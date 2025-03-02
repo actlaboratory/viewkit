@@ -21,6 +21,13 @@ requires-python = ">=3.8,<3.13"
 [tool.setuptools]
 packages = ["viewKit"]
 
+[tool.autopep8]
+aggressive = 2
+ignore = ["E402", "E721"]
+max-line-length = 150
+in-place = true
+recursive = true
+
 [project.urls]
 Homepage = "https://github.com/actlaboratory/viewKit"
 Repository = "https://github.com/actlaboratory/viewKit"
