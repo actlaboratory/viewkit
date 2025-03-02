@@ -1,5 +1,5 @@
 import wx
-import viewKit
+import viewkit
 
 
 class TestFrame(wx.Frame):
@@ -13,4 +13,4 @@ class TestFrame(wx.Frame):
         self.Close()
 
 
-viewKit.run(TestFrame)
+viewkit.run(TestFrame)
