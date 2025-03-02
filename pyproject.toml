@@ -27,7 +27,7 @@ ignore = ["E402", "E721"]
 max-line-length = 150
 in-place = true
 recursive = true
-exclude = ["venv"]
+exclude = "venv"
 
 [project.urls]
 Homepage = "https://github.com/actlaboratory/viewKit"
