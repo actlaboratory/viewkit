@@ -1,0 +1,7 @@
+﻿wxpython==4.2.2
+pywin32
+winpaths
+pyinstaller==6.11.0
+requests
+https://github.com/actlaboratory/proxyutil/archive/0.2.3.zip
+pillow==9.5
