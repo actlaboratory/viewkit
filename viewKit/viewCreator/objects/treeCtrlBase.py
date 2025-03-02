@@ -2,10 +2,9 @@
 # Copyright (C) 2019-2020 Hiroki Fujii <hfujii@hisystron.com>
 # Copyright (C) 2021 yamahubuki <itiro.ishino@gmail.com>
 
-import globalVars
 import json
 import wx
-from views.viewObjectBase import viewObjectUtil, controlBase, listCtrlBase
+from . import viewObjectUtil, controlBase, listCtrlBase
 
 
 class treeCtrl(controlBase.controlBase, wx.TreeCtrl):

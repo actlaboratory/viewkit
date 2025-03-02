@@ -3,7 +3,7 @@
 
 
 import wx
-from views.viewObjectBase import viewObjectUtil, controlBase
+from . import viewObjectUtil, controlBase
 
 
 class textCtrl(controlBase.controlBase, wx.TextCtrl):

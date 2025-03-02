@@ -2,7 +2,7 @@
 # Copyright (C) 2023 yamahubuki <itiro.ishino@gmail.com>
 
 import wx
-from views.viewObjectBase import viewObjectUtil, controlBase
+from . import viewObjectUtil, controlBase
 
 
 class staticBitmap(controlBase.controlBase, wx.StaticBitmap):

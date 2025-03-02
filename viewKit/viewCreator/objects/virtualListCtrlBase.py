@@ -4,9 +4,8 @@
 
 import wx
 
-import globalVars
 
-from views.viewObjectBase import viewObjectUtil, listCtrlBase
+from . import viewObjectUtil, listCtrlBase
 
 
 class virtualListCtrl(listCtrlBase.listCtrl):
@@ -380,13 +379,7 @@ class virtualListCtrl(listCtrlBase.listCtrl):
         assert type(v) == bool
         self.printColumn = v
 
-    def loadColumnInfo(self, section, key):
-        self.printColumn = self._needSaveColumnInfo and globalVars.app.config.getboolean(self.sectionName, self.keyName + "_print_column_name", True)
-        super().loadColumnInfo(section, key)
-
-    def saveColumnInfo(self):
-        super().saveColumnInfo()
-        globalVars.app.config[self.sectionName][self.keyName + "_print_column_name"] = self.printColumn
+    # todo: loadColumnInfo and saveColumnInfo
 
     def AppendColumn(self, heading, format=wx.LIST_FORMAT_LEFT, width=-1):
         if self.isPrintColumn():

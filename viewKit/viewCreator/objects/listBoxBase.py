@@ -4,7 +4,7 @@
 
 
 import wx
-from views.viewObjectBase import viewObjectUtil, controlBase
+from . import viewObjectUtil, controlBase
 
 
 class listBox(controlBase.controlBase, wx.ListBox):

@@ -1,8 +1,9 @@
-# View Creator
+﻿# View Creator
 # Copyright (C) 2019-2021 yamahubuki <itiro.ishino@gmail.com>
 # Copyright (C) 2019-2020 Hiroki Fujii <hfujii@hisystron.com>
 
 import ctypes
+import os
 import pywintypes
 import win32api
 import _winxptheme
@@ -28,7 +29,7 @@ from .objects import clearSlider
 from .objects import gridBagSizer
 
 
-viewHelper = ctypes.cdll.LoadLibrary("viewHelper.dll")
+viewHelper = ctypes.cdll.LoadLibrary(os.path.join(os.getcwd(), "viewHelper.dll"))
 
 NORMAL = 0
 BUTTON_COLOUR = 1

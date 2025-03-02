@@ -2,7 +2,7 @@
 # Copyright (C) 2020 yamahubuki <itiro.ishino@gmail.com>
 
 import wx
-from views.viewObjectBase import sliderBase, toolTipBase
+from . import sliderBase, toolTipBase
 
 
 def unsupported(*pArg, **kwargs):

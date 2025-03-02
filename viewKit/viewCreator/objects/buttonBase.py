@@ -3,7 +3,7 @@
 
 
 import wx
-from views.viewObjectBase import viewObjectUtil, toolTipBase, controlBase
+from . import viewObjectUtil, toolTipBase, controlBase
 
 
 class button(controlBase.controlBase, wx.Button):

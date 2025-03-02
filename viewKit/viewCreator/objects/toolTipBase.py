@@ -1,6 +1,5 @@
 import wx
 import logging
-import constants
 
 
 class toolTip():
@@ -22,9 +21,6 @@ class toolTip():
         if pos:
             self.dialog.SetPosition(pos)
             self.dialog.Show()
-        else:
-            log = logging.getLogger("%s.toolTip" % (constants.LOG_PREFIX,))
-            log.warning("The window size is too small to show. - %s" % (label,))
 
     def refresh(self, cursorPos=None, label=None):
         if label is not None:

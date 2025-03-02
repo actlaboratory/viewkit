@@ -3,7 +3,7 @@
 
 
 import wx
-from views.viewObjectBase import viewObjectUtil, controlBase
+from . import viewObjectUtil, controlBase
 
 
 class spinCtrl(controlBase.controlBase, wx.SpinCtrl):
