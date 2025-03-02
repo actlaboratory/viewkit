@@ -3,7 +3,7 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "viewKit"
+name = "viewkit"
 version = "0.1.0"
 description = "ACT Laboratory's base GUI infrastructure"
 authors = [
@@ -19,7 +19,7 @@ dependencies = [
 requires-python = ">=3.8,<3.13"
 
 [tool.setuptools]
-packages = ["viewKit"]
+packages = ["viewkit", "viewkit.creator", "viewkit.creator.objects"]
 
 [tool.autopep8]
 aggressive = 2

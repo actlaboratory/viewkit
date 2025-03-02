@@ -1,7 +1,7 @@
 import os
 import sys
 from .app import App
-from .viewCreator import *
+from . import creator
 
 
 def run(first_window):
