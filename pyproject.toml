@@ -21,6 +21,9 @@ requires-python = ">=3.8,<3.13"
 [tool.setuptools]
 packages = ["viewkit", "viewkit.creator", "viewkit.creator.objects"]
 
+[tool.setuptools.package-data]
+"viewkit" = ["viewHelper.dll"]
+
 [tool.autopep8]
 aggressive = 2
 ignore = ["E402", "E721"]

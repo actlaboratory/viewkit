@@ -1,8 +1,9 @@
-# View Creator
+﻿# View Creator
 # Copyright (C) 2019-2021 yamahubuki <itiro.ishino@gmail.com>
 # Copyright (C) 2019-2020 Hiroki Fujii <hfujii@hisystron.com>
 
 import ctypes
+import importlib.resources
 import os
 import pywintypes
 import win32api
@@ -28,8 +29,8 @@ from .objects import staticBitmapBase
 from .objects import clearSlider
 from .objects import gridBagSizer
 
-
-viewHelper = ctypes.cdll.LoadLibrary(os.path.join(os.getcwd(), "viewHelper.dll"))
+dll_path = importlib.resources.files("viewkit").joinpath("viewHelper.dll")
+viewHelper = ctypes.cdll.LoadLibrary(str(dll_path))
 
 NORMAL = 0
 BUTTON_COLOUR = 1
