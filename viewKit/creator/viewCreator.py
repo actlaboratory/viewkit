@@ -12,22 +12,22 @@ import wx
 import wx.lib.scrolledpanel
 
 
-from .objects import buttonBase
-from .objects import comboBoxBase
-from .objects import checkBoxBase
-from .objects import radioBoxBase
-from .objects import radioButtonBase
-from .objects import listBoxBase
-from .objects import treeCtrlBase
-from .objects import normalListCtrlBase
-from .objects import virtualListCtrlBase
-from .objects import notebookBase
-from .objects import textCtrlBase
-from .objects import spinCtrlBase
-from .objects import sliderBase
-from .objects import staticBitmapBase
-from .objects import clearSlider
-from .objects import gridBagSizer
+from .objects import button
+from .objects import combobox
+from .objects import checkbox
+from .objects import radiobox
+from .objects import radiobutton
+from .objects import listbox
+from .objects import treectrl
+from .objects import normal_listctrl
+from .objects import virtual_listCtrl
+from .objects import notebook
+from .objects import textctrl
+from .objects import spinctrl
+from .objects import slider
+from .objects import static_bitmap
+from .objects import clear_slider
+from .objects import grid_bag_sizer
 
 dll_path = importlib.resources.files("viewkit").joinpath("viewHelper.dll")
 viewHelper = ctypes.cdll.LoadLibrary(str(dll_path))
@@ -53,23 +53,23 @@ class ViewCreator():
     def __init__(self, mode, parent, parentSizer=None, orient=wx.HORIZONTAL, space=0, label="", style=0, proportion=0, margin=20):
         # wxオブジェクトを辞書に格納
         self.winObject = {
-            "button": buttonBase.button,
+            "button": button.button,
             "staticText": wx.StaticText,
-            "comboBox": comboBoxBase.comboBox,
-            "checkBox": checkBoxBase.checkBox,
-            "radioBox": radioBoxBase.radioBox,
-            "radioButton": radioButtonBase.radioButton,
-            "listBox": listBoxBase.listBox,
-            "treeCtrl": treeCtrlBase.treeCtrl,
-            "listCtrl": normalListCtrlBase.listCtrl,
-            "virtualListCtrl": virtualListCtrlBase.virtualListCtrl,
-            "notebook": notebookBase.notebook,
-            "textCtrl": textCtrlBase.textCtrl,
+            "comboBox": combobox.comboBox,
+            "checkBox": checkbox.checkBox,
+            "radioBox": radiobox.radioBox,
+            "radioButton": radiobutton.radioButton,
+            "listBox": listbox.listBox,
+            "treeCtrl": treectrl.treeCtrl,
+            "listCtrl": normal_listctrl.listCtrl,
+            "virtualListCtrl": virtual_listCtrl.virtualListCtrl,
+            "notebook": notebook.notebook,
+            "textCtrl": textctrl.textCtrl,
             "gauge": wx.Gauge,
-            "spinCtrl": spinCtrlBase.spinCtrl,
-            "slider": sliderBase.slider,
-            "clear_slider": clearSlider.clearSlider,
-            "static_bitmap": staticBitmapBase.staticBitmap,
+            "spinCtrl": spinctrl.spinCtrl,
+            "slider": slider.slider,
+            "clear_slider": clear_slider.clearSlider,
+            "static_bitmap": static_bitmap.staticBitmap,
         }
 
         # 表示モード
@@ -169,7 +169,7 @@ class ViewCreator():
     def GridBagSizer(self, parent, space=0, style=0, x=2):
         if type(x) != int:
             x = 2
-        sizer = gridBagSizer.GridBagSizer(x, space, space)
+        sizer = grid_bag_sizer.GridBagSizer(x, space, space)
         if type(parent) in (wx.Panel, wx.Window):
             parent.SetSizer(sizer)
         elif (parent is None):
