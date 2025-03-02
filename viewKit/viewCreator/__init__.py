@@ -1,1 +1,1 @@
-﻿from .viewCreator import ViewCreator
+from .viewCreator import ViewCreator

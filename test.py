@@ -1,6 +1,7 @@
 import wx
 import viewKit
 
+
 class TestFrame(wx.Frame):
     def __init__(self):
         wx.Frame.__init__(self, None, -1, "Test Frame")
@@ -10,5 +11,6 @@ class TestFrame(wx.Frame):
 
     def OnExit(self, event):
         self.Close()
+
 
 viewKit.run(TestFrame)

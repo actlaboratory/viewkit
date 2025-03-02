@@ -1,5 +1,6 @@
 import wx
 
+
 class App(wx.App):
     def __init__(self, initial_window):
         """アプリケーション初期化"""
