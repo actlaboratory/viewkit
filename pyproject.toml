@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "viewKit"
+version = "0.1.0"
+description = "ACT Laboratory's base GUI infrastructure"
+authors = [
+    { name = "ACT Laboratory", email = "support@actlab.org" }
+]
+dependencies = [
+    "wxpython==4.2.2",
+    "pywin32",
+    "winpaths",
+    "pyinstaller==6.11.0",
+    "requests",
+    "pillow==9.5"
+]
+requires-python = ">=3.8,<3.13"
+
+[tool.setuptools]
+packages = ["viewKit"]
+
+[project.urls]
+Homepage = "https://github.com/actlaboratory/viewKit"
+Repository = "https://github.com/actlaboratory/viewKit"
+
+[tool.pip]
+# GitHubからの依存関係
+install-options = [
+    "https://github.com/actlaboratory/proxyutil/archive/0.2.3.zip"
+]
