@@ -1,5 +1,5 @@
 import wx
-from typing import Callable, Optional
+from typing import Callable, List, Optional
 from .definition import MenuDefinition
 
 
@@ -7,6 +7,13 @@ class MenuItem:
     def __init__(self, identifier: str, display_name: str):
         self.identifier = identifier
         self.display_name = display_name
+
+
+class MenuItemWithSubmenu:
+    def __init__(self, identifier, display_name: str, sub_menu_items: List[MenuItem]):
+        self.identifier = identifier
+        self.display_name = display_name
+        self.sub_menu_items = sub_menu_items
 
 
 class TopMenu:
@@ -17,6 +24,9 @@ class TopMenu:
 
     def add_item(self, identifier: str, display_name: str):
         self.items.append(MenuItem(identifier, display_name))
+
+    def add_item_with_submenu(self, item: MenuItemWithSubmenu):
+        self.items.append(item)
 
 
 class Menu:
@@ -30,7 +40,10 @@ class Menu:
         for top_menu_def in definition.top_menus:
             top_menu = self._add_top_menu(top_menu_def.display_name, top_menu_def.accessor_letter)
             for item_def in top_menu_def.items:
-                top_menu.add_item(item_def.identifier, item_def.display_name)
+                if item_def.sub_menu_items is None:
+                    top_menu.add_item(item_def.identifier, item_def.display_name)
+                else:
+                    top_menu.add_item_with_submenu(_submenu_def_to_instance(item_def))
 
     def _add_top_menu(self, display_name: str, accessor_letter: str) -> TopMenu:
         topmenu = TopMenu(display_name, accessor_letter)
@@ -39,3 +52,9 @@ class Menu:
 
     def need_menu_bar(self):
         return len(self.top_menus) > 0
+
+def _submenu_def_to_instance(submenu_def: MenuItemWithSubmenu) -> MenuItemWithSubmenu:
+    sub_menu_items = []
+    for item in submenu_def.sub_menu_items:
+        sub_menu_items.append(MenuItem(item.identifier, item.display_name))
+    return MenuItemWithSubmenu(submenu_def.identifier, submenu_def.display_name, sub_menu_items)

@@ -3,7 +3,7 @@ from typing import List
 from viewkit.context.app import ApplicationContext
 from viewkit.context.window import WindowContext
 from viewkit.feature import Feature
-from viewkit.menu import MenuDefinition
+from viewkit.menu import MenuDefinition, MenuItem, MenuItemWithSubmenu
 
 
 class MainWindow(wx.Frame):
@@ -35,7 +35,18 @@ class MainWindow(wx.Frame):
             menu = wx.Menu()
             for item in top_menu.items:
                 ref = self.ctx.ref_store.get_ref(item.identifier)
-                menu_item = wx.MenuItem(menu, ref, item.display_name)
+                menu_item = self._generate_menu_item(menu, ref, item)
                 menu.Append(menu_item)
             bar.Append(menu, "%s(&%s)" % (top_menu.display_name, top_menu.accessor_letter))
         self.SetMenuBar(bar)
+
+    def _generate_menu_item(self, menu: wx.Menu, ref: int, item: MenuItem | MenuItemWithSubmenu):
+        if isinstance(item, MenuItem):
+            return wx.MenuItem(menu, ref, item.display_name)
+        elif isinstance(item, MenuItemWithSubmenu):
+            submenu = wx.Menu()
+            for sub_item in item.sub_menu_items:
+                ref = self.ctx.ref_store.get_ref(sub_item.identifier)
+                menu_item = self._generate_menu_item(submenu, ref, sub_item)
+                submenu.Append(menu_item)
+            return wx.MenuItem(menu, ref, item.display_name, subMenu=submenu)
