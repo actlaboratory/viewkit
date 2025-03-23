@@ -14,7 +14,7 @@ class App(wx.App):
         wnd = self._initial_window(self.ctx)
         wnd._register_features(wnd.define_features())
         wnd._assign_refs()
-        wnd.define_menu(wnd.ctx)
+        wnd.ctx.menu.setup(wnd.define_menu())
         wnd._setup_menu_bar()
         wnd.Show()
         self.MainLoop()

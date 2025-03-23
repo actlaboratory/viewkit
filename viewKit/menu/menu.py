@@ -1,5 +1,6 @@
 import wx
 from typing import Callable
+from .definition import MenuDefinition
 
 
 class MenuItem:
@@ -22,7 +23,13 @@ class Menu:
     def __init__(self):
         self.top_menus = []
 
-    def add_top_menu(self, display_name: str, accessor_letter: str) -> TopMenu:
+    def setup(self, definition: MenuDefinition):
+        for top_menu_def in definition.top_menus:
+            top_menu = self._add_top_menu(top_menu_def.display_name, top_menu_def.accessor_letter)
+            for item_def in top_menu_def.items:
+                top_menu.add_item(item_def.identifier, item_def.display_name)
+
+    def _add_top_menu(self, display_name: str, accessor_letter: str) -> TopMenu:
         topmenu = TopMenu(display_name, accessor_letter)
         self.top_menus.append(topmenu)
         return topmenu

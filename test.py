@@ -14,12 +14,19 @@ class TestWindow(viewkit.MainWindow):
             viewkit.Feature("file_exit", "Exit", "Ctrl+Q", self.OnExit)
         ]
 
-    def define_menu(self, ctx):
-        menu = ctx.menu
-        filemenu = menu.add_top_menu("File", "F")
-        filemenu.add_item("file_exit", "&Exit")
-        editmenu = menu.add_top_menu("Edit", "E")
-        helpmenu = menu.add_top_menu("Help", "H")
+    def define_menu(self):
+        return viewkit.MenuDefinition(
+            viewkit.TopMenuDefinition(
+                "File", "F", [
+                    viewkit.MenuItemDefinition("file_exit", "&Exit")
+                ]
+            ),
+            viewkit.TopMenuDefinition(
+                "Help", "H", [
+                    viewkit.MenuItemDefinition("help_about", "&About")
+                ]
+            )
+        )
 
     def OnExit(self, event):
         self.Close()

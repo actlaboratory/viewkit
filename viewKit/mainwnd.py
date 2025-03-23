@@ -3,6 +3,7 @@ from typing import List
 from viewkit.context.app import ApplicationContext
 from viewkit.context.window import WindowContext
 from viewkit.feature import Feature
+from viewkit.menu import MenuDefinition
 
 
 class MainWindow(wx.Frame):
