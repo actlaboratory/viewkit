@@ -1,8 +1,9 @@
 import wx
+from viewkit.context.app import ApplicationContext
 
 
 class App(wx.App):
-    def __init__(self, ctx, initial_window):
+    def __init__(self, ctx: ApplicationContext, initial_window):
         """アプリケーション初期化"""
         self.ctx = ctx
         self._initial_window = initial_window

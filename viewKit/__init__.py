@@ -2,7 +2,7 @@ import os
 import sys
 from .app import App
 from . import creator
-from .ctx import ApplicationContext
+from .context import ApplicationContext, WindowContext
 from .mainwnd import MainWindow
 
 def run(ctx, first_window):
