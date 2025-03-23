@@ -21,7 +21,6 @@ class TopMenu:
 
 class Menu:
     def __init__(self):
-        if 
         self.top_menus = []
 
     def setup(self, definition: Optional[MenuDefinition]):

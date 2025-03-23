@@ -1,5 +1,6 @@
 from typing import List
 
+
 class MenuItemDefinition:
     def __init__(self, identifier: str, display_name: str, sub_menu_items: List["MenuItemDefinition"] = []):
         self.identifier = identifier
