@@ -62,7 +62,7 @@ class ViewCreator():
             "listBox": listbox.listBox,
             "treeCtrl": treectrl.treeCtrl,
             "listCtrl": normal_listctrl.listCtrl,
-            "virtualListCtrl": virtual_listCtrl.virtualListCtrl,
+            "virtualListCtrl": virtual_listctrl.virtualListCtrl,
             "notebook": notebook.notebook,
             "textCtrl": textctrl.textCtrl,
             "gauge": wx.Gauge,
