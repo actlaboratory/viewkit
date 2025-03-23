@@ -1,6 +1,7 @@
 import wx
 import viewkit
 
+
 class TestWindow(viewkit.MainWindow):
     def __init__(self, ctx):
         viewkit.MainWindow.__init__(self, ctx)
@@ -10,6 +11,7 @@ class TestWindow(viewkit.MainWindow):
 
     def OnExit(self, event):
         self.Close()
+
 
 ctx = viewkit.ApplicationContext("testtest")
 viewkit.run(ctx, TestWindow)

@@ -1,6 +1,7 @@
 from typing import Callable
 from .shortcut import str_to_shortcut_key
 
+
 class MenuItem:
     def __init__(self, identifier: str, display_name: str, shortcut_key: str | None, action: Callable | None):
         self.identifier = identifier
@@ -25,4 +26,3 @@ class Menu:
 
     def add_top_menu(self, displayName: str, accessorLetter: str):
         self.top_menus.append(TopMenu(displayName, accessorLetter))
-
