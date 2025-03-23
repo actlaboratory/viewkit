@@ -16,7 +16,7 @@ class MainWindow(wx.Frame):
         raise RuntimeError("Please override define_features method to describe the application features")
 
     def define_menu(self, ctx: WindowContext):
-        """このメソッドをオーバーライドして、メインウインドウのメニューを設定します。渡されてくる ctx に対して、メニューを設定する処理を記述します。メニューバーを持たないアプリケーションであっても、 pass でオーバーライドしてください。"""
+        """このメソッドをオーバーライドして、メインウインドウのメニューを設定します。 viewkit.MenuDefinition の機能を使って、メニューを定義してください。メニューバーを持たないアプリケーションの場合は、 return None で終了してください。"""
         raise RuntimeError("Please override define_menu method to setup the application menu")
 
     def _register_features(self, features):
