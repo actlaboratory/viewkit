@@ -53,6 +53,7 @@ class Menu:
     def need_menu_bar(self):
         return len(self.top_menus) > 0
 
+
 def _submenu_def_to_instance(submenu_def: MenuItemWithSubmenu) -> MenuItemWithSubmenu:
     sub_menu_items = []
     for item in submenu_def.sub_menu_items:
