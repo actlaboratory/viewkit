@@ -1,10 +1,9 @@
 import wx
 import viewkit
 
-
-class TestFrame(wx.Frame):
+class TestWindow(viewkit.MainWindow):
     def __init__(self):
-        wx.Frame.__init__(self, None, -1, "Test Frame")
+        viewkit.MainWindow.__init__(self, "test")
         panel = wx.Panel(self, -1)
         exitButton = wx.Button(panel, -1, "Exit")
         exitButton.Bind(wx.EVT_BUTTON, self.OnExit)
@@ -12,5 +11,4 @@ class TestFrame(wx.Frame):
     def OnExit(self, event):
         self.Close()
 
-
-viewkit.run(TestFrame)
+viewkit.run(TestWindow)

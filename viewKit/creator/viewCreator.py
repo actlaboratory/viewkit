@@ -20,7 +20,7 @@ from .objects import radiobutton
 from .objects import listbox
 from .objects import treectrl
 from .objects import normal_listctrl
-from .objects import virtual_listCtrl
+from .objects import virtual_listctrl
 from .objects import notebook
 from .objects import textctrl
 from .objects import spinctrl

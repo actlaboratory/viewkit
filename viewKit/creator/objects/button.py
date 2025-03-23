@@ -3,17 +3,17 @@
 
 
 import wx
-from . import viewObjectUtil, toolTipBase, controlBase
+from . import control, tooltip, util
 
 
-class button(controlBase.controlBase, wx.Button):
+class button(control.controlBase, wx.Button):
     def __init__(self, *pArg, **kArg):
-        self.focusFromKbd = viewObjectUtil.popArg(kArg, "enableTabFocus", True)  # キーボードフォーカスの初期値
+        self.focusFromKbd = util.popArg(kArg, "enableTabFocus", True)  # キーボードフォーカスの初期値
         super().__init__(*pArg, **kArg)
         self.Bind(wx.EVT_ENTER_WINDOW, self.onMouseEnter)
         self.Bind(wx.EVT_LEAVE_WINDOW, self.onMouseLeave)
         # ツールチップ
-        self.toolTipObject = toolTipBase.toolTip  # ツールチップオブジェクトを指定
+        self.toolTipObject = tooltip.toolTip  # ツールチップオブジェクトを指定
         self.enableToolTip = False
 
     def setToolTip(self, label=None):

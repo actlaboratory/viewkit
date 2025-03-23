@@ -4,10 +4,10 @@
 
 import json
 import wx
-from . import viewObjectUtil, controlBase, listCtrlBase
+from . import control, listctrl, util
 
 
-class listCtrl(controlBase.controlBase, wx.ListCtrl):
+class listCtrl(control.controlBase, wx.ListCtrl):
     def __init__(self, *pArg, **kArg):
         self._needSaveColumnInfo = False
         self.sectionName = ""

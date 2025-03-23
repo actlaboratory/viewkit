@@ -5,10 +5,10 @@
 import wx
 
 
-from . import viewObjectUtil, listCtrlBase
+from . import listctrl, util
 
 
-class virtualListCtrl(listCtrlBase.listCtrl):
+class virtualListCtrl(listctrl.listCtrl):
     # listの機能を組み込み
     def __init__(self, *pArg, **kArg):
         lPArg = list(pArg)
@@ -19,7 +19,7 @@ class virtualListCtrl(listCtrlBase.listCtrl):
         else:
             kArg["style"] = wx.LC_REPORT | wx.LC_VIRTUAL
         self.lst = []
-        self.focusFromKbd = viewObjectUtil.popArg(kArg, "enableTabFocus", True)
+        self.focusFromKbd = util.popArg(kArg, "enableTabFocus", True)
         self.columns = []
         self.bindFunctions = {}  # カラム関係のイベントのバインドを保存する辞書
         self.printColumn = True

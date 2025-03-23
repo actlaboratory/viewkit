@@ -2,14 +2,14 @@
 # Copyright (C) 2020 yamahubuki <itiro.ishino@gmail.com>
 
 import wx
-from . import sliderBase, toolTipBase
+from . import slider, tooltip
 
 
 def unsupported(*pArg, **kwargs):
     raise NotImplementedError("ClearSlider is not support this function.")
 
 
-class clearSlider(sliderBase.slider):
+class clearSlider(slider.slider):
     """
         見やすいスライダ。
         Sliderの派生だが、メモリ表示をサポートしていないので注意すること。
@@ -149,7 +149,7 @@ class clearSlider(sliderBase.slider):
             if self.toolTip is not None:
                 self.toolTip.refresh(self.ClientToScreen(evt.GetPosition()), val)
             else:
-                self.toolTip = toolTipBase.toolTip(
+                self.toolTip = tooltip.toolTip(
                     self,
                     self.ClientToScreen(
                         evt.GetPosition()),

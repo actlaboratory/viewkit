@@ -2,7 +2,7 @@ import os
 import sys
 from .app import App
 from . import creator
-
+from .mainwnd import MainWindow
 
 def run(first_window):
     # dllを相対パスで指定した時のため、カレントディレクトリを変更

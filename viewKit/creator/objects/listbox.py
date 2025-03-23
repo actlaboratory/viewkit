@@ -4,12 +4,12 @@
 
 
 import wx
-from . import viewObjectUtil, controlBase
+from . import control, util
 
 
-class listBox(controlBase.controlBase, wx.ListBox):
+class listBox(control.controlBase, wx.ListBox):
     def __init__(self, *pArg, **kArg):
-        self.focusFromKbd = viewObjectUtil.popArg(kArg, "enableTabFocus", True)  # キーボードフォーカスの初期値
+        self.focusFromKbd = util.popArg(kArg, "enableTabFocus", True)  # キーボードフォーカスの初期値
         return super().__init__(*pArg, **kArg)
 
     # ポップアップメニューの表示位置をクライアント座標のwx.Pointで返す

@@ -3,10 +3,10 @@
 
 
 import wx
-from . import viewObjectUtil, controlBase
+from . import control, util
 
 
-class comboBox(controlBase.controlBase, wx.ComboBox):
+class comboBox(control.controlBase, wx.ComboBox):
     def __init__(self, *pArg, **kArg):
-        self.focusFromKbd = viewObjectUtil.popArg(kArg, "enableTabFocus", True)  # キーボードフォーカスの初期値
+        self.focusFromKbd = util.popArg(kArg, "enableTabFocus", True)  # キーボードフォーカスの初期値
         return super().__init__(*pArg, **kArg)

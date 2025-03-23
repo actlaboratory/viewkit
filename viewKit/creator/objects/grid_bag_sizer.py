@@ -2,7 +2,7 @@
 # Copyright (C) 2020 yamahubuki <itiro.ishino@gmail.com>
 
 import wx
-from .viewObjectUtil import *
+from .util import *
 
 
 class GridBagSizer(wx.GridBagSizer):
