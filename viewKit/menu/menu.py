@@ -1,3 +1,4 @@
+import wx
 from typing import Callable
 from .shortcut import str_to_shortcut_key
 
@@ -11,9 +12,9 @@ class MenuItem:
 
 
 class TopMenu:
-    def __init__(self, displayName: str, accessorLetter: str):
-        self.displayName = displayName
-        self.accessorLetter = accessorLetter
+    def __init__(self, display_name: str, accessor_letter: str):
+        self.display_name = display_name
+        self.accessor_letter = accessor_letter
         self.items = []
 
     def add_item(self, identifier: str, display_name: str, shortcut_key: str | None, action: Callable | None):
@@ -24,5 +25,13 @@ class Menu:
     def __init__(self):
         self.top_menus = []
 
-    def add_top_menu(self, displayName: str, accessorLetter: str):
-        self.top_menus.append(TopMenu(displayName, accessorLetter))
+    def add_top_menu(self, display_name: str, accessor_letter: str):
+        self.top_menus.append(TopMenu(display_name, accessor_letter))
+
+    def generate_menu_bar(self):
+        bar = wx.MenuBar()
+        for top_menu in self.top_menus:
+            menu = wx.Menu()
+            bar.Append(menu, "%s(&%s)" % (top_menu.display_name, top_menu.accessor_letter))
+        # サブメニューアイテムはあとでやる
+        return bar

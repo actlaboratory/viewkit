@@ -9,6 +9,13 @@ class TestWindow(viewkit.MainWindow):
         exitButton = wx.Button(panel, -1, "Exit")
         exitButton.Bind(wx.EVT_BUTTON, self.OnExit)
 
+    def define_menu_bar(self):
+        menu = self.ctx.menu
+        menu.add_top_menu("File", "F")
+        menu.add_top_menu("Edit", "E")
+        menu.add_top_menu("Help", "H")
+        return menu.generate_menu_bar()
+
     def OnExit(self, event):
         self.Close()
 
