@@ -12,7 +12,7 @@ class ShortcutKey:
         self.keyCode = keyCode
 
 
-def str_to_shortcut_key(ref, key, filter):
+def str_to_shortcut_key(key: str) -> ShortcutKey:
     """人間が読めるショートカットキー文字列から、ShortcutKeyのインスタンスに変換する"""
     key = key.upper()  # 大文字に統一して処理
     modifier_keys = {

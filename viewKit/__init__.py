@@ -3,6 +3,7 @@ import sys
 from .app import App
 from . import creator
 from .context import ApplicationContext, WindowContext
+from .feature import Feature, FeatureStore
 from .mainwnd import MainWindow
 
 

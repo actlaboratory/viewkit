@@ -1,6 +1,8 @@
 import wx
+from typing import List
 from viewkit.context.app import ApplicationContext
 from viewkit.context.window import WindowContext
+from viewkit.feature import Feature
 
 
 class MainWindow(wx.Frame):
@@ -8,6 +10,31 @@ class MainWindow(wx.Frame):
         wx.Frame.__init__(self, None, -1, app_ctx.applicationName)
         self.ctx = WindowContext()
 
-    def define_menu_bar(self) -> wx.MenuBar:
-        """このメソッドをオーバーライドして、メインウインドウのメニューを設定します。最終的に適用する wx.MenuBar のインスタンスを返すようにします。メニューバーを作らないアプリケーションであっても、 return None するメソッドで上書きしてください。"""
-        raise RuntimeError("Please override define_menu_bar method to setup the application menu")
+    def define_features(self) -> List[Feature]:
+        """このメソッドをオーバーライドして、アプリケーションが持つ機能を定義します。viewkit.Feature のリストを返す必要があります。"""
+        raise RuntimeError("Please override define_features method to describe the application features")
+
+    def define_menu(self, ctx: WindowContext):
+        """このメソッドをオーバーライドして、メインウインドウのメニューを設定します。渡されてくる ctx に対して、メニューを設定する処理を記述します。メニューバーを持たないアプリケーションであっても、 pass でオーバーライドしてください。"""
+        raise RuntimeError("Please override define_menu method to setup the application menu")
+
+    def _register_features(self, features):
+        for feature in features:
+            self.ctx.feature_store.register(feature)
+
+    def _assign_refs(self):
+        for feature in self.ctx.feature_store.all().values():
+            self.ctx.ref_store.get_ref(feature.identifier)
+
+    def _setup_menu_bar(self):
+        if not self.ctx.menu.need_menu_bar():
+            return
+        bar = wx.MenuBar()
+        for top_menu in self.ctx.menu.top_menus:
+            menu = wx.Menu()
+            for item in top_menu.items:
+                ref = self.ctx.ref_store.get_ref(item.identifier)
+                menu_item = wx.MenuItem(menu, ref, item.display_name)
+                menu.Append(menu_item)
+            bar.Append(menu, "%s(&%s)" % (top_menu.display_name, top_menu.accessor_letter))
+        self.SetMenuBar(bar)

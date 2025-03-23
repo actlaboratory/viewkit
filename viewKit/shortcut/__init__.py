@@ -1,0 +1,1 @@
+from .translation import InvalidShortcutKeyError, str_to_shortcut_key

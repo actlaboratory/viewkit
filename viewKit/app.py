@@ -12,8 +12,9 @@ class App(wx.App):
     def run(self):
         """ウインドウを表示して、アプリケーションを開始。アプリケーションが終了するまで制御を返さない"""
         wnd = self._initial_window(self.ctx)
-        bar = wnd.define_menu_bar()
-        if bar:
-            wnd.SetMenuBar(bar)
+        wnd._register_features(wnd.define_features())
+        wnd._assign_refs()
+        wnd.define_menu(wnd.ctx)
+        wnd._setup_menu_bar()
         wnd.Show()
         self.MainLoop()
