@@ -16,3 +16,9 @@ class RefStore:
             ref = self._refgen.next()
             self.refs[identifier] = ref
             return ref
+
+    def getIdentifier(self, ref: int) -> str:
+        for identifier, r in self.refs.items():
+            if r == ref:
+                return identifier
+        return None

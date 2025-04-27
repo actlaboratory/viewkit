@@ -10,6 +10,7 @@ class MainWindow(wx.Frame):
     def __init__(self, app_ctx: ApplicationContext):
         wx.Frame.__init__(self, None, -1, app_ctx.applicationName)
         self.ctx = WindowContext()
+        self.Bind(wx.EVT_MENU, self._receive_menu_command)
 
     def define_features(self) -> List[Feature]:
         """このメソッドをオーバーライドして、アプリケーションが持つ機能を定義します。viewkit.Feature のリストを返す必要があります。"""
@@ -55,3 +56,12 @@ class MainWindow(wx.Frame):
         if not self.ctx.menu.need_menu_bar():
             return
         self.SetAcceleratorTable(self.ctx.generateAcceleratorTable())
+
+    def _receive_menu_command(self, event):
+        identifier = self.ctx.ref_store.getIdentifier(event.GetId())
+        if identifier is None:
+            return
+        feature = self.ctx.feature_store.getByIdentifier(identifier)
+        if feature is None:
+            return
+        print("%s is executed" % feature)
