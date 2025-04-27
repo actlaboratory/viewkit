@@ -17,6 +17,7 @@ class Feature:
     def __str__(self):
         return f"Feature(identifier={self.identifier}, display_name={self.display_name}, shortcut_key={self.shortcut_key_str})"
 
+
 class FeatureStore:
     def __init__(self):
         self.features = {}
@@ -27,5 +28,5 @@ class FeatureStore:
     def all(self):
         return copy(self.features)
 
-    def getByIdentifier(self, identifier:str) -> Optional[Feature]:
+    def getByIdentifier(self, identifier: str) -> Optional[Feature]:
         return self.features.get(identifier, None)

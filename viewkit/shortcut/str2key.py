@@ -120,7 +120,7 @@ str2InputControlKey = {
 }
 
 # 主要キー
-str2StandaloneKey = {
+str2GenericKey = {
     "TAB": wx.WXK_TAB,
     "RETURN": wx.WXK_RETURN,
     "ESCAPE": wx.WXK_ESCAPE,
@@ -194,7 +194,7 @@ str2SpecialKey = {
 }
 
 # 他の修飾キーとの組み合わせで利用できるキー
-str2CharactorKey = {
+str2CharacterKey = {
     # アルファベットキー
     "A": ord('A'),
     "B": ord('B'),
@@ -307,6 +307,6 @@ str2key.update(
     **str2InputControlKey,
     **str2StandaloneKey,
     **str2SpecialKey,
-    **str2CharactorKey,
+    **str2CharacterKey,
     **str2categoryKey,
     **str2numpadKey)

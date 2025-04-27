@@ -15,7 +15,12 @@ class WindowContext:
         entries = []
         for feature in self.feature_store.all().values():
             if feature.shortcut_key is not None:
-                entries.append(wx.AcceleratorEntry(feature.shortcut_key.modifier_flags, feature.shortcut_key.key_code, self.ref_store.getRef(feature.identifier)))
+                entries.append(
+                    wx.AcceleratorEntry(
+                        feature.shortcut_key.modifier_flags,
+                        feature.shortcut_key.key_code,
+                        self.ref_store.getRef(
+                            feature.identifier)))
             # end shortcut key exists
         # end for feature
         return wx.AcceleratorTable(entries)
