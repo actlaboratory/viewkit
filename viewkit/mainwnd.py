@@ -4,13 +4,21 @@ from viewkit.context.app import ApplicationContext
 from viewkit.context.window import WindowContext
 from viewkit.feature import Feature
 from viewkit.menu import MenuDefinition, MenuItem, MenuItemWithSubmenu
-
+from viewkit.creator import ViewCreator
 
 class MainWindow(wx.Frame):
     def __init__(self, app_ctx: ApplicationContext):
         wx.Frame.__init__(self, None, -1, app_ctx.applicationName)
         self.ctx = WindowContext()
         self.Bind(wx.EVT_MENU, self._receive_menu_command)
+        self.clear()
+
+    def clear(self, space=0):
+        self.DestroyChildren()
+        panel=wx.Panel(self, wx.ID_ANY, size=(-1, -1))
+        self.creator = ViewCreator(0,panel, None, wx.VERTICAL, style=wx.ALL,space=space)
+        self.Layout()
+
 
     def define_features(self) -> List[Feature]:
         """このメソッドをオーバーライドして、アプリケーションが持つ機能を定義します。viewkit.Feature のリストを返す必要があります。"""
