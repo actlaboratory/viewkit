@@ -12,13 +12,13 @@ class MenuItemDefinition:
     def getDisplayString(self) -> str:
         result = self.display_name
         if self.accessor_letter:
-            # ƒAƒNƒZƒ‰ƒŒ[ƒ^[‚«[‚Ìˆ—
+            # ã‚¢ã‚¯ã‚»ãƒ©ãƒ¬ãƒ¼ã‚¿ãƒ¼ããƒ¼ã®å‡¦ç†
             if self.accessor_letter in self.display_name.upper():
-                # ŠY“–‚Ì•¶Žš‚Ì’¼‘O‚É&‚ð‚Â‚¯‚é
+                # è©²å½“ã®æ–‡å­—ã®ç›´å‰ã«&ã‚’ã¤ã‘ã‚‹
                 idx = self.display_name.upper().find(self.accessor_letter)
                 result = self.display_name[0:idx] + "&" + self.display_name[idx:]
             else:
-                # ––”ö‚É(&O)‚Ì‚æ‚¤‚É‚µ‚Ä‚­‚Á‚Â‚¯‚é
+                # æœ«å°¾ã«(&O)ã®ã‚ˆã†ã«ã—ã¦ãã£ã¤ã‘ã‚‹
                 result = self.display_name + "(&" + self.accessor_letter + ")"
         return result
 
