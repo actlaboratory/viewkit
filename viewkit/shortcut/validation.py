@@ -51,7 +51,7 @@ class ShortcutKeyValidationError(Exception):
 
 
 class ShortcutKeyStringValidator:
-    """ショートカットキーを表す文字列を解析して、利用可能な諸音かっとキーかどうかをチェックする。"""
+    """ショートカットキーを表す文字列を解析して、利用可能なショートカットキーかどうかをチェックする。"""
 
     def __init__(self, has_char_input_on_screen: bool):
         self.modifier_keys = set([
