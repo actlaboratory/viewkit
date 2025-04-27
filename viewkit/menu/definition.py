@@ -2,7 +2,7 @@ from typing import List
 
 
 class MenuItemDefinition:
-    def __init__(self, identifier: str, display_name: str, sub_menu_items: List["MenuItemDefinition"] = []):
+    def __init__(self, identifier: str, display_name: str, sub_menu_items: List["MenuItemDefinition"] = None):
         self.identifier = identifier
         self.display_name = display_name
         self.sub_menu_items = sub_menu_items

@@ -40,10 +40,10 @@ class Menu:
         for top_menu_def in definition.top_menus:
             top_menu = self._add_top_menu(top_menu_def.display_name, top_menu_def.accessor_letter)
             for item_def in top_menu_def.items:
-                if item_def.sub_menu_items is None:
-                    top_menu.add_item(item_def.identifier, item_def.display_name)
-                else:
+                if item_def.sub_menu_items:
                     top_menu.add_item_with_submenu(_submenu_def_to_instance(item_def))
+                else:
+                    top_menu.add_item(item_def.identifier, item_def.display_name)
 
     def _add_top_menu(self, display_name: str, accessor_letter: str) -> TopMenu:
         topmenu = TopMenu(display_name, accessor_letter)
