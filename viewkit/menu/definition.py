@@ -1,10 +1,11 @@
-from typing import List
+from typing import List, Optional
 
 
 class MenuItemDefinition:
-    def __init__(self, identifier: str, display_name: str, accessor_letter: str, sub_menu_items: List["MenuItemDefinition"] = None):
+    def __init__(self, identifier: str, display_name: str, accessor_letter: Optional[str] = None, sub_menu_items: List["MenuItemDefinition"] = None):
         self.identifier = identifier
         self.display_name = display_name
+        validateAccessor(accessor_letter)
         self.accessor_letter = accessor_letter
         self.sub_menu_items = sub_menu_items
 
@@ -24,6 +25,7 @@ class MenuItemDefinition:
 class TopMenuDefinition:
     def __init__(self, display_name: str, accessor_letter: str, items: List[MenuItemDefinition]):
         self.display_name = display_name
+        validateAccessor(accessor_letter)
         self.accessor_letter = accessor_letter
         self.items = items
 
@@ -34,3 +36,7 @@ class MenuDefinition:
             if not isinstance(arg, TopMenuDefinition):
                 raise ValueError("MenuDefinition must be initialized with TopMenuDefinition instances")
         self.top_menus = args
+
+def validateAccessor(accessor_letter):
+    if len(accessor_letter) != 1 or not accessor_letter.isupper():
+        raise ValueError("The accelerator letter must be a single uppercase letter.")
