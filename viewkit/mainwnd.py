@@ -10,6 +10,7 @@ class MainWindow(wx.Frame):
     def __init__(self, app_ctx: ApplicationContext):
         wx.Frame.__init__(self, None, -1, app_ctx.applicationName)
         self.ctx = WindowContext()
+        self.Bind(wx.EVT_MENU, self._receive_menu_command)
 
     def define_features(self) -> List[Feature]:
         """このメソッドをオーバーライドして、アプリケーションが持つ機能を定義します。viewkit.Feature のリストを返す必要があります。"""
@@ -25,7 +26,7 @@ class MainWindow(wx.Frame):
 
     def _assign_refs(self):
         for feature in self.ctx.feature_store.all().values():
-            self.ctx.ref_store.get_ref(feature.identifier)
+            self.ctx.ref_store.getRef(feature.identifier)
 
     def _setup_menu_bar(self):
         if not self.ctx.menu.need_menu_bar():
@@ -34,7 +35,7 @@ class MainWindow(wx.Frame):
         for top_menu in self.ctx.menu.top_menus:
             menu = wx.Menu()
             for item in top_menu.items:
-                ref = self.ctx.ref_store.get_ref(item.identifier)
+                ref = self.ctx.ref_store.getRef(item.identifier)
                 menu_item = self._generate_menu_item(menu, ref, item)
                 menu.Append(menu_item)
             bar.Append(menu, "%s(&%s)" % (top_menu.display_name, top_menu.accessor_letter))
@@ -46,7 +47,21 @@ class MainWindow(wx.Frame):
         elif isinstance(item, MenuItemWithSubmenu):
             submenu = wx.Menu()
             for sub_item in item.sub_menu_items:
-                ref = self.ctx.ref_store.get_ref(sub_item.identifier)
+                ref = self.ctx.ref_store.getRef(sub_item.identifier)
                 menu_item = self._generate_menu_item(submenu, ref, sub_item)
                 submenu.Append(menu_item)
             return wx.MenuItem(menu, ref, item.display_name, subMenu=submenu)
+
+    def _apply_accelerator_table(self):
+        if not self.ctx.menu.need_menu_bar():
+            return
+        self.SetAcceleratorTable(self.ctx.generateAcceleratorTable())
+
+    def _receive_menu_command(self, event):
+        identifier = self.ctx.ref_store.getIdentifier(event.GetId())
+        if identifier is None:
+            return
+        feature = self.ctx.feature_store.getByIdentifier(identifier)
+        if feature is None:
+            return
+        print("%s is executed" % feature)

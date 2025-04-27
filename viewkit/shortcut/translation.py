@@ -7,9 +7,9 @@ class InvalidShortcutKeyError:
 
 
 class ShortcutKey:
-    def __init__(self, modifierFlags, keyCode):
-        self.modifierFlags = modifierFlags
-        self.keyCode = keyCode
+    def __init__(self, modifier_flags, key_code):
+        self.modifier_flags = modifier_flags
+        self.key_code = key_code
 
 
 def str_to_shortcut_key(key: str) -> ShortcutKey:
@@ -33,3 +33,5 @@ def str_to_shortcut_key(key: str) -> ShortcutKey:
     codestr = codestr[len(codestr) - 1]
     if codestr not in str2key.str2key:  # 存在しないキーの指定はエラー
         raise InvalidShortcutKeyError("unrecognized key name: " + codestr)
+    key_code = str2key.str2key[codestr]
+    return ShortcutKey(flags, key_code)

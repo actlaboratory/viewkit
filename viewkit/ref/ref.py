@@ -9,10 +9,16 @@ class RefStore:
         self.refs = {}
         self._refgen = IncrementalNumberGenerator(DEFAULT_REF_START)
 
-    def get_ref(self, identifier: str) -> int:
+    def getRef(self, identifier: str) -> int:
         if identifier in self.refs:
             return self.refs[identifier]
         else:
             ref = self._refgen.next()
             self.refs[identifier] = ref
             return ref
+
+    def getIdentifier(self, ref: int) -> str:
+        for identifier, r in self.refs.items():
+            if r == ref:
+                return identifier
+        return None
