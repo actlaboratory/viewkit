@@ -22,8 +22,8 @@ class TopMenu:
         self.accessor_letter = accessor_letter
         self.items = []
 
-    def add_item(self, identifier: str, display_name: str):
-        self.items.append(MenuItem(identifier, display_name))
+    def add_item(self, identifier: str, display_string: str):
+        self.items.append(MenuItem(identifier, display_string))
 
     def add_item_with_submenu(self, item: MenuItemWithSubmenu):
         self.items.append(item)
@@ -43,7 +43,7 @@ class Menu:
                 if item_def.sub_menu_items:
                     top_menu.add_item_with_submenu(_submenu_def_to_instance(item_def))
                 else:
-                    top_menu.add_item(item_def.identifier, item_def.display_name)
+                    top_menu.add_item(item_def.identifier, item_def.getDisplayString())
 
     def _add_top_menu(self, display_name: str, accessor_letter: str) -> TopMenu:
         topmenu = TopMenu(display_name, accessor_letter)
@@ -57,5 +57,5 @@ class Menu:
 def _submenu_def_to_instance(submenu_def: MenuItemWithSubmenu) -> MenuItemWithSubmenu:
     sub_menu_items = []
     for item in submenu_def.sub_menu_items:
-        sub_menu_items.append(MenuItem(item.identifier, item.display_name))
-    return MenuItemWithSubmenu(submenu_def.identifier, submenu_def.display_name, sub_menu_items)
+        sub_menu_items.append(MenuItem(item.identifier, item.getDisplayString()))
+    return MenuItemWithSubmenu(submenu_def.identifier, submenu_def.getDisplayString(), sub_menu_items)
