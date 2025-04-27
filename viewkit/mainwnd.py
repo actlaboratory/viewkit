@@ -50,3 +50,8 @@ class MainWindow(wx.Frame):
                 menu_item = self._generate_menu_item(submenu, ref, sub_item)
                 submenu.Append(menu_item)
             return wx.MenuItem(menu, ref, item.display_name, subMenu=submenu)
+
+    def _apply_accelerator_table(self):
+        if not self.ctx.menu.need_menu_bar():
+            return
+        self.SetAcceleratorTable(self.ctx.generateAcceleratorTable())
