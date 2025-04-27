@@ -3,7 +3,7 @@ from typing import List
 from viewkit.context.app import ApplicationContext
 from viewkit.context.window import WindowContext
 from viewkit.feature import Feature
-from viewkit.menu import MenuDefinition, MenuItem, MenuItemWithSubmenu
+from viewkit.menu import MenuDefinition, MenuItem, MenuItemWithSubmenu, separator
 from viewkit.creator import ViewCreator
 
 class MainWindow(wx.Frame):
@@ -43,6 +43,9 @@ class MainWindow(wx.Frame):
         for top_menu in self.ctx.menu.top_menus:
             menu = wx.Menu()
             for item in top_menu.items:
+                if item is separator:
+                    menu.AppendSeparator()
+                    continue
                 ref = self.ctx.ref_store.getRef(item.identifier)
                 menu_item = self._generate_menu_item(menu, ref, item)
                 menu.Append(menu_item)

@@ -1,6 +1,6 @@
 import wx
 from typing import Callable, List, Optional
-from .definition import MenuDefinition
+from .definition import MenuDefinition, separator
 
 
 class MenuItem:
@@ -28,6 +28,8 @@ class TopMenu:
     def add_item_with_submenu(self, item: MenuItemWithSubmenu):
         self.items.append(item)
 
+    def addSeparator(self):
+        self.items.append(separator)
 
 class Menu:
     def __init__(self):
@@ -40,6 +42,9 @@ class Menu:
         for top_menu_def in definition.top_menus:
             top_menu = self._add_top_menu(top_menu_def.display_name, top_menu_def.accessor_letter)
             for item_def in top_menu_def.items:
+                if item_def is separator:
+                    top_menu.addSeparator()
+                    continue
                 if item_def.sub_menu_items:
                     top_menu.add_item_with_submenu(_submenu_def_to_instance(item_def))
                 else:

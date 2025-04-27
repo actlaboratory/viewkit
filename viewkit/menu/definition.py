@@ -22,6 +22,8 @@ class MenuItemDefinition:
                 result = self.display_name + "(&" + self.accessor_letter + ")"
         return result
 
+separator = "separator"
+
 class TopMenuDefinition:
     def __init__(self, display_name: str, accessor_letter: str, items: List[MenuItemDefinition]):
         self.display_name = display_name

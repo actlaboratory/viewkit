@@ -23,6 +23,7 @@ class TestWindow(viewkit.MainWindow):
                         viewkit.MenuItemDefinition("file_open_audio", "Audio", "A"),
                         viewkit.MenuItemDefinition("file_open_video", "Video", "V")
                     ]),
+                    viewkit.separator,
                     viewkit.MenuItemDefinition("file_exit", "Exit", "E")
                 ]
             ),

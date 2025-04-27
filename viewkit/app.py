@@ -24,7 +24,7 @@ class App(wx.App):
         self.MainLoop()
 
     def _addPath(self):
-		"""sys.pathと、3.8以降の場合のdll読み込み対象パスにアプリケーション直下を追加"""
+        """sys.pathと、3.8以降の場合のdll読み込み対象パスにアプリケーション直下を追加"""
         if sys.version_info.major>=3 and sys.version_info.minor>=8:
             os.add_dll_directory(os.path.dirname(self.getAppPath()))
         sys.path.append(os.path.dirname(self.getAppPath()))

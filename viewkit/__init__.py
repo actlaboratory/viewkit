@@ -5,7 +5,7 @@ from . import creator
 from .context import ApplicationContext, WindowContext
 from .feature import Feature, FeatureStore
 from .mainwnd import MainWindow
-from .menu import TopMenuDefinition, MenuItemDefinition, MenuDefinition
+from .menu import TopMenuDefinition, MenuItemDefinition, MenuDefinition, separator
 
 
 def run(ctx, first_window):
