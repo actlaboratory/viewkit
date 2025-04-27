@@ -16,5 +16,6 @@ class App(wx.App):
         wnd._assign_refs()
         wnd.ctx.menu.setup(wnd.define_menu())
         wnd._setup_menu_bar()
+        wnd._apply_accelerator_table()
         wnd.Show()
         self.MainLoop()
