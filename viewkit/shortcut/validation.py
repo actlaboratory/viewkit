@@ -93,7 +93,7 @@ class ShortcutKeyStringValidator:
 
     def validate(self, key_string: str):
         if not key_string:
-            raise ShortcutKeyEmptyError("Shortcut key string is empty")
+            raise ShortcutKeyValidationError(key_string, VALIDATION_ERROR_EMPTY)
         keys = key_string.upper().split("+")
         is_modifier = False
         is_shift = False
