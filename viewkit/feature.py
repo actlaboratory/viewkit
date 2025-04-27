@@ -8,8 +8,9 @@ class Feature:
         self.identifier = identifier
         self.display_name = display_name
         if shortcut_key is not None:
-            self.shortcutKey = str_to_shortcut_key(shortcut_key)
-
+            self.shortcut_key = str_to_shortcut_key(shortcut_key)
+        else:
+            self.shortcut_key = None
 
 class FeatureStore:
     def __init__(self):
