@@ -305,7 +305,7 @@ str2key.update(
     **str2UnknownKey,
     **str2FunctionKey,
     **str2InputControlKey,
-    **str2StandaloneKey,
+    **str2GenericKey,
     **str2SpecialKey,
     **str2CharacterKey,
     **str2categoryKey,

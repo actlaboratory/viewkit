@@ -1,4 +1,3 @@
-from typing import boolean
 from .str2key import *
 
 # 単独のキーの組み合わせのバリデーション
@@ -6,7 +5,7 @@ validation_dict = {
     # 絶対に設定できないキーの組み合わせ
     "always_forbidden": set([
         "CTRL+ESCAPE",  # スタートメニュー
-        "CTRL+SHIFT+ESCAPE"  # タスクマネージャ
+        "CTRL+SHIFT+ESCAPE",  # タスクマネージャ
         "CTRL+WINDOWS+RETURN",  # ナレーターの起動と終了
         "ALT+SHIFT+PRINTSCREEN",  # ハイコントラストの切り替え
         "ALT+ESCAPE",  # 最前面ウィンドウの最小化
@@ -54,7 +53,7 @@ class ShortcutKeyValidationError(Exception):
 class ShortcutKeyStringValidator:
     """ショートカットキーを表す文字列を解析して、利用可能な諸音かっとキーかどうかをチェックする。"""
 
-    def __init__(self, has_char_input_on_screen: boolean):
+    def __init__(self, has_char_input_on_screen: bool):
         self.modifier_keys = set([
             "CTRL",
             "ALT",
@@ -64,7 +63,7 @@ class ShortcutKeyStringValidator:
         self.allowed_with_modifier = set()
         self.forbidden_combinations = []
         # 初期設定
-        self.allowed_standalone |= set(str2FunctionKey.keys() + str2SpecialKey.keys())
+        self.allowed_standalone |= set(list(str2FunctionKey.keys()) + list(str2SpecialKey.keys()))
         if has_char_input_on_screen:
             # 単独で文字入力の制御に利用されるので修飾キー必須
             self.allowed_with_modifier |= str2InputControlKey.keys()
@@ -80,7 +79,6 @@ class ShortcutKeyStringValidator:
                 self._add_forbidden_combination(elem)
             # end add
         # end for
-        return self
 
     def _add_forbidden_combination(self, combination_string):
         combinations = combination_string.split("+")
