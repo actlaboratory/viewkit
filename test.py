@@ -21,16 +21,16 @@ class TestWindow(viewkit.MainWindow):
         return viewkit.MenuDefinition(
             viewkit.TopMenuDefinition(
                 "File", "F", [
-                    viewkit.MenuItemDefinition(None, "&Open", [
-                        viewkit.MenuItemDefinition("file_open_audio", "&Audio"),
-                        viewkit.MenuItemDefinition("file_open_video", "&Video")
+                    viewkit.MenuItemDefinition(None, "Open", "O", [
+                        viewkit.MenuItemDefinition("file_open_audio", "Audio", "A"),
+                        viewkit.MenuItemDefinition("file_open_video", "Video", "V")
                     ]),
-                    viewkit.MenuItemDefinition("file_exit", "&Exit")
+                    viewkit.MenuItemDefinition("file_exit", "Exit", "E")
                 ]
             ),
             viewkit.TopMenuDefinition(
                 "Help", "H", [
-                    viewkit.MenuItemDefinition("help_about", "&About")
+                    viewkit.MenuItemDefinition("help_about", "About", "A")
                 ]
             )
         )
