@@ -1,5 +1,5 @@
 from typing import Optional, Callable
-from viewkit.shortcut import strToShortcutKey, ShortcutKeyStringValidator
+from viewkit.shortcut import strToShortcutKey, separateShortcutKeyString, ShortcutKeyStringValidator
 from viewkit.settings.shortcut import ShortcutKeySettings, RawEntry, RemovedEntry, ParsedFileInput
 from copy import copy
 
@@ -9,21 +9,21 @@ class Feature:
         self.identifier = identifier
         self.display_name = display_name
         if shortcut_key is not None:
-            self.shortcut_key = strToShortcutKey(shortcut_key)
-            self.shortcut_key_str = shortcut_key
+            separated_keys = separateShortcutKeyString(shortcut_key)
+            self.shortcut_keys = [strToShortcutKey(key) for key in separated_keys]
         else:
-            self.shortcut_key = None
-            self.shortcut_key_str = None
+            self.shortcut_keys = []
 
     def __str__(self):
-        return f"Feature(identifier={self.identifier}, display_name={self.display_name}, shortcut_key={self.shortcut_key_str})"
+        shortcut_keys_str = [str(key) for key in self.shortcut_keys] if self.shortcut_keys else []
+        return f"Feature(identifier={self.identifier}, display_name={self.display_name}, shortcut_keys={shortcut_keys_str})"
 
     def copy(self):
         """Featureのコピーを返す"""
         return Feature(
             identifier=self.identifier,
             display_name=self.display_name,
-            shortcut_key=self.shortcut_key_str,
+            shortcut_key=str(self.shortcut_keys[0]) if self.shortcut_keys else None,
         )
 
 
@@ -52,12 +52,9 @@ class FeatureStore:
         # 無効なエントリを削除
         removed_entries = settings.removeInvalidEntries(validator)
         # featuresに上書きしていく
-        # todo: 複数に対応する。とりあえず [0] を使う
         for e in settings.entries:
             feature = self.getByIdentifier(e.feature_identifier)
             if feature is None:
                 continue
-            if e.shortcut_key_string is not None:
-                feature.shortcut_key_str = e.shortcut_key_string
             if e.shortcut_keys:
-                feature.shortcut_key = e.shortcut_keys[0]
+                feature.shortcut_keys = e.shortcut_keys
