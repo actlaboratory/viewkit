@@ -21,6 +21,7 @@ class Entry:
     def __init__(self, raw_entry: RawEntry):
         """ショートカットキーの設定を表すエントリ"""
         self.feature_identifier = raw_entry.feature_identifier
+        self.shortcut_keys = []
         temp_shortcut_keys = []
         # 文字列から ShortcutKey への返還を試みる
         if not raw_entry.shortcut_key_string:
@@ -50,18 +51,18 @@ class Entry:
 
 
 def _listDuplicateIdentifierEntryKeys(entries: list[Entry]) -> list[str]:
-    """リスト内のエントリの中で、ショートカットキーが重複しているものを返す"""
+    """リスト内のエントリの中で、機能識別子が重複しているものを返す"""
     key_count = {}
     for entry in entries:
-        if entry.shortcut_key_string not in key_count:
-            key_count[entry.shortcut_key_string] = 0
-        key_count[entry.shortcut_key_string] += 1
+        if entry.feature_identifier not in key_count:
+            key_count[entry.feature_identifier] = 0
+        key_count[entry.feature_identifier] += 1
     return [key for key, count in key_count.items() if count > 1]
 
 
 REMOVED_ENTRY_REASON_INVALID_NOTATION = "invalid_notation"
 REMOVED_ENTRY_REASON_DUPLICATE_IDENTIFIER_IN_SETTINGS = "duplicate_identifier_in_settings"
-REMOVED_ENTRY_REASON_DUPLICATE_SHORTCUT_IN_SETTINGS = "duplicate_shortcut_in_settings"
+REMOVED_ENTRY_REASON_DUPLICATE_KEYSTROKE_IN_SETTINGS = "duplicate_shortcut_in_settings"
 REMOVED_ENTRY_REASON_DUPLICATE_AFTER_APPLY = "duplicate_after_apply"
 
 
@@ -102,7 +103,7 @@ class ShortcutKeySettings:
                     removed_entries.append(e)
                     break
         self.entries = [e for e in self.entries if e not in removed_entries]
-        return [RemovedEntry(REMOVED_ENTRY_REASON_DUPLICATE_SHORTCUT_IN_SETTINGS, entry) for entry in removed_entries]
+        return [RemovedEntry(REMOVED_ENTRY_REASON_DUPLICATE_KEYSTROKE_IN_SETTINGS, entry) for entry in removed_entries]
 
     def removeInvalidEntries(self, validator) -> list[RemovedEntry]:
         """ショートカットキーの文字列が無効なエントリを削除する。削除したエントリの識別子をリストにして返す。"""

@@ -5,7 +5,7 @@ from copy import copy
 
 
 class Feature:
-    def __init__(self, identifier: str, display_name: str, shortcut_key: Optional[str], action: Optional[Callable]):
+    def __init__(self, identifier: str, display_name: str, shortcut_key: Optional[str]):
         self.identifier = identifier
         self.display_name = display_name
         if shortcut_key is not None:
@@ -42,6 +42,7 @@ class FeatureStore:
 
     def applyShortcutKeySettings(self, input: ParsedFileInput) -> list[RemovedEntry]:
         """ショートカットキーの設定を適用し、無効なエントリを削除する。"""
+        removed_entries = []
         settings = ShortcutKeySettings(input.version, input.raw_entries)
         settings.generateEntries()
         validator = ShortcutKeyStringValidator(has_char_input_on_screen=True)
@@ -58,3 +59,4 @@ class FeatureStore:
                 continue
             if e.shortcut_keys:
                 feature.shortcut_keys = e.shortcut_keys
+        return removed_entries
