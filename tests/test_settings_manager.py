@@ -227,16 +227,16 @@ class TestSettingsManager(unittest.TestCase):
             }
         }
         self.settings.changeSetting('custom.feature', nested_data)
-        
+
         # ネスト取得のテスト（getSettingで統合）
         self.assertEqual(self.settings.getSetting('custom.feature.ui.theme'), 'dark')
         self.assertEqual(self.settings.getSetting('custom.feature.ui.language'), 'ja')
         self.assertEqual(self.settings.getSetting('custom.feature.api.timeout'), 30)
-        
+
         # 存在しないパスのテスト
         self.assertIsNone(self.settings.getSetting('custom.feature.nonexistent'))
         self.assertEqual(self.settings.getSetting('custom.feature.nonexistent', 'default'), 'default')
-        
+
         # トップレベルの取得テスト（従来通り）
         self.assertEqual(self.settings.getSetting('test_str'), '')
         self.assertEqual(self.settings.getSetting('test_number'), 0)
@@ -247,15 +247,15 @@ class TestSettingsManager(unittest.TestCase):
         self.settings.registerCustomField('feature')
         initial_data = {'ui': {'theme': 'light'}}
         self.settings.changeSetting('custom.feature', initial_data)
-        
+
         # ネストした値を変更（changeSettingで統合）
         self.settings.changeSetting('custom.feature.ui.theme', 'dark')
         self.assertEqual(self.settings.getSetting('custom.feature.ui.theme'), 'dark')
-        
+
         # 新しいネストパスを作成
         self.settings.changeSetting('custom.feature.api.timeout', 60)
         self.assertEqual(self.settings.getSetting('custom.feature.api.timeout'), 60)
-        
+
         # 深いネストの作成
         self.settings.changeSetting('custom.feature.deep.very.nested.value', 'test')
         self.assertEqual(self.settings.getSetting('custom.feature.deep.very.nested.value'), 'test')
@@ -265,7 +265,7 @@ class TestSettingsManager(unittest.TestCase):
         # 無効な値でバリデーションエラーを発生させる
         with self.assertRaises(ValueError):
             self.settings.changeSetting('test_str', 123)  # 文字列フィールドに数値
-        
+
         with self.assertRaises(ValueError):
             self.settings.changeSetting('test_range', 200)  # 範囲外の値
 
@@ -273,7 +273,7 @@ class TestSettingsManager(unittest.TestCase):
         """ネストパスの競合エラーテスト（changeSetting統合版）"""
         # 文字列値が設定されている場所に辞書を作ろうとする
         self.settings.changeSetting('test_str', 'string_value')
-        
+
         with self.assertRaises(ValueError):
             self.settings.changeSetting('test_str.nested', 'value')
 

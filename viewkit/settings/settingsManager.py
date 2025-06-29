@@ -6,7 +6,7 @@ from cerberus import Validator
 
 class SettingsManager:
     SETTING_SEPARATOR = '.'
-    
+
     def __init__(self, filename: str):
         self.filename = filename
         self.custom_fields = {}
@@ -68,13 +68,13 @@ class SettingsManager:
         if self.SETTING_SEPARATOR in key:
             keys = key.split(self.SETTING_SEPARATOR)
             current = self.data
-            
+
             for k in keys:
                 if isinstance(current, dict) and k in current:
                     current = current[k]
                 else:
                     return default
-            
+
             return current
         else:
             return self.data.get(key, default)
@@ -94,40 +94,40 @@ class SettingsManager:
         """区切り文字で区切られたパスで設定値を探索して取得する"""
         keys = path.split(self.SETTING_SEPARATOR)
         current = self.data
-        
+
         for key in keys:
             if isinstance(current, dict) and key in current:
                 current = current[key]
             else:
                 return default
-        
+
         return current
 
     def changeNestedSetting(self, path: str, value: Any):
         """区切り文字で区切られたパスで設定値を変更する（バリデーション付き）"""
         keys = path.split(self.SETTING_SEPARATOR)
-        
+
         # バリデーション用に一時的にデータを作成
         temp_data = self.data.copy()
         current = temp_data
-        
+
         # パスをたどって設定値を変更
         for i, key in enumerate(keys[:-1]):
             if key not in current:
                 current[key] = {}
             elif not isinstance(current[key], dict):
-                raise ValueError(f"Path '{self.SETTING_SEPARATOR.join(keys[:i+1])}' is not a dictionary")
+                raise ValueError(f"Path '{self.SETTING_SEPARATOR.join(keys[:i + 1])}' is not a dictionary")
             current = current[key]
-        
+
         # 最終キーに値を設定
         final_key = keys[-1]
         current[final_key] = value
-        
+
         # バリデーション実行
         validator = Validator(self.schema)
         if not validator.validate(temp_data):
             raise ValueError(f"Setting validation failed: {validator.errors}")
-        
+
         # バリデーション成功時のみ実際のデータを更新
         self.data = validator.normalized(temp_data)
 
@@ -135,13 +135,13 @@ class SettingsManager:
         """設定値を変更する（ネストパス・カスタム設定対応）"""
         if self.SETTING_SEPARATOR in key:
             keys = key.split(self.SETTING_SEPARATOR)
-            
+
             # カスタム設定の場合は専用のバリデーションロジック
             if keys[0] == 'custom' and len(keys) >= 2:
                 field_name = keys[1]
                 if field_name not in self.custom_fields:
                     raise ValueError(f"Custom field '{field_name}' is not registered")
-                
+
                 # カスタムフィールドの値全体を設定する場合
                 if len(keys) == 2:
                     # バリデーション（スキーマが空でない場合のみ）
@@ -149,34 +149,34 @@ class SettingsManager:
                         field_validator = Validator(self.custom_fields[field_name], allow_unknown=True)
                         if not field_validator.validate(value):
                             raise ValueError(f"Custom field '{field_name}' validation failed: {field_validator.errors}")
-                    
+
                     if 'custom' not in self.data:
                         self.data['custom'] = {}
                     self.data['custom'][field_name] = value
                     return
-            
+
             # 通常のネストパス処理
             # バリデーション用に一時的にデータを作成
             temp_data = self.data.copy()
             current = temp_data
-            
+
             # パスをたどって設定値を変更
             for i, k in enumerate(keys[:-1]):
                 if k not in current:
                     current[k] = {}
                 elif not isinstance(current[k], dict):
-                    raise ValueError(f"Path '{self.SETTING_SEPARATOR.join(keys[:i+1])}' is not a dictionary")
+                    raise ValueError(f"Path '{self.SETTING_SEPARATOR.join(keys[:i + 1])}' is not a dictionary")
                 current = current[k]
-            
+
             # 最終キーに値を設定
             final_key = keys[-1]
             current[final_key] = value
-            
+
             # バリデーション実行
             validator = Validator(self.schema)
             if not validator.validate(temp_data):
                 raise ValueError(f"Setting validation failed: {validator.errors}")
-            
+
             # バリデーション成功時のみ実際のデータを更新
             self.data = validator.normalized(temp_data)
         else:
