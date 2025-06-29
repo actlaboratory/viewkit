@@ -10,20 +10,19 @@ class Feature:
         self.display_name = display_name
         if shortcut_key is not None:
             self.shortcut_key = strToShortcutKey(shortcut_key)
-            self.shortcut_key_str = shortcut_key
         else:
             self.shortcut_key = None
-            self.shortcut_key_str = None
 
     def __str__(self):
-        return f"Feature(identifier={self.identifier}, display_name={self.display_name}, shortcut_key={self.shortcut_key_str})"
+        shortcut_key_str = str(self.shortcut_key) if self.shortcut_key else None
+        return f"Feature(identifier={self.identifier}, display_name={self.display_name}, shortcut_key={shortcut_key_str})"
 
     def copy(self):
         """Featureのコピーを返す"""
         return Feature(
             identifier=self.identifier,
             display_name=self.display_name,
-            shortcut_key=self.shortcut_key_str,
+            shortcut_key=str(self.shortcut_key) if self.shortcut_key else None,
         )
 
 
@@ -58,6 +57,6 @@ class FeatureStore:
             if feature is None:
                 continue
             if e.shortcut_key_string is not None:
-                feature.shortcut_key_str = e.shortcut_key_string
+                feature.shortcut_key = strToShortcutKey(e.shortcut_key_string)
             if e.shortcut_keys:
                 feature.shortcut_key = e.shortcut_keys[0]
