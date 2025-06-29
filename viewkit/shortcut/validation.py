@@ -60,6 +60,8 @@ class ShortcutKeyStringValidator:
         self.forbidden_combinations = []
         # 初期設定
         self.allowed_standalone |= set(list(str2FunctionKey.keys()) + list(str2SpecialKey.keys()))
+        self.allowed_with_modifier |= set(list(str2CharacterKey.keys()))
+
         if has_char_input_on_screen:
             # 単独で文字入力の制御に利用されるので修飾キー必須
             self.allowed_with_modifier |= str2InputControlKey.keys()
@@ -67,7 +69,7 @@ class ShortcutKeyStringValidator:
         else:
             # 単独で文字入力の制御に利用されるが、それがないため単独利用可能
             self.allowed_standalone |= str2InputControlKey.keys()
-            self.allowed_standalone |= str2GenericControlKey.keys()
+            self.allowed_standalone |= str2GenericKey.keys()
         # 禁止されているパターンを全部追加
         for elem in validation_dict["always_forbidden"]:
             self._add_forbidden_combination(elem)

@@ -11,7 +11,7 @@ class TestShortcutValidator(unittest.TestCase):
             if success:
                 self.fail(f"Test case {name} failed: expected success but got error: {e}")
             else:
-                self.assertEqual(e.reason, error_reason, f"Test case {name} failed: {e.reason}")
+                self.assertEqual(error_reason, e.reason, f"Test case {name} failed: {e.reason}")
 
     def test_initializeWithCharInputOff(self):
         viewkit.shortcut.ShortcutKeyStringValidator(False)
@@ -40,13 +40,13 @@ class TestShortcutValidator(unittest.TestCase):
         self._testcase(validator, "input control key", "PAGEUP", False)
 
     def _singleKeyCommonCase(self, validator):
-        self._testcase(validator, "unknown key", "CAT", False)
-        self._testcase(validator, "mouse button", "LBUTTON", False)
+        self._testcase(validator, "unknown key", "CAT", False, viewkit.shortcut.VALIDATION_ERROR_FORBIDDEN)
+        self._testcase(validator, "mouse button", "LBUTTON", False, viewkit.shortcut.VALIDATION_ERROR_FORBIDDEN)
 
-        self._testcase(validator, "modifier key", "CTRL", False)
-        self._testcase(validator, "modifier key", "ALT", False)
-        self._testcase(validator, "modifier key", "SHIFT", False)
-        self._testcase(validator, "modifier key", "WINDOWS", False)
+        self._testcase(validator, "modifier key", "CTRL", False, viewkit.shortcut.VALIDATION_ERROR_MODIFIER_ONLY)
+        self._testcase(validator, "modifier key", "ALT", False, viewkit.shortcut.VALIDATION_ERROR_MODIFIER_ONLY)
+        self._testcase(validator, "modifier key", "SHIFT", False, viewkit.shortcut.VALIDATION_ERROR_MODIFIER_ONLY)
+        self._testcase(validator, "modifier key", "WINDOWS", False, viewkit.shortcut.VALIDATION_ERROR_MODIFIER_ONLY)
 
         self._testcase(validator, "function key", "F1", True)
         self._testcase(validator, "function key", "F24", True)
@@ -66,16 +66,16 @@ class TestShortcutValidator(unittest.TestCase):
         self._testcase(validator, "media key", "VOLUME_UP",True)
         self._testcase(validator, "special key", "SPECIAL20",True)
 
-        self._testcase(validator, "alphabet key", "A",False)
-        self._testcase(validator, "alphabet key", "Z",False)
-        self._testcase(validator, "number key", "0",False)
-        self._testcase(validator, "number key", "9",False)
-        self._testcase(validator, "symbol key", ":",False)
-        self._testcase(validator, "symbol key", "@",False)
-        self._testcase(validator, "symbol key", "/",False)
+        self._testcase(validator, "alphabet key", "A",False, viewkit.shortcut.VALIDATION_ERROR_NEEDS_MODIFIER)
+        self._testcase(validator, "alphabet key", "Z",False, viewkit.shortcut.VALIDATION_ERROR_NEEDS_MODIFIER)
+        self._testcase(validator, "number key", "0",False, viewkit.shortcut.VALIDATION_ERROR_NEEDS_MODIFIER)
+        self._testcase(validator, "number key", "9",False, viewkit.shortcut.VALIDATION_ERROR_NEEDS_MODIFIER)
+        self._testcase(validator, "symbol key", ":",False, viewkit.shortcut.VALIDATION_ERROR_NEEDS_MODIFIER)
+        self._testcase(validator, "symbol key", "@",False, viewkit.shortcut.VALIDATION_ERROR_NEEDS_MODIFIER)
+        self._testcase(validator, "symbol key", "/",False, viewkit.shortcut.VALIDATION_ERROR_NEEDS_MODIFIER)
 
-        self._testcase(validator, "numpad number key", "NUMPAD0",False)
-        self._testcase(validator, "numpad number key", "NUMPAD9",False)
+        self._testcase(validator, "numpad number key", "NUMPAD0",False, viewkit.shortcut.VALIDATION_ERROR_NEEDS_MODIFIER)
+        self._testcase(validator, "numpad number key", "NUMPAD9",False, viewkit.shortcut.VALIDATION_ERROR_NEEDS_MODIFIER)
 
     def test_multiKeyValidCombinations(self):
         validator = viewkit.shortcut.ShortcutKeyStringValidator(False)
@@ -148,7 +148,7 @@ class TestShortcutValidator(unittest.TestCase):
         # マウスボタン
         self._testcase(validator, "mouse button", "LBUTTON", False, viewkit.shortcut.VALIDATION_ERROR_FORBIDDEN)
         # Windowsキー（修飾キーだが許可されていない）
-        self._testcase(validator, "windows key", "WINDOWS", False, viewkit.shortcut.VALIDATION_ERROR_FORBIDDEN)
+        self._testcase(validator, "windows key", "WINDOWS", False, viewkit.shortcut.VALIDATION_ERROR_MODIFIER_ONLY)
 
 
 
