@@ -31,6 +31,7 @@ class TopMenu:
     def addSeparator(self):
         self.items.append(separator)
 
+
 class Menu:
     def __init__(self):
         self.top_menus = []

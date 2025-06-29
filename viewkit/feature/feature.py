@@ -26,6 +26,7 @@ class Feature:
             shortcut_key=self.shortcut_key_str,
         )
 
+
 class FeatureStore:
     def __init__(self):
         self.features = {}
@@ -39,7 +40,7 @@ class FeatureStore:
     def getByIdentifier(self, identifier: str) -> Optional[Feature]:
         return self.features.get(identifier, None)
 
-    def applyShortcutKeySettings(self, input:ParsedFileInput) -> list[RemovedEntry]:
+    def applyShortcutKeySettings(self, input: ParsedFileInput) -> list[RemovedEntry]:
         """ショートカットキーの設定を適用し、無効なエントリを削除する。"""
         settings = ShortcutKeySettings(input.version, input.raw_entries)
         settings.generateEntries()
@@ -54,7 +55,8 @@ class FeatureStore:
         # todo: 複数に対応する。とりあえず [0] を使う
         for e in settings.entries:
             feature = self.getByIdentifier(e.feature_identifier)
-            if feature is None: continue
+            if feature is None:
+                continue
             if e.shortcut_key_string is not None:
                 feature.shortcut_key_str = e.shortcut_key_string
             if e.shortcut_keys:

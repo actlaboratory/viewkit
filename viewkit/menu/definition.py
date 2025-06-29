@@ -22,7 +22,9 @@ class MenuItemDefinition:
                 result = self.display_name + "(&" + self.accessor_letter + ")"
         return result
 
+
 separator = "separator"
+
 
 class TopMenuDefinition:
     def __init__(self, display_name: str, accessor_letter: str, items: List[MenuItemDefinition]):
@@ -38,6 +40,7 @@ class MenuDefinition:
             if not isinstance(arg, TopMenuDefinition):
                 raise ValueError("MenuDefinition must be initialized with TopMenuDefinition instances")
         self.top_menus = args
+
 
 def validateAccessor(accessor_letter):
     if len(accessor_letter) != 1 or not accessor_letter.isupper():

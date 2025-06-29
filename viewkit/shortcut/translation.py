@@ -6,15 +6,16 @@ class ModifierKeyOnly(Exception):
     """ショートカットキーの文字列が修飾キーのみで構成されている場合に発生するエラー"""
     pass
 
+
 class UnrecognizedKeyString(Exception):
     """ショートカットキーの文字列が認識できない場合に発生するエラー"""
     pass
+
 
 class ShortcutKey:
     def __init__(self, modifier_flags, key_code):
         self.modifier_flags = modifier_flags
         self.key_code = key_code
-
 
     def isSame(self, other: 'ShortcutKey') -> bool:
         """他のショートカットキーと同じかどうかを比較する"""
@@ -48,6 +49,7 @@ def strToShortcutKey(key: str) -> ShortcutKey:
 
 
 SHORTCUT_KEY_SEPARATOR = "/"
+
 
 def separateShortcutKeyString(key_string: str) -> list[str]:
     """ショートカットキーの文字列を分割する。"""

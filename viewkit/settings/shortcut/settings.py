@@ -4,19 +4,21 @@ from viewkit.shortcut.translation import strToShortcutKey, separateShortcutKeySt
 
 
 class RawEntry:
-    def __init__(self, feature_identifier:str, shortcut_key_string:str):
+    def __init__(self, feature_identifier: str, shortcut_key_string: str):
         self.feature_identifier = feature_identifier
         self.shortcut_key_string = shortcut_key_string
 
 
 class ParsedFileInput:
     """設定ファイルのパース結果を表すクラス"""
-    def __init__(self, version:str, raw_entries:list[RawEntry]):
+
+    def __init__(self, version: str, raw_entries: list[RawEntry]):
         self.version = version
         self.raw_entries = raw_entries
 
+
 class Entry:
-    def __init__(self, raw_entry:RawEntry):
+    def __init__(self, raw_entry: RawEntry):
         """ショートカットキーの設定を表すエントリ"""
         self.feature_identifier = raw_entry.feature_identifier
         temp_shortcut_keys = []
@@ -60,19 +62,20 @@ def _listDuplicateIdentifierEntryKeys(entries: list[Entry]) -> list[str]:
 REMOVED_ENTRY_REASON_INVALID_NOTATION = "invalid_notation"
 REMOVED_ENTRY_REASON_DUPLICATE_IDENTIFIER_IN_SETTINGS = "duplicate_identifier_in_settings"
 REMOVED_ENTRY_REASON_DUPLICATE_SHORTCUT_IN_SETTINGS = "duplicate_shortcut_in_settings"
-REMOVED_ENTRY_REASON_DUPLICATE_AFTER_APPLY = "duplicate_after_apply" 
+REMOVED_ENTRY_REASON_DUPLICATE_AFTER_APPLY = "duplicate_after_apply"
 
 
 class RemovedEntry:
     """何らかのエラーで使用できず、削除されたエントリーを表すクラス。"""
-    def __init__(self, reason: str, entry: Entry, additionalInfo:str = ""):
+
+    def __init__(self, reason: str, entry: Entry, additionalInfo: str = ""):
         self.reason = reason
         self.entry = entry
         self.additionalInfo = additionalInfo
 
 
 class ShortcutKeySettings:
-    def __init__(self, version:str, raw_entries: list[RawEntry]):
+    def __init__(self, version: str, raw_entries: list[RawEntry]):
         """ショートカットキーの設定を表すクラス。"""
         self.version = version
         self.raw_entries = raw_entries
