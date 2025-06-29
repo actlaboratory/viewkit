@@ -14,13 +14,13 @@ class WindowContext:
         """すべての feature の wx.AcceleratorTable を作成する"""
         entries = []
         for feature in self.feature_store.all().values():
-            if feature.shortcut_key is not None:
+            for shortcut_key in feature.shortcut_keys:
                 entries.append(
                     wx.AcceleratorEntry(
-                        feature.shortcut_key.modifier_flags,
-                        feature.shortcut_key.key_code,
+                        shortcut_key.modifier_flags,
+                        shortcut_key.key_code,
                         self.ref_store.getRef(
                             feature.identifier)))
-            # end shortcut key exists
+            # end for shortcut_key
         # end for feature
         return wx.AcceleratorTable(entries)
