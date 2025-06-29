@@ -23,9 +23,9 @@ class Entry:
         self.feature_identifier = raw_entry.feature_identifier
         temp_shortcut_keys = []
         # 文字列から ShortcutKey への返還を試みる
-        if not self.shortcut_key_string:
+        if not raw_entry.shortcut_key_string:
             return
-        separated = separateShortcutKeyString(self.shortcut_key_string)
+        separated = separateShortcutKeyString(raw_entry.shortcut_key_string)
         for key in separated:
             temp_shortcut_keys.append(strToShortcutKey(key))
         # 重複をチェックしながらリストに入れていく
