@@ -87,14 +87,14 @@ class TestSettingsManager(unittest.TestCase):
             'enabled': {'type': 'boolean', 'default': True},
             'name': {'type': 'string', 'default': 'default_name'}
         }
-        self.settings.register_custom_field('feature', schema)
+        self.settings.registerCustomField('feature', schema)
         self.assertIn('feature', self.settings.custom_fields)
         self.assertEqual(self.settings.custom_fields['feature'], schema)
 
     def test_set_custom_setting_unregistered_field(self):
         """未登録のカスタムフィールドへの設定テスト"""
         with self.assertRaises(ValueError):
-            self.settings.set_custom_setting('unregistered', {'value': 'test'})
+            self.settings.changeSetting('custom.unregistered', {'value': 'test'})
 
     def test_set_custom_setting_valid(self):
         """有効なカスタム設定のテスト"""
@@ -102,10 +102,10 @@ class TestSettingsManager(unittest.TestCase):
             'enabled': {'type': 'boolean', 'default': True},
             'count': {'type': 'number', 'default': 0}
         }
-        self.settings.register_custom_field('feature', schema)
+        self.settings.registerCustomField('feature', schema)
 
         custom_data = {'enabled': False, 'count': 10}
-        self.settings.set_custom_setting('feature', custom_data)
+        self.settings.changeSetting('custom.feature', custom_data)
 
         result = self.settings.get_custom_setting('feature')
         self.assertEqual(result, custom_data)
@@ -115,10 +115,10 @@ class TestSettingsManager(unittest.TestCase):
         schema = {
             'enabled': {'type': 'boolean', 'default': True}
         }
-        self.settings.register_custom_field('feature', schema)
+        self.settings.registerCustomField('feature', schema)
 
         with self.assertRaises(ValueError):
-            self.settings.set_custom_setting('feature', {'enabled': 'not_boolean'})
+            self.settings.changeSetting('custom.feature', {'enabled': 'not_boolean'})
 
     def test_get_custom_setting_nonexistent_field(self):
         """存在しないカスタムフィールドの取得テスト"""
@@ -129,7 +129,7 @@ class TestSettingsManager(unittest.TestCase):
         """キー指定でのカスタム設定取得テスト"""
         self.settings.register_custom_field('feature')
         custom_data = {'key1': 'value1', 'key2': 'value2'}
-        self.settings.set_custom_setting('feature', custom_data)
+        self.settings.changeSetting('custom.feature', custom_data)
 
         result = self.settings.get_custom_setting('feature', 'key1')
         self.assertEqual(result, 'value1')
@@ -145,7 +145,7 @@ class TestSettingsManager(unittest.TestCase):
 
         # カスタム設定を追加
         self.settings.register_custom_field('feature')
-        self.settings.set_custom_setting('feature', {'option': 'custom_value'})
+        self.settings.changeSetting('custom.feature', {'option': 'custom_value'})
 
         # 保存
         self.settings.save()
@@ -210,7 +210,72 @@ class TestSettingsManager(unittest.TestCase):
 
         # 新しいインスタンスで正しく読み込めることを確認
         new_settings = SettingsManager(self.test_file)
-        self.assertEqual(new_settings.get_setting('test_str'), japanese_text)
+        self.assertEqual(new_settings.getSetting('test_str'), japanese_text)
+
+    def test_get_nested_setting(self):
+        """ネストした設定値の取得テスト（getSetting統合版）"""
+        # カスタムフィールドに階層データを設定
+        self.settings.registerCustomField('feature')
+        nested_data = {
+            'ui': {
+                'theme': 'dark',
+                'language': 'ja'
+            },
+            'api': {
+                'timeout': 30,
+                'retries': 3
+            }
+        }
+        self.settings.changeSetting('custom.feature', nested_data)
+        
+        # ネスト取得のテスト（getSettingで統合）
+        self.assertEqual(self.settings.getSetting('custom.feature.ui.theme'), 'dark')
+        self.assertEqual(self.settings.getSetting('custom.feature.ui.language'), 'ja')
+        self.assertEqual(self.settings.getSetting('custom.feature.api.timeout'), 30)
+        
+        # 存在しないパスのテスト
+        self.assertIsNone(self.settings.getSetting('custom.feature.nonexistent'))
+        self.assertEqual(self.settings.getSetting('custom.feature.nonexistent', 'default'), 'default')
+        
+        # トップレベルの取得テスト（従来通り）
+        self.assertEqual(self.settings.getSetting('test_str'), '')
+        self.assertEqual(self.settings.getSetting('test_number'), 0)
+
+    def test_change_nested_setting(self):
+        """ネストした設定値の変更テスト（changeSetting統合版）"""
+        # 既存の構造に値を設定
+        self.settings.registerCustomField('feature')
+        initial_data = {'ui': {'theme': 'light'}}
+        self.settings.changeSetting('custom.feature', initial_data)
+        
+        # ネストした値を変更（changeSettingで統合）
+        self.settings.changeSetting('custom.feature.ui.theme', 'dark')
+        self.assertEqual(self.settings.getSetting('custom.feature.ui.theme'), 'dark')
+        
+        # 新しいネストパスを作成
+        self.settings.changeSetting('custom.feature.api.timeout', 60)
+        self.assertEqual(self.settings.getSetting('custom.feature.api.timeout'), 60)
+        
+        # 深いネストの作成
+        self.settings.changeSetting('custom.feature.deep.very.nested.value', 'test')
+        self.assertEqual(self.settings.getSetting('custom.feature.deep.very.nested.value'), 'test')
+
+    def test_change_nested_setting_validation_error(self):
+        """ネストした設定値変更時のバリデーションエラーテスト（changeSetting統合版）"""
+        # 無効な値でバリデーションエラーを発生させる
+        with self.assertRaises(ValueError):
+            self.settings.changeSetting('test_str', 123)  # 文字列フィールドに数値
+        
+        with self.assertRaises(ValueError):
+            self.settings.changeSetting('test_range', 200)  # 範囲外の値
+
+    def test_change_nested_setting_path_conflict(self):
+        """ネストパスの競合エラーテスト（changeSetting統合版）"""
+        # 文字列値が設定されている場所に辞書を作ろうとする
+        self.settings.changeSetting('test_str', 'string_value')
+        
+        with self.assertRaises(ValueError):
+            self.settings.changeSetting('test_str.nested', 'value')
 
 
 if __name__ == '__main__':

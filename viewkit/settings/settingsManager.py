@@ -5,6 +5,8 @@ from cerberus import Validator
 
 
 class SettingsManager:
+    SETTING_SEPARATOR = '.'
+    
     def __init__(self, filename: str):
         self.filename = filename
         self.custom_fields = {}
@@ -15,28 +17,28 @@ class SettingsManager:
             'custom': {'type': 'dict', 'default': {}}
         }
         self.data = {}
-        self._load_or_create_default()
+        self._loadOrCreateDefault()
 
-    def register_custom_field(self, field_name: str, schema: Optional[Dict[str, Any]] = None):
+    def registerCustomField(self, field_name: str, schema: Optional[Dict[str, Any]] = None):
         """カスタムフィールドを登録する"""
         if schema is None:
             schema = {}
         self.custom_fields[field_name] = schema
 
-    def _load_or_create_default(self):
+    def _loadOrCreateDefault(self):
         """ファイルがなければデフォルトの設定でファイルを書き込む"""
         if not os.path.exists(self.filename):
-            self._create_default_settings()
+            self._createDefaultSettings()
         else:
-            self._load_settings()
+            self._loadSettings()
 
-    def _create_default_settings(self):
+    def _createDefaultSettings(self):
         """デフォルト設定を作成"""
         validator = Validator(self.schema)
         self.data = validator.normalized({})
-        self._save_settings()
+        self._saveSettings()
 
-    def _load_settings(self):
+    def _loadSettings(self):
         """設定ファイルを読み込む"""
         try:
             with open(self.filename, 'r', encoding='utf-8') as f:
@@ -47,7 +49,7 @@ class SettingsManager:
             if validator.validate(data):
                 self.data = validator.normalized(data)
             else:
-                raise ValueError(f"設定ファイルの検証に失敗: {validator.errors}")
+                raise ValueError(f"Settings file validation failed: {validator.errors}")
 
             # カスタムフィールドのバリデーション
             if 'custom' in self.data:
@@ -55,17 +57,29 @@ class SettingsManager:
                     if field_name in self.custom_fields and self.custom_fields[field_name]:
                         field_validator = Validator(self.custom_fields[field_name], allow_unknown=True)
                         if not field_validator.validate(field_data):
-                            raise ValueError(f"カスタムフィールド '{field_name}' の検証に失敗: {field_validator.errors}")
+                            raise ValueError(f"Custom field '{field_name}' validation failed: {field_validator.errors}")
 
         except (json.JSONDecodeError, FileNotFoundError, ValueError) as e:
             print(f"設定ファイルの読み込みエラー: {e}")
-            self._create_default_settings()
+            self._createDefaultSettings()
 
-    def get_setting(self, key: str, default: Any = None) -> Any:
-        """設定値にアクセスする"""
-        return self.data.get(key, default)
+    def getSetting(self, key: str, default: Any = None) -> Any:
+        """設定値にアクセスする（ネストパス対応）"""
+        if self.SETTING_SEPARATOR in key:
+            keys = key.split(self.SETTING_SEPARATOR)
+            current = self.data
+            
+            for k in keys:
+                if isinstance(current, dict) and k in current:
+                    current = current[k]
+                else:
+                    return default
+            
+            return current
+        else:
+            return self.data.get(key, default)
 
-    def get_custom_setting(self, field_name: str, key: str = None, default: Any = None) -> Any:
+    def getCustomSetting(self, field_name: str, key: str = None, default: Any = None) -> Any:
         """カスタム設定値にアクセスする"""
         custom_data = self.data.get('custom', {})
         if field_name not in custom_data:
@@ -76,31 +90,119 @@ class SettingsManager:
 
         return custom_data[field_name].get(key, default)
 
-    def set_setting(self, key: str, value: Any):
-        """設定値を変更する"""
-        if key == 'custom':
-            raise ValueError("カスタム設定は set_custom_setting を使用してください")
+    def getNestedSetting(self, path: str, default: Any = None) -> Any:
+        """区切り文字で区切られたパスで設定値を探索して取得する"""
+        keys = path.split(self.SETTING_SEPARATOR)
+        current = self.data
+        
+        for key in keys:
+            if isinstance(current, dict) and key in current:
+                current = current[key]
+            else:
+                return default
+        
+        return current
 
-        # バリデーション
+    def changeNestedSetting(self, path: str, value: Any):
+        """区切り文字で区切られたパスで設定値を変更する（バリデーション付き）"""
+        keys = path.split(self.SETTING_SEPARATOR)
+        
+        # バリデーション用に一時的にデータを作成
         temp_data = self.data.copy()
-        temp_data[key] = value
+        current = temp_data
+        
+        # パスをたどって設定値を変更
+        for i, key in enumerate(keys[:-1]):
+            if key not in current:
+                current[key] = {}
+            elif not isinstance(current[key], dict):
+                raise ValueError(f"Path '{self.SETTING_SEPARATOR.join(keys[:i+1])}' is not a dictionary")
+            current = current[key]
+        
+        # 最終キーに値を設定
+        final_key = keys[-1]
+        current[final_key] = value
+        
+        # バリデーション実行
         validator = Validator(self.schema)
+        if not validator.validate(temp_data):
+            raise ValueError(f"Setting validation failed: {validator.errors}")
+        
+        # バリデーション成功時のみ実際のデータを更新
+        self.data = validator.normalized(temp_data)
 
-        if validator.validate(temp_data):
-            self.data[key] = value
+    def changeSetting(self, key: str, value: Any):
+        """設定値を変更する（ネストパス・カスタム設定対応）"""
+        if self.SETTING_SEPARATOR in key:
+            keys = key.split(self.SETTING_SEPARATOR)
+            
+            # カスタム設定の場合は専用のバリデーションロジック
+            if keys[0] == 'custom' and len(keys) >= 2:
+                field_name = keys[1]
+                if field_name not in self.custom_fields:
+                    raise ValueError(f"Custom field '{field_name}' is not registered")
+                
+                # カスタムフィールドの値全体を設定する場合
+                if len(keys) == 2:
+                    # バリデーション（スキーマが空でない場合のみ）
+                    if self.custom_fields[field_name]:
+                        field_validator = Validator(self.custom_fields[field_name], allow_unknown=True)
+                        if not field_validator.validate(value):
+                            raise ValueError(f"Custom field '{field_name}' validation failed: {field_validator.errors}")
+                    
+                    if 'custom' not in self.data:
+                        self.data['custom'] = {}
+                    self.data['custom'][field_name] = value
+                    return
+            
+            # 通常のネストパス処理
+            # バリデーション用に一時的にデータを作成
+            temp_data = self.data.copy()
+            current = temp_data
+            
+            # パスをたどって設定値を変更
+            for i, k in enumerate(keys[:-1]):
+                if k not in current:
+                    current[k] = {}
+                elif not isinstance(current[k], dict):
+                    raise ValueError(f"Path '{self.SETTING_SEPARATOR.join(keys[:i+1])}' is not a dictionary")
+                current = current[k]
+            
+            # 最終キーに値を設定
+            final_key = keys[-1]
+            current[final_key] = value
+            
+            # バリデーション実行
+            validator = Validator(self.schema)
+            if not validator.validate(temp_data):
+                raise ValueError(f"Setting validation failed: {validator.errors}")
+            
+            # バリデーション成功時のみ実際のデータを更新
+            self.data = validator.normalized(temp_data)
         else:
-            raise ValueError(f"設定値の検証に失敗: {validator.errors}")
+            if key == 'custom':
+                raise ValueError("Use custom.field_name format for custom settings")
 
-    def set_custom_setting(self, field_name: str, value: Any):
+            # バリデーション
+            temp_data = self.data.copy()
+            temp_data[key] = value
+            validator = Validator(self.schema)
+
+            if validator.validate(temp_data):
+                self.data[key] = value
+            else:
+                raise ValueError(f"Setting validation failed: {validator.errors}")
+
+    def setCustomSetting(self, field_name: str, value: Any):
         """カスタム設定値を変更する"""
         if field_name not in self.custom_fields:
-            raise ValueError(f"カスタムフィールド '{field_name}' が登録されていません")
+            raise ValueError(f"Custom field '{field_name}' is not registered")
 
         # バリデーション（スキーマが空でない場合のみ）
         if self.custom_fields[field_name]:
             field_validator = Validator(self.custom_fields[field_name], allow_unknown=True)
             if not field_validator.validate(value):
-                raise ValueError(f"カスタムフィールド '{field_name}' の検証に失敗: {field_validator.errors}")
+                raise ValueError(f"Custom field '{field_name}' validation failed: {field_validator.errors}")
 
         if 'custom' not in self.data:
             self.data['custom'] = {}
@@ -109,9 +211,9 @@ class SettingsManager:
 
     def save(self):
         """ファイルを保存する"""
-        self._save_settings()
+        self._saveSettings()
 
-    def _save_settings(self):
+    def _saveSettings(self):
         """設定をファイルに保存"""
         os.makedirs(os.path.dirname(self.filename), exist_ok=True)
         with open(self.filename, 'w', encoding='utf-8') as f:
