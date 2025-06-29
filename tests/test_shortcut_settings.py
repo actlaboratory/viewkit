@@ -70,10 +70,10 @@ class TestEntry(unittest.TestCase):
         """同じショートカットキーでの重複チェックテスト"""
         raw_entry1 = RawEntry("feature1", "ctrl+a")
         raw_entry2 = RawEntry("feature2", "ctrl+a")
-        
+
         entry1 = Entry(raw_entry1)
         entry2 = Entry(raw_entry2)
-        
+
         # 両方のエントリが同じショートカットキーを持つ場合、重複チェックがTrueになるべき
         if hasattr(entry1, 'shortcut_keys') and hasattr(entry2, 'shortcut_keys'):
             if entry1.shortcut_keys and entry2.shortcut_keys:
@@ -85,10 +85,10 @@ class TestEntry(unittest.TestCase):
         """異なるエントリ間でのキーストローク比較テスト"""
         raw_entry1 = RawEntry("feature1", "ctrl+a")
         raw_entry2 = RawEntry("feature2", "ctrl+b")
-        
+
         entry1 = Entry(raw_entry1)
         entry2 = Entry(raw_entry2)
-        
+
         # 異なるショートカットキーなので重複はないはず
         result = entry1.hasSameKeystroke(entry2)
         self.assertFalse(result)
@@ -96,11 +96,11 @@ class TestEntry(unittest.TestCase):
     def test_has_same_keystroke_same_entries(self):
         """同じショートカットキーのエントリ間での比較テスト"""
         raw_entry1 = RawEntry("feature1", "ctrl+a")
-        raw_entry2 = RawEntry("feature2", "ctrl+a") 
-        
+        raw_entry2 = RawEntry("feature2", "ctrl+a")
+
         entry1 = Entry(raw_entry1)
         entry2 = Entry(raw_entry2)
-        
+
         # 同じショートカットキーなので重複があるはず
         result = entry1.hasSameKeystroke(entry2)
         # 実際の実装に依存するが、同じキーの場合はTrueになるはず
@@ -125,11 +125,11 @@ class TestListDuplicateIdentifierEntryKeys(unittest.TestCase):
         raw_entry1 = RawEntry("feature1", "ctrl+a")
         raw_entry2 = RawEntry("feature2", "ctrl+b")
         raw_entry3 = RawEntry("feature3", "ctrl+c")
-        
+
         entry1 = Entry(raw_entry1)
         entry2 = Entry(raw_entry2)
         entry3 = Entry(raw_entry3)
-        
+
         entries = [entry1, entry2, entry3]
         result = _listDuplicateIdentifierEntryKeys(entries)
         self.assertEqual(result, [])
@@ -137,15 +137,15 @@ class TestListDuplicateIdentifierEntryKeys(unittest.TestCase):
     def test_with_duplicates(self):
         """重複ありのテスト"""
         raw_entry1 = RawEntry("feature1", "ctrl+a")
-        raw_entry2 = RawEntry("feature2", "ctrl+b") 
+        raw_entry2 = RawEntry("feature2", "ctrl+b")
         raw_entry3 = RawEntry("feature3", "ctrl+a")  # entry1と同じキー
         raw_entry4 = RawEntry("feature4", "ctrl+c")
-        
+
         entry1 = Entry(raw_entry1)
         entry2 = Entry(raw_entry2)
         entry3 = Entry(raw_entry3)
         entry4 = Entry(raw_entry4)
-        
+
         entries = [entry1, entry2, entry3, entry4]
         result = _listDuplicateIdentifierEntryKeys(entries)
         self.assertIn("ctrl+a", result)
@@ -198,7 +198,7 @@ class TestShortcutKeySettings(unittest.TestCase):
     def test_generate_entries(self):
         """エントリ生成のテスト"""
         self.settings.generateEntries()
-        
+
         self.assertTrue(hasattr(self.settings, 'entries'))
         self.assertEqual(len(self.settings.entries), 2)
         self.assertIsInstance(self.settings.entries[0], Entry)
@@ -207,9 +207,9 @@ class TestShortcutKeySettings(unittest.TestCase):
     def test_remove_invalid_entries_with_valid_keys(self):
         """有効なキーでの無効エントリ削除テスト"""
         validator = ShortcutKeyStringValidator(has_char_input_on_screen=False)
-        
+
         removed = self.settings.removeInvalidEntries(validator)
-        
+
         # 有効なキーなので削除されるエントリはないはず
         self.assertEqual(len(removed), 0)
         self.assertEqual(len(self.settings.raw_entries), 2)
@@ -224,9 +224,9 @@ class TestShortcutKeySettings(unittest.TestCase):
         ]
         settings = ShortcutKeySettings("1.0", invalid_raw_entries)
         validator = ShortcutKeyStringValidator(has_char_input_on_screen=False)
-        
+
         removed = settings.removeInvalidEntries(validator)
-        
+
         # 2つの無効なエントリが削除されるはず
         self.assertEqual(len(removed), 2)
         self.assertEqual(len(settings.raw_entries), 1)
@@ -236,9 +236,9 @@ class TestShortcutKeySettings(unittest.TestCase):
     def test_remove_entries_with_duplicate_identifiers_no_duplicates(self):
         """重複識別子なしでの削除テスト"""
         self.settings.generateEntries()  # まずエントリを生成
-        
+
         removed = self.settings.removeEntriesWithDuplicateIdentifiers()
-        
+
         # 重複がないので削除されるエントリはないはず
         self.assertEqual(len(removed), 0)
 
@@ -252,9 +252,9 @@ class TestShortcutKeySettings(unittest.TestCase):
         ]
         settings = ShortcutKeySettings("1.0", duplicate_raw_entries)
         settings.generateEntries()
-        
+
         removed = settings.removeEntriesWithDuplicateIdentifiers()
-        
+
         # 重複するエントリが削除されるはず
         self.assertGreater(len(removed), 0)
         for removed_entry in removed:
@@ -270,9 +270,9 @@ class TestShortcutKeySettings(unittest.TestCase):
         ]
         settings = ShortcutKeySettings("1.0", duplicate_raw_entries)
         settings.generateEntries()
-        
+
         removed = settings.removeEntriesWithDuplicateKeystrokes()
-        
+
         # 重複するキーストロークのエントリが削除されるはず
         self.assertGreater(len(removed), 0)
         for removed_entry in removed:

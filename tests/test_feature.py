@@ -12,7 +12,7 @@ class TestFeature(unittest.TestCase):
         """ショートカットキー付きの初期化テスト"""
         action = Mock()
         feature = Feature("test_id", "Test Feature", "ctrl+a", action)
-        
+
         self.assertEqual(feature.identifier, "test_id")
         self.assertEqual(feature.display_name, "Test Feature")
         self.assertEqual(len(feature.shortcut_keys), 1)
@@ -22,23 +22,23 @@ class TestFeature(unittest.TestCase):
         """ショートカットキーなしの初期化テスト"""
         action = Mock()
         feature = Feature("test_id", "Test Feature", None, action)
-        
+
         self.assertEqual(feature.identifier, "test_id")
-        self.assertEqual(feature.display_name, "Test Feature")  
+        self.assertEqual(feature.display_name, "Test Feature")
         self.assertEqual(feature.shortcut_keys, [])
 
     def test_init_with_multiple_shortcut_keys(self):
         """複数ショートカットキーでの初期化テスト"""
         action = Mock()
         feature = Feature("test_id", "Test Feature", "ctrl+a/ctrl+b", action)
-        
+
         self.assertEqual(len(feature.shortcut_keys), 2)
 
     def test_str_representation(self):
         """文字列表現のテスト"""
         action = Mock()
         feature = Feature("test_id", "Test Feature", "ctrl+a", action)
-        
+
         str_repr = str(feature)
         self.assertIn("test_id", str_repr)
         self.assertIn("Test Feature", str_repr)
@@ -47,7 +47,7 @@ class TestFeature(unittest.TestCase):
         """ショートカットキーなしの文字列表現テスト"""
         action = Mock()
         feature = Feature("test_id", "Test Feature", None, action)
-        
+
         str_repr = str(feature)
         self.assertIn("test_id", str_repr)
         self.assertIn("Test Feature", str_repr)
@@ -58,7 +58,7 @@ class TestFeature(unittest.TestCase):
         action = Mock()
         original = Feature("test_id", "Test Feature", "ctrl+a", action)
         copied = original.copy()
-        
+
         self.assertEqual(copied.identifier, original.identifier)
         self.assertEqual(copied.display_name, original.display_name)
         self.assertIsNot(copied, original)
@@ -68,7 +68,7 @@ class TestFeature(unittest.TestCase):
         action = Mock()
         original = Feature("test_id", "Test Feature", None, action)
         copied = original.copy()
-        
+
         self.assertEqual(copied.identifier, original.identifier)
         self.assertEqual(copied.display_name, original.display_name)
         self.assertEqual(copied.shortcut_keys, [])
@@ -92,7 +92,7 @@ class TestFeatureStore(unittest.TestCase):
     def test_register(self):
         """機能登録のテスト"""
         self.store.register(self.feature1)
-        
+
         self.assertIn("feature1", self.store.features)
         self.assertEqual(self.store.features["feature1"], self.feature1)
 
@@ -100,7 +100,7 @@ class TestFeatureStore(unittest.TestCase):
         """複数機能登録のテスト"""
         self.store.register(self.feature1)
         self.store.register(self.feature2)
-        
+
         self.assertEqual(len(self.store.features), 2)
         self.assertIn("feature1", self.store.features)
         self.assertIn("feature2", self.store.features)
@@ -109,7 +109,7 @@ class TestFeatureStore(unittest.TestCase):
         """全機能取得のテスト"""
         self.store.register(self.feature1)
         self.store.register(self.feature2)
-        
+
         all_features = self.store.all()
         self.assertEqual(len(all_features), 2)
         self.assertIn("feature1", all_features)
@@ -119,7 +119,7 @@ class TestFeatureStore(unittest.TestCase):
     def test_getByIdentifier_existing(self):
         """存在する識別子での取得テスト"""
         self.store.register(self.feature1)
-        
+
         retrieved = self.store.getByIdentifier("feature1")
         self.assertEqual(retrieved, self.feature1)
 
@@ -132,15 +132,15 @@ class TestFeatureStore(unittest.TestCase):
         """ショートカットキー設定適用のテスト"""
         self.store.register(self.feature1)
         self.store.register(self.feature2)
-        
+
         raw_entries = [
             RawEntry("feature1", "ctrl+x"),
             RawEntry("feature2", "ctrl+y")
         ]
         input_data = ParsedFileInput(version=1, raw_entries=raw_entries)
-        
+
         removed_entries = self.store.applyShortcutKeySettings(input_data)
-        
+
         self.assertIsInstance(removed_entries, list)
 
 

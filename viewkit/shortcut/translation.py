@@ -25,7 +25,7 @@ class ShortcutKey:
     def __str__(self) -> str:
         """ショートカットキーを人間が読める文字列に変換する"""
         parts = []
-        
+
         # 修飾キーを追加
         if self.modifier_flags & wx.ACCEL_CTRL:
             parts.append("ctrl")
@@ -33,17 +33,17 @@ class ShortcutKey:
             parts.append("alt")
         if self.modifier_flags & wx.ACCEL_SHIFT:
             parts.append("shift")
-        
+
         # キーコードを文字列に変換
         key_str = None
         for key_name, key_code in str2key.str2key.items():
             if key_code == self.key_code:
                 key_str = key_name.lower()
                 break
-        
+
         if key_str:
             parts.append(key_str)
-        
+
         return "+".join(parts)
 
 
