@@ -128,6 +128,6 @@ class ShortcutKeyStringValidator:
             raise ShortcutKeyValidationError(key_string, VALIDATION_ERROR_MULTI_NONMODIFIER)
         elif standalone_count == 0 and with_modifier_count == 0:
             raise ShortcutKeyValidationError(key_string, VALIDATION_ERROR_MODIFIER_ONLY)
-        if set(keys) in self.disablePattern:
+        if set(keys) in self.forbidden_combinations:
             raise ShortcutKeyValidationError(key_string, VALIDATION_ERROR_FORBIDDEN)
         return True
