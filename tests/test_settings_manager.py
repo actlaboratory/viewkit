@@ -23,10 +23,10 @@ class TestSettingsManager(unittest.TestCase):
     def test_init_creates_default_file(self):
         """初期化時にデフォルトファイルが作成されることを確認"""
         self.assertTrue(os.path.exists(self.test_file))
-        
+
         with open(self.test_file, 'r', encoding='utf-8') as f:
             data = json.load(f)
-        
+
         self.assertEqual(data['test_str'], '')
         self.assertEqual(data['test_number'], 0)
         self.assertEqual(data['test_range'], 50)
@@ -49,7 +49,7 @@ class TestSettingsManager(unittest.TestCase):
         self.settings.set_setting('test_str', 'hello')
         self.settings.set_setting('test_number', 42)
         self.settings.set_setting('test_range', 75)
-        
+
         self.assertEqual(self.settings.get_setting('test_str'), 'hello')
         self.assertEqual(self.settings.get_setting('test_number'), 42)
         self.assertEqual(self.settings.get_setting('test_range'), 75)
@@ -58,7 +58,7 @@ class TestSettingsManager(unittest.TestCase):
         """範囲外の値の設定テスト"""
         with self.assertRaises(ValueError):
             self.settings.set_setting('test_range', 0)  # 1未満
-        
+
         with self.assertRaises(ValueError):
             self.settings.set_setting('test_range', 101)  # 100超過
 
@@ -66,7 +66,7 @@ class TestSettingsManager(unittest.TestCase):
         """無効な型の設定テスト"""
         with self.assertRaises(ValueError):
             self.settings.set_setting('test_str', 123)  # 文字列に数値
-        
+
         with self.assertRaises(ValueError):
             self.settings.set_setting('test_number', 'not_a_number')  # 数値に文字列
 
@@ -103,10 +103,10 @@ class TestSettingsManager(unittest.TestCase):
             'count': {'type': 'number', 'default': 0}
         }
         self.settings.register_custom_field('feature', schema)
-        
+
         custom_data = {'enabled': False, 'count': 10}
         self.settings.set_custom_setting('feature', custom_data)
-        
+
         result = self.settings.get_custom_setting('feature')
         self.assertEqual(result, custom_data)
 
@@ -116,7 +116,7 @@ class TestSettingsManager(unittest.TestCase):
             'enabled': {'type': 'boolean', 'default': True}
         }
         self.settings.register_custom_field('feature', schema)
-        
+
         with self.assertRaises(ValueError):
             self.settings.set_custom_setting('feature', {'enabled': 'not_boolean'})
 
@@ -130,10 +130,10 @@ class TestSettingsManager(unittest.TestCase):
         self.settings.register_custom_field('feature')
         custom_data = {'key1': 'value1', 'key2': 'value2'}
         self.settings.set_custom_setting('feature', custom_data)
-        
+
         result = self.settings.get_custom_setting('feature', 'key1')
         self.assertEqual(result, 'value1')
-        
+
         result = self.settings.get_custom_setting('feature', 'nonexistent', 'default')
         self.assertEqual(result, 'default')
 
@@ -142,21 +142,21 @@ class TestSettingsManager(unittest.TestCase):
         # 設定を変更
         self.settings.set_setting('test_str', 'saved_value')
         self.settings.set_setting('test_number', 99)
-        
+
         # カスタム設定を追加
         self.settings.register_custom_field('feature')
         self.settings.set_custom_setting('feature', {'option': 'custom_value'})
-        
+
         # 保存
         self.settings.save()
-        
+
         # 新しいインスタンスで読み込み
         new_settings = SettingsManager(self.test_file)
-        
+
         # 値が保存されていることを確認
         self.assertEqual(new_settings.get_setting('test_str'), 'saved_value')
         self.assertEqual(new_settings.get_setting('test_number'), 99)
-        
+
         # カスタム設定は登録が必要
         new_settings.register_custom_field('feature')
         result = new_settings.get_custom_setting('feature')
@@ -167,10 +167,10 @@ class TestSettingsManager(unittest.TestCase):
         # 無効なJSONを書き込み
         with open(self.test_file, 'w', encoding='utf-8') as f:
             f.write("invalid json content")
-        
+
         # 新しいインスタンスを作成（内部でデフォルト設定が作成される）
         settings = SettingsManager(self.test_file)
-        
+
         # デフォルト値になっていることを確認
         self.assertEqual(settings.get_setting('test_str'), '')
         self.assertEqual(settings.get_setting('test_number'), 0)
@@ -183,13 +183,13 @@ class TestSettingsManager(unittest.TestCase):
             'test_str': 'partial_data'
             # test_number, test_range, customが不足
         }
-        
+
         with open(self.test_file, 'w', encoding='utf-8') as f:
             json.dump(incomplete_data, f, ensure_ascii=False, indent=2)
-        
+
         # 新しいインスタンスで読み込み
         settings = SettingsManager(self.test_file)
-        
+
         # デフォルト値で補完されることを確認
         self.assertEqual(settings.get_setting('test_str'), 'partial_data')
         self.assertEqual(settings.get_setting('test_number'), 0)  # デフォルト値
@@ -201,13 +201,13 @@ class TestSettingsManager(unittest.TestCase):
         japanese_text = '日本語のテスト'
         self.settings.set_setting('test_str', japanese_text)
         self.settings.save()
-        
+
         # ファイルを直接読み込んでUTF-8であることを確認
         with open(self.test_file, 'r', encoding='utf-8') as f:
             data = json.load(f)
-        
+
         self.assertEqual(data['test_str'], japanese_text)
-        
+
         # 新しいインスタンスで正しく読み込めることを確認
         new_settings = SettingsManager(self.test_file)
         self.assertEqual(new_settings.get_setting('test_str'), japanese_text)
