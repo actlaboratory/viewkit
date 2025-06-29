@@ -54,11 +54,7 @@ class ShortcutKeyStringValidator:
     """ショートカットキーを表す文字列を解析して、利用可能なショートカットキーかどうかをチェックする。"""
 
     def __init__(self, has_char_input_on_screen: bool):
-        self.modifier_keys = set([
-            "CTRL",
-            "ALT",
-            "SHIFT",
-        ])
+        self.modifier_keys = set(str2ModifierKey.keys())
         self.allowed_standalone = set()
         self.allowed_with_modifier = set()
         self.forbidden_combinations = []
