@@ -1,2 +1,2 @@
-from .translation import ModifierKeyOnly, strToShortcutKey, separateShortcutKeyString
+from .translation import ModifierKeyOnly, strToShortcutKey, separateShortcutKeyString, ShortcutKey
 from .validation import VALIDATION_ERROR_EMPTY, VALIDATION_ERROR_FORBIDDEN, VALIDATION_ERROR_MODIFIER_ONLY, VALIDATION_ERROR_MULTI_NONMODIFIER, VALIDATION_ERROR_NEEDS_MODIFIER, ShortcutKeyValidationError, ShortcutKeyStringValidator

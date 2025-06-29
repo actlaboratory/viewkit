@@ -10,8 +10,7 @@ class TestFeature(unittest.TestCase):
 
     def test_init_with_shortcut_key(self):
         """ショートカットキー付きの初期化テスト"""
-        action = Mock()
-        feature = Feature("test_id", "Test Feature", "ctrl+a", action)
+        feature = Feature("test_id", "Test Feature", "ctrl+a")
 
         self.assertEqual(feature.identifier, "test_id")
         self.assertEqual(feature.display_name, "Test Feature")
@@ -20,8 +19,7 @@ class TestFeature(unittest.TestCase):
 
     def test_init_without_shortcut_key(self):
         """ショートカットキーなしの初期化テスト"""
-        action = Mock()
-        feature = Feature("test_id", "Test Feature", None, action)
+        feature = Feature("test_id", "Test Feature", None)
 
         self.assertEqual(feature.identifier, "test_id")
         self.assertEqual(feature.display_name, "Test Feature")
@@ -29,15 +27,13 @@ class TestFeature(unittest.TestCase):
 
     def test_init_with_multiple_shortcut_keys(self):
         """複数ショートカットキーでの初期化テスト"""
-        action = Mock()
-        feature = Feature("test_id", "Test Feature", "ctrl+a/ctrl+b", action)
+        feature = Feature("test_id", "Test Feature", "ctrl+a/ctrl+b")
 
         self.assertEqual(len(feature.shortcut_keys), 2)
 
     def test_str_representation(self):
         """文字列表現のテスト"""
-        action = Mock()
-        feature = Feature("test_id", "Test Feature", "ctrl+a", action)
+        feature = Feature("test_id", "Test Feature", "ctrl+a")
 
         str_repr = str(feature)
         self.assertIn("test_id", str_repr)
@@ -45,8 +41,7 @@ class TestFeature(unittest.TestCase):
 
     def test_str_representation_no_shortcut(self):
         """ショートカットキーなしの文字列表現テスト"""
-        action = Mock()
-        feature = Feature("test_id", "Test Feature", None, action)
+        feature = Feature("test_id", "Test Feature", None)
 
         str_repr = str(feature)
         self.assertIn("test_id", str_repr)
@@ -55,8 +50,7 @@ class TestFeature(unittest.TestCase):
 
     def test_copy_with_shortcut_key(self):
         """ショートカットキー付きコピーのテスト"""
-        action = Mock()
-        original = Feature("test_id", "Test Feature", "ctrl+a", action)
+        original = Feature("test_id", "Test Feature", "ctrl+a")
         copied = original.copy()
 
         self.assertEqual(copied.identifier, original.identifier)
@@ -65,8 +59,7 @@ class TestFeature(unittest.TestCase):
 
     def test_copy_without_shortcut_key(self):
         """ショートカットキーなしコピーのテスト"""
-        action = Mock()
-        original = Feature("test_id", "Test Feature", None, action)
+        original = Feature("test_id", "Test Feature", None)
         copied = original.copy()
 
         self.assertEqual(copied.identifier, original.identifier)
@@ -81,8 +74,8 @@ class TestFeatureStore(unittest.TestCase):
     def setUp(self):
         """テスト用のセットアップ"""
         self.store = FeatureStore()
-        self.feature1 = Feature("feature1", "Feature 1", "ctrl+a", Mock())
-        self.feature2 = Feature("feature2", "Feature 2", "ctrl+b", Mock())
+        self.feature1 = Feature("feature1", "Feature 1", "ctrl+a")
+        self.feature2 = Feature("feature2", "Feature 2", "ctrl+b")
 
     def test_init(self):
         """初期化のテスト"""
