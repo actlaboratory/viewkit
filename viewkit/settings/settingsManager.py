@@ -11,9 +11,11 @@ class SettingsManager:
         self.filename = os.path.abspath(filename)
         self.custom_fields = {}
         self.schema = {
-            'test_str': {'type': 'string', 'default': ''},
-            'test_number': {'type': 'number', 'default': 0},
-            'test_range': {'type': 'number', 'min': 1, 'max': 100, 'default': 50},
+            # 'test_str': {'type': 'string', 'default': ''},
+            # 'test_number': {'type': 'number', 'default': 0},
+            # 'test_range': {'type': 'number', 'min': 1, 'max': 100, 'default': 50},
+            'app_version': {'type': 'string', 'default': ''},
+            'schema_version': {'type': 'string', 'default': '20250816.0'},
             'custom': {'type': 'dict', 'default': {}}
         }
         self.data = {}
