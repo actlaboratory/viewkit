@@ -19,7 +19,7 @@ dependencies = [
 requires-python = ">=3.8,<3.13"
 
 [tool.setuptools]
-packages = ["viewkit", "viewkit.creator", "viewkit.creator.objects"]
+packages = { find = { where = ["."], include = ["viewkit*"] } }
 
 [tool.setuptools.package-data]
 "viewkit" = ["viewHelper.dll"]
