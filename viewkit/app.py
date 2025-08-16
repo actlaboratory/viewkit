@@ -29,6 +29,7 @@ class App(wx.App):
         wnd._setup_menu_bar()
         wnd._apply_accelerator_table()
         wnd.Show()
+        wx.CallAfter(wnd.onOpen)
         self.MainLoop()
 
     def _addPath(self):
