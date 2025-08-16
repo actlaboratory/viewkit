@@ -6,6 +6,7 @@ from .context import ApplicationContext, WindowContext
 from .feature import Feature, FeatureStore
 from .mainwnd import MainWindow
 from .menu import TopMenuDefinition, MenuItemDefinition, MenuDefinition, separator
+from .settings import CustomSettingField
 
 
 def run(ctx, first_window):

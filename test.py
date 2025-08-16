@@ -37,10 +37,27 @@ class TestWindow(viewkit.MainWindow):
     def onExit(self, event):
         self.Close()
 
+user_name_field = viewkit.CustomSettingField(
+    "user_name",
+    {
+        "type": "string",
+        "default": "nekochan",
+    }
+)
+
+user_age_field = viewkit.CustomSettingField(
+    "user_age",
+    {
+        "type": "number",
+        "default": 27,
+    }
+)
 
 ctx = viewkit.ApplicationContext(
-    applicationName="testtest",
+    applicationName="viewkitExample",
     supportedLanguages={"ja-JP": "日本語", "en-US": "English"},
     language="ja-JP",
+    settingFileName="settings.json",
+    customSettingFields=[user_name_field, user_age_field],
 )
 viewkit.run(ctx, TestWindow)
