@@ -318,6 +318,89 @@ class TestCustomShortcuts(unittest.TestCase):
         f1 = self.store.getByIdentifier("feature1")
         self.assertEqual(str(f1.shortcut_keys[0]), "ctrl+shift+a")
 
+    def test_conflict_resolution_default_removed(self):
+        """デフォルト設定がカスタム設定と競合して削除されるテスト"""
+        # デフォルト設定でFeatureを作成
+        store = FeatureStore()
+        feature1 = Feature("feature1", "Feature 1", "F1")  # デフォルト: F1
+        feature2 = Feature("feature2", "Feature 2", "F2")  # デフォルト: F2
+        store.register(feature1)
+        store.register(feature2)
+        
+        # カスタム設定: feature2にF1を設定（feature1のデフォルトと競合）
+        custom_settings = {
+            "feature2": "F1"
+        }
+        
+        # 競合解決ありの適用
+        removed_entries = store.applyCustomShortcutSettingsWithConflictResolution(custom_settings)
+        
+        # 結果確認
+        f1 = store.getByIdentifier("feature1")
+        f2 = store.getByIdentifier("feature2")
+        
+        # feature1のF1は削除される（カスタム設定のfeature2と競合）
+        self.assertEqual(len(f1.shortcut_keys), 0)
+        
+        # feature2はカスタム設定のF1が適用される
+        self.assertEqual(len(f2.shortcut_keys), 1)
+        self.assertEqual(str(f2.shortcut_keys[0]), "f1")
+
+    def test_conflict_resolution_multiple_conflicts(self):
+        """複数の競合解決テスト"""
+        store = FeatureStore()
+        feature1 = Feature("feature1", "Feature 1", "F1")
+        feature2 = Feature("feature2", "Feature 2", "F2")
+        feature3 = Feature("feature3", "Feature 3", "F3")
+        store.register(feature1)
+        store.register(feature2)
+        store.register(feature3)
+        
+        # カスタム設定で複数の競合を作成
+        custom_settings = {
+            "feature2": "F1",  # feature1と競合
+            "feature3": "F2"   # feature2と競合（ただしfeature2はF1に変更されるため実質的にfeature2元のF2は無効）
+        }
+        
+        removed_entries = store.applyCustomShortcutSettingsWithConflictResolution(custom_settings)
+        
+        f1 = store.getByIdentifier("feature1")
+        f2 = store.getByIdentifier("feature2")
+        f3 = store.getByIdentifier("feature3")
+        
+        # feature1: F1が削除（feature2カスタムと競合）
+        self.assertEqual(len(f1.shortcut_keys), 0)
+        
+        # feature2: カスタムF1が適用
+        self.assertEqual(str(f2.shortcut_keys[0]), "f1")
+        
+        # feature3: カスタムF2が適用
+        self.assertEqual(str(f3.shortcut_keys[0]), "f2")
+
+    def test_conflict_resolution_no_conflicts(self):
+        """競合がない場合のテスト"""
+        store = FeatureStore()
+        feature1 = Feature("feature1", "Feature 1", "F1")
+        feature2 = Feature("feature2", "Feature 2", "F2")
+        store.register(feature1)
+        store.register(feature2)
+        
+        # 競合しないカスタム設定
+        custom_settings = {
+            "feature1": "F3"  # 新しいキー、競合なし
+        }
+        
+        removed_entries = store.applyCustomShortcutSettingsWithConflictResolution(custom_settings)
+        
+        f1 = store.getByIdentifier("feature1")
+        f2 = store.getByIdentifier("feature2")
+        
+        # feature1: カスタムF3が適用
+        self.assertEqual(str(f1.shortcut_keys[0]), "f3")
+        
+        # feature2: デフォルトF2が保持
+        self.assertEqual(str(f2.shortcut_keys[0]), "f2")
+
 
 if __name__ == '__main__':
     unittest.main()

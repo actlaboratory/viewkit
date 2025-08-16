@@ -20,7 +20,7 @@ class App(wx.App):
     def run(self):
         """ウインドウを表示して、アプリケーションを開始。アプリケーションが終了するまで制御を返さない"""
         self._addPath()
-        self._init_translation()
+        self._initTranslation()
         wnd = self._initial_window(self.ctx)
         wnd._register_features(wnd.define_features())
         wnd._apply_custom_shortcuts()
@@ -37,7 +37,7 @@ class App(wx.App):
             os.add_dll_directory(os.path.dirname(self.getAppPath()))
         sys.path.append(os.path.dirname(self.getAppPath()))
 
-    def _init_translation(self):
+    def _initTranslation(self):
         """翻訳を初期化する。"""
         localeLang = locale.getdefaultlocale()[0].replace("_", "-")
         if self.ctx.language in list(self.ctx.supportedLanguages.keys()):

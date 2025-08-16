@@ -37,7 +37,7 @@ class MainWindow(wx.Frame):
         """カスタムショートカット設定を適用する"""
         shortcuts_settings = self.app_ctx.settings.getShortcutSettings()
         if shortcuts_settings:
-            self.ctx.feature_store.applyCustomShortcutSettings(shortcuts_settings)
+            self.ctx.feature_store.applyCustomShortcutSettingsWithConflictResolution(shortcuts_settings)
 
     def _assign_refs(self):
         for feature in self.ctx.feature_store.all().values():

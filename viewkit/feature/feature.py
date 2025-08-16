@@ -93,3 +93,37 @@ class FeatureStore:
             all_removed_entries.extend(self.applyCustomShortcutSettings(custom_settings))
         
         return all_removed_entries
+
+    def applyCustomShortcutSettingsWithConflictResolution(self, shortcut_settings: dict) -> list[RemovedEntry]:
+        """カスタムショートカット設定を適用し、デフォルト設定との競合を解決する"""
+        if not shortcut_settings:
+            return []
+        
+        removed_entries = []
+        
+        # カスタム設定で使用されるショートカットキーを収集
+        custom_shortcut_keys = set()
+        for feature_id, shortcut_str in shortcut_settings.items():
+            if isinstance(shortcut_str, str) and shortcut_str.strip():
+                try:
+                    from viewkit.shortcut import separateShortcutKeyString, strToShortcutKey
+                    separated_keys = separateShortcutKeyString(shortcut_str)
+                    for key_str in separated_keys:
+                        shortcut_key = strToShortcutKey(key_str)
+                        custom_shortcut_keys.add(str(shortcut_key).lower())
+                except:
+                    continue
+        
+        # デフォルト設定のFeatureで競合するものを特定し、ショートカットを削除
+        for feature in self.features.values():
+            if feature.identifier not in shortcut_settings:  # カスタム設定にないFeature
+                if feature.shortcut_keys:
+                    for shortcut_key in feature.shortcut_keys[:]:  # コピーを作成してイテレート
+                        if str(shortcut_key).lower() in custom_shortcut_keys:
+                            # 競合するデフォルトショートカットを削除
+                            feature.shortcut_keys.remove(shortcut_key)
+        
+        # カスタム設定を適用
+        removed_entries.extend(self.applyCustomShortcutSettings(shortcut_settings))
+        
+        return removed_entries
