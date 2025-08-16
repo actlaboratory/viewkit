@@ -3,6 +3,10 @@ import os
 from typing import Dict, Any, Optional
 from cerberus import Validator
 
+class CustomSettingField:
+    def __init__(self, name:str, schema: Dict[str, Any]):
+        self.name = name
+        self.schema = schema
 
 class SettingsManager:
     SETTING_SEPARATOR = '.'
@@ -20,19 +24,16 @@ class SettingsManager:
             'custom': {'type': 'dict', 'default': {}}
         }
         self.data = {}
-        self._loadOrCreateDefault()
 
-    def registerCustomField(self, field_name: str, schema: Optional[Dict[str, Any]] = None):
+    def registerCustomField(self, field: CustomSettingField):
         """カスタムフィールドを登録する"""
-        if schema is None:
-            schema = {}
-        self.custom_fields[field_name] = schema
+        self.custom_fields[field.name] = field.schema
 
     def getShortcutSettings(self):
         """ショートカット設定を取得する"""
         return self.getSetting('shortcuts', default={})
 
-    def _loadOrCreateDefault(self):
+    def loadOrCreateDefault(self):
         """ファイルがなければデフォルトの設定でファイルを書き込む"""
         if not os.path.exists(self.filename):
             self._createDefaultSettings()
@@ -41,7 +42,11 @@ class SettingsManager:
 
     def _createDefaultSettings(self):
         """デフォルト設定を作成"""
-        validator = Validator(self.schema)
+        # カスタムフィールドも含めてデフォルト設定を埋めたいので、カスタムフィールドと通常のスキーマを一時的にマージする
+        merged_schema = {**self.schema}
+        if self.custom_fields:
+            merged_schema["custom"]["schema"] = self.custom_fields
+        validator = Validator(merged_schema)
         self.data = validator.normalized({})
         self._saveSettings()
 

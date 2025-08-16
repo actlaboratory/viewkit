@@ -14,12 +14,13 @@ dependencies = [
     "pywin32",
     "winpaths",
     "pyinstaller==6.11.0",
-    "pillow==9.5"
+    "pillow==9.5",
+    "cerberus"
 ]
 requires-python = ">=3.8,<3.13"
 
 [tool.setuptools]
-packages = ["viewkit", "viewkit.creator", "viewkit.creator.objects"]
+packages = { find = { where = ["."], include = ["viewkit*"] } }
 
 [tool.setuptools.package-data]
 "viewkit" = ["viewHelper.dll"]
