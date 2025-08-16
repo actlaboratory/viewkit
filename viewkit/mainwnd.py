@@ -11,7 +11,7 @@ class MainWindow(wx.Frame):
     def __init__(self, app_ctx: ApplicationContext):
         wx.Frame.__init__(self, None, -1, app_ctx.applicationName)
         self.ctx = WindowContext()
-        self.Bind(wx.EVT_MENU, self._receive_menu_command)
+        self.Bind(wx.EVT_MENU, self._receiveMenuCommand)
         self.clear()
 
     def clear(self, space=0):
@@ -72,11 +72,12 @@ class MainWindow(wx.Frame):
             return
         self.SetAcceleratorTable(self.ctx.generateAcceleratorTable())
 
-    def _receive_menu_command(self, event):
+    def _receiveMenuCommand(self, event):
         identifier = self.ctx.ref_store.getIdentifier(event.GetId())
         if identifier is None:
             return
         feature = self.ctx.feature_store.getByIdentifier(identifier)
         if feature is None:
             return
-        print("%s is executed" % feature)
+        if feature.action is not None:
+            feature.action(event)

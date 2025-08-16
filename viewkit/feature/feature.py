@@ -5,9 +5,10 @@ from copy import copy
 
 
 class Feature:
-    def __init__(self, identifier: str, display_name: str, shortcut_key: Optional[str]):
+    def __init__(self, identifier: str, display_name: str, shortcut_key: Optional[str], action: Optional[Callable]=None):
         self.identifier = identifier
         self.display_name = display_name
+        self.action = action
         if shortcut_key is not None:
             separated_keys = separateShortcutKeyString(shortcut_key)
             self.shortcut_keys = [strToShortcutKey(key) for key in separated_keys]

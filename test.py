@@ -5,11 +5,11 @@ import viewkit
 class TestWindow(viewkit.MainWindow):
     def __init__(self, ctx):
         viewkit.MainWindow.__init__(self, ctx)
-        exitButton = self.creator.button("Exit", self.OnExit)
+        exitButton = self.creator.button("Exit", self.onExit)
 
     def define_features(self):
         return [
-            viewkit.Feature("file_exit", "Exit", "Ctrl+Q"),
+            viewkit.Feature("file_exit", "Exit", "Ctrl+Q", self.onExit),
             viewkit.Feature("file_open_audio", "Open audio file", None),
             viewkit.Feature("file_open_video", "Open video file", None),
             viewkit.Feature("help_about", "Show about dialog", None)
@@ -34,7 +34,7 @@ class TestWindow(viewkit.MainWindow):
             )
         )
 
-    def OnExit(self, event):
+    def onExit(self, event):
         self.Close()
 
 
