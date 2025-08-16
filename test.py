@@ -54,10 +54,10 @@ user_age_field = viewkit.CustomSettingField(
 )
 
 ctx = viewkit.ApplicationContext(
-    applicationName="viewkitExample",
-    supportedLanguages={"ja-JP": "日本語", "en-US": "English"},
+    application_name="viewkitExample",
+    supported_languages={"ja-JP": "日本語", "en-US": "English"},
     language="ja-JP",
-    settingFileName="settings.json",
-    customSettingFields=[user_name_field, user_age_field],
+    setting_file_name="settings.json",
+    custom_setting_fields=[user_name_field, user_age_field],
 )
 viewkit.run(ctx, TestWindow)

@@ -3,20 +3,20 @@ from viewkit.settings import SettingsManager, CustomSettingField
 class ApplicationContext:
     def __init__(
         self,
-        applicationName: str,
-        supportedLanguages: dict,
+        application_name: str,
+        supported_languages: dict,
         language: str,
-        settingFileName:str="",
-        customSettingFields: list[CustomSettingField] = []
+        setting_file_name:str="",
+        custom_setting_fields: list[CustomSettingField] = []
     ):
-        self.applicationName = applicationName
-        self.supportedLanguages = supportedLanguages
+        self.application_name = application_name
+        self.supported_languages = supported_languages
         self.language = language
-        self.settingFileName = settingFileName
-        if self.settingFileName == "":
-            self.settingFileName = "%s.json" % self.applicationName
-        self.settings = SettingsManager(self.settingFileName)
+        self.setting_file_name = setting_file_name
+        if self.setting_file_name == "":
+            self.setting_file_name = "%s.json" % self.application_name
+        self.settings = SettingsManager(self.setting_file_name)
 
-        for field in customSettingFields:
+        for field in custom_setting_fields:
             self.settings.registerCustomField(field)
         self.settings.loadOrCreateDefault()
