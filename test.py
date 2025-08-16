@@ -9,10 +9,10 @@ class TestWindow(viewkit.MainWindow):
 
     def define_features(self):
         return [
-            viewkit.Feature("file_exit", "Exit", "Ctrl+Q", self.OnExit),
-            viewkit.Feature("file_open_audio", "Open audio file", None, self.OnExit),
-            viewkit.Feature("file_open_video", "Open video file", None, self.OnExit),
-            viewkit.Feature("help_about", "Show about dialog", None, self.OnExit)
+            viewkit.Feature("file_exit", "Exit", "Ctrl+Q"),
+            viewkit.Feature("file_open_audio", "Open audio file", None),
+            viewkit.Feature("file_open_video", "Open video file", None),
+            viewkit.Feature("help_about", "Show about dialog", None)
         ]
 
     def define_menu(self):

@@ -56,8 +56,8 @@ class MainWindow(wx.Frame):
         if isinstance(item, MenuItem):
             display_name = item.display_name
             feature = self.ctx.feature_store.getByIdentifier(item.identifier)
-            if feature.shortcut_key:
-                display_name += "\t" + str(feature.shortcut_key)
+            if feature.shortcut_keys:
+                display_name += "\t" + str(feature.shortcut_keys[0])
             return wx.MenuItem(menu, ref, display_name)
         elif isinstance(item, MenuItemWithSubmenu):
             submenu = wx.Menu()
