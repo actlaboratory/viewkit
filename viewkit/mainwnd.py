@@ -10,6 +10,7 @@ from viewkit.creator import ViewCreator
 class MainWindow(wx.Frame):
     def __init__(self, app_ctx: ApplicationContext):
         wx.Frame.__init__(self, None, -1, app_ctx.applicationName)
+        self.app_ctx = app_ctx
         self.ctx = WindowContext()
         self.Bind(wx.EVT_MENU, self._receiveMenuCommand)
         self.clear()
@@ -31,6 +32,12 @@ class MainWindow(wx.Frame):
     def _register_features(self, features):
         for feature in features:
             self.ctx.feature_store.register(feature)
+
+    def _apply_custom_shortcuts(self):
+        """カスタムショートカット設定を適用する"""
+        shortcuts_settings = self.app_ctx.settings.getShortcutSettings()
+        if shortcuts_settings:
+            self.ctx.feature_store.applyCustomShortcutSettings(shortcuts_settings)
 
     def _assign_refs(self):
         for feature in self.ctx.feature_store.all().values():

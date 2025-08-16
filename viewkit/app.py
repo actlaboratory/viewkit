@@ -23,6 +23,7 @@ class App(wx.App):
         self._init_translation()
         wnd = self._initial_window(self.ctx)
         wnd._register_features(wnd.define_features())
+        wnd._apply_custom_shortcuts()
         wnd._assign_refs()
         wnd.ctx.menu.setup(wnd.define_menu())
         wnd._setup_menu_bar()

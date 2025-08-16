@@ -1,3 +1,4 @@
 venv/
 __pycache__/
 testtest.json
+.claude/ettings.local.json
