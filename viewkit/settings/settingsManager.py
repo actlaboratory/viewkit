@@ -8,7 +8,7 @@ class SettingsManager:
     SETTING_SEPARATOR = '.'
 
     def __init__(self, filename: str):
-        self.filename = filename
+        self.filename = os.path.abspath(filename)
         self.custom_fields = {}
         self.schema = {
             'test_str': {'type': 'string', 'default': ''},
