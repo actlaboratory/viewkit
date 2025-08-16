@@ -61,3 +61,35 @@ class FeatureStore:
             if e.shortcut_keys:
                 feature.shortcut_keys = e.shortcut_keys
         return removed_entries
+
+    def applyCustomShortcutSettings(self, shortcut_settings: dict) -> list[RemovedEntry]:
+        """カスタムショートカット設定を適用し、競合解決を行う"""
+        if not shortcut_settings:
+            return []
+        
+        # 辞書形式から RawEntry リストに変換
+        raw_entries = []
+        for feature_id, shortcut_str in shortcut_settings.items():
+            if isinstance(shortcut_str, str) and shortcut_str.strip():
+                raw_entries.append(RawEntry(feature_id, shortcut_str))
+        
+        if not raw_entries:
+            return []
+        
+        # 既存の applyShortcutKeySettings を利用
+        input_data = ParsedFileInput("custom", raw_entries)
+        return self.applyShortcutKeySettings(input_data)
+
+    def applyShortcutSettingsWithCustomPriority(self, default_settings: ParsedFileInput = None, custom_settings: dict = None) -> list[RemovedEntry]:
+        """デフォルト設定とカスタム設定を統合して適用し、カスタムを優先する"""
+        all_removed_entries = []
+        
+        # まずデフォルト設定を適用
+        if default_settings:
+            all_removed_entries.extend(self.applyShortcutKeySettings(default_settings))
+        
+        # 次にカスタム設定を適用（カスタム設定が優先される）
+        if custom_settings:
+            all_removed_entries.extend(self.applyCustomShortcutSettings(custom_settings))
+        
+        return all_removed_entries

@@ -16,6 +16,7 @@ class SettingsManager:
             # 'test_range': {'type': 'number', 'min': 1, 'max': 100, 'default': 50},
             'app_version': {'type': 'string', 'default': ''},
             'schema_version': {'type': 'string', 'default': '20250816.0'},
+            'shortcuts': {'type': 'dict', 'default': {}},
             'custom': {'type': 'dict', 'default': {}}
         }
         self.data = {}
@@ -26,6 +27,10 @@ class SettingsManager:
         if schema is None:
             schema = {}
         self.custom_fields[field_name] = schema
+
+    def getShortcutSettings(self):
+        """ショートカット設定を取得する"""
+        return self.getSetting('shortcuts', default={})
 
     def _loadOrCreateDefault(self):
         """ファイルがなければデフォルトの設定でファイルを書き込む"""
