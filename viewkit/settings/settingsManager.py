@@ -32,6 +32,14 @@ class SettingsManager:
                     'maximized': {'type': 'number', 'min': 0, 'max': 1, 'default': 0},
                 },
             },
+            'view': {
+                'type': 'dict',
+                'default': {},
+                'schema': {
+                    'is_dark': {'type': 'boolean', 'default': False},
+                    'is_word_wrap': {'type': 'boolean', 'default': False},
+                },
+            },
             'custom': {'type': 'dict', 'default': {}}
         }
         self.data = {}

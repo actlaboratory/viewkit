@@ -6,7 +6,7 @@ from viewkit.context.app import ApplicationContext
 from viewkit.context.window import WindowContext
 from viewkit.feature import Feature
 from viewkit.menu import MenuDefinition, MenuItem, MenuItemWithSubmenu, separator
-from viewkit.creator import ViewCreator
+from viewkit.creator import ViewCreator, ViewModeCalculator
 from viewkit.subwnd import ModalResult
 
 
@@ -36,7 +36,14 @@ class MainWindow(wx.Frame):
     def clear(self, space=0):
         self.DestroyChildren()
         panel = wx.Panel(self, wx.ID_ANY, size=(-1, -1))
-        self.creator = ViewCreator(0, panel, None, wx.VERTICAL, style=wx.ALL, space=space)
+        self.creator = ViewCreator(
+            ViewModeCalculator(self.app_ctx.settings.getSetting('view.is_dark'),self.app_ctx.settings.getSetting('view.is_word_wrap')).getMode(),
+            panel,
+            None, 
+            wx.VERTICAL, 
+            style=wx.ALL, 
+            space=space
+        )
         self.Layout()
 
     def define_features(self) -> List[Feature]:

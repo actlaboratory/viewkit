@@ -731,17 +731,6 @@ class ViewCreator():
         assert (isinstance(self.sizer, wx.GridBagSizer))
         self.sizer.SetItemSpan(wx.GBSpan(row, col))
 
-    # configから読み取った値からmodeの整数値を生成して返す
-    def config2modeValue(color="white", wrapping="off"):
-        if type(color) != str or type(wrapping) != str:
-            raise ValueError
-        mode = 0
-        if color.lower() == "dark":
-            mode += MODE_DARK
-        if wrapping.lower() == "on":
-            mode += MODE_WRAPPING
-        return mode
-
 # parentで指定したsizerの下に、新たなBoxSizerを設置
 
 
