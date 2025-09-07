@@ -67,8 +67,10 @@ class SettingsManager:
             if 'custom' in self.data:
                 for field_name, field_data in self.data['custom'].items():
                     if field_name in self.custom_fields and self.custom_fields[field_name]:
-                        field_validator = Validator(self.custom_fields[field_name], allow_unknown=True)
-                        if not field_validator.validate(field_data):
+                        # カスタムフィールドのスキーマをCerberus形式に変換
+                        field_schema = {field_name: self.custom_fields[field_name]}
+                        field_validator = Validator(field_schema, allow_unknown=True)
+                        if not field_validator.validate({field_name: field_data}):
                             raise ValueError(f"Custom field '{field_name}' validation failed: {field_validator.errors}")
 
         except (json.JSONDecodeError, FileNotFoundError, ValueError) as e:

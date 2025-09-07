@@ -65,15 +65,15 @@ user_name_field = viewkit.CustomSettingField(
     "user_name",
     {
         "type": "string",
-        "default": "nekochan",
+        "default": "nekochan"
     }
 )
 
 user_age_field = viewkit.CustomSettingField(
     "user_age",
     {
-        "type": "number",
-        "default": 27,
+        "type": "integer",
+        "default": 27
     }
 )
 
