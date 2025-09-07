@@ -14,6 +14,7 @@ from .subwnd import SubWindow
 from .menu import TopMenuDefinition, MenuItemDefinition, MenuDefinition, separator
 from .settings import CustomSettingField
 from .dialog import *
+import viewkit.presets as presets
 
 def run(ctx, first_window):
     app = App(ctx, first_window)

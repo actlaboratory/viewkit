@@ -5,10 +5,9 @@ import os
 import sys
 import wx
 
-import viewkit.views.langDialog
 
 from viewkit.context.app import ApplicationContext
-from viewkit.views.langDialog import LangDialog
+from viewkit.presets.langDialog import LangDialog
 from viewkit.version import getVersion
 
 
