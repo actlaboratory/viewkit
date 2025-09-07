@@ -44,8 +44,8 @@ class TestWindow(viewkit.MainWindow):
         viewkit.dialog(self, "Result from sub window", f"Result: {result}")
 
 class TestSubWindow(viewkit.SubWindow):
-    def __init__(self, parent, title):
-        viewkit.SubWindow.__init__(self, parent, title)
+    def __init__(self, parent, ctx, title):
+        viewkit.SubWindow.__init__(self, parent, ctx, title)
         self.creator.staticText("This is a sub window")
         self.creator.okbutton("OK", self.onOK)
         self.creator.cancelbutton("Cancel", self.onCancel)
