@@ -35,7 +35,7 @@ class ApplicationContext:
         if log_handler:
             self._root_logger.addHandler(log_handler)
         else:
-            h = logging.FileHandler('viewkit.log', encoding='utf-8', mode='w')
+            h = logging.FileHandler("%s.log" % self.short_name, encoding='utf-8', mode='w')
             f = logging.Formatter("%(name)s - %(levelname)s - %(message)s (%(asctime)s)")
             h.setFormatter(f)
             self._root_logger.addHandler(h)
