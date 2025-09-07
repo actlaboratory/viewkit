@@ -9,6 +9,7 @@ import viewkit.views.langDialog
 
 from viewkit.context.app import ApplicationContext
 from viewkit.views.langDialog import LangDialog
+from viewkit.version import getVersion
 
 
 class App(wx.App):
@@ -35,6 +36,7 @@ class App(wx.App):
         wnd.Show()
         self.SetTopWindow(wnd)
         wx.CallAfter(wnd.onOpen)
+        self.logger.info("viewkit version %s", getVersion())
         self.logger.info("application started")
         self.MainLoop()
         self.logger.info("application exited")

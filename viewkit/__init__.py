@@ -1,5 +1,10 @@
 import os
 import sys
+
+from .version import getVersion
+
+__version__ = getVersion()
+
 from .app import App
 from . import creator
 from .context import ApplicationContext, WindowContext
