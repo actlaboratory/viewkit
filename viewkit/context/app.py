@@ -1,5 +1,6 @@
 import logging
 from viewkit.settings import SettingsManager, CustomSettingField
+from viewkit.fontManager import FontManager, DEFAULT_FONT
 
 class ApplicationContext:
     def __init__(
@@ -27,10 +28,13 @@ class ApplicationContext:
             self.setting_file_name = "%s.json" % self.application_name
             self.logger.debug("ApplicationContext using default setting_file_name=%s", self.setting_file_name)
         self.settings = SettingsManager(self.setting_file_name)
-
+        self.font = FontManager()
         for field in custom_setting_fields:
             self.settings.registerCustomField(field)
         self.settings.loadOrCreateDefault()
+        print(self.settings.getSetting("view.font"))
+        if not self.font.setFontFromString(self.settings.getSetting("view.font")):
+            self.settings.changeSetting("view.font", DEFAULT_FONT)
 
     def _initLogger(self, log_handler):
         self._root_logger = logging.getLogger("viewkit")

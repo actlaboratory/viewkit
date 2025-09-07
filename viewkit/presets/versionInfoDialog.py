@@ -25,6 +25,6 @@ class VersionInfoDialog(SubWindow):
         self.info.SetMinSize(wx.Size(750,240))
 
         # フッター
-        footerCreator = ViewCreator(0, self.panel, self.creator.getSizer(), style=wx.ALIGN_RIGHT | wx.ALL, margin=20)
+        footerCreator = ViewCreator(0, self.app_ctx.font.getFont(), self.panel, self.creator.getSizer(), style=wx.ALIGN_RIGHT | wx.ALL, margin=20)
         self.closeBtn = footerCreator.closebutton(_("閉じる"))
         self.closeBtn.SetDefault()

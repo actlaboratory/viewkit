@@ -23,6 +23,7 @@ class SubWindow(wx.Dialog):
         self.panel = wx.Panel(self, wx.ID_ANY)
         self.creator = ViewCreator(
             ViewModeCalculator(self.app_ctx.settings.getSetting('view.is_dark'), self.app_ctx.settings.getSetting('view.is_word_wrap')).getMode(),
+            self.app_ctx.font.getFont(),
             self.panel,
             None,
             wx.VERTICAL,

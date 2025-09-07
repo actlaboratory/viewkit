@@ -50,7 +50,7 @@ MODE_WRAPPING = 2
 
 
 class ViewCreator():
-    def __init__(self, mode, parent, parentSizer=None, orient=wx.HORIZONTAL, space=0, label="", style=0, proportion=0, margin=20):
+    def __init__(self, mode: int, font: wx.Font, parent, parentSizer=None, orient=wx.HORIZONTAL, space=0, label="", style=0, proportion=0, margin=20):
         # wxオブジェクトを辞書に格納
         self.winObject = {
             "button": button.button,
@@ -73,18 +73,9 @@ class ViewCreator():
         }
 
         # 表示モード
-        if type(mode) == int:
-            self.mode = mode
-        elif type(mode) == str:
-            if mode.lower() == "dark":
-                self.mode = MODE_DARK
-            else:
-                self.mode = MODE_WHITE
-        else:
-            raise ValueError("モードは整数値またはwhiteかdarkの文字列で指定してください。")
+        self.mode = mode
 
-        # 初期設定フォント
-        # todo fontManager
+        self.font = font
 
         # 親ウィンドウ
         if type(parent) in [wx.Panel, wx.lib.scrolledpanel.ScrolledPanel]:
@@ -719,7 +710,7 @@ class ViewCreator():
         # end skip
         target.SetThemeEnabled(False)
         _winxptheme.SetWindowTheme(target.GetHandle(), "", "")
-        target.SetFont(wx.Font())
+        target.SetFont(self.font)
 
     def getParentOrientation(self, default=wx.VERTICAL):
         if type(self.sizer) in (wx.BoxSizer, wx.StaticBoxSizer):

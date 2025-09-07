@@ -27,8 +27,8 @@ class SettingsManager:
                 'schema': {
                     'x': {'type': 'number', 'min': 0, 'default': 0},
                     'y': {'type': 'number', 'min': 0, 'default': 0},
-                    'size_x': {'type': 'number', 'min': 0, 'default': -1},
-                    'size_y': {'type': 'number', 'min': 0, 'default': -1},
+                    'size_x': {'type': 'number', 'min': -1, 'default': -1},
+                    'size_y': {'type': 'number', 'min': -1, 'default': -1},
                     'maximized': {'type': 'number', 'min': 0, 'max': 1, 'default': 0},
                 },
             },
@@ -38,6 +38,7 @@ class SettingsManager:
                 'schema': {
                     'is_dark': {'type': 'boolean', 'default': False},
                     'is_word_wrap': {'type': 'boolean', 'default': False},
+                    'font': {'type': 'string', 'default': ''},
                 },
             },
             'custom': {'type': 'dict', 'default': {}}
