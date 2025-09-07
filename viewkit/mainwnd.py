@@ -23,14 +23,14 @@ class MainWindow(wx.Frame):
         if app_ctx.settings.getSetting('main_window.maximized'):
             self.Maximize()
         self.app_ctx = app_ctx
-        self.log=getLogger(__name__)
+        self.logger=getLogger(__name__)
         self.ctx = WindowContext()
         self.Bind(wx.EVT_MENU, self._receiveMenuCommand)
         self.Bind(wx.EVT_MOVE_END,self._windowMove)
         self.Bind(wx.EVT_SIZE,self._windowResize)
         self.Bind(wx.EVT_MAXIMIZE,self._windowResize)
         _winxptheme.SetWindowTheme(self.GetHandle(),"","")
-        self.log.info("initialized")
+        self.logger.info("initialized")
         self.clear()
 
     def clear(self, space=0):
