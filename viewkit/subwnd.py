@@ -15,8 +15,6 @@ class SubWindow(wx.Dialog):
     """viewkit では、メインウィンドウ以外のウィンドウをサブウィンドウと呼びます。現状では、これらは全て wx.Dialogのサブクラスとして実装されます。"""
 
     def __init__(self, parent, title, style=wx.CAPTION | wx.SYSTEM_MENU | wx.BORDER_DEFAULT):
-        self.user_object = None
-        self.code = None
         wx.Dialog.__init__(self, parent, -1, title, style=style)
         _winxptheme.SetWindowTheme(self.GetHandle(), "", "")
         self.SetEscapeId(wx.ID_NONE)
@@ -25,7 +23,7 @@ class SubWindow(wx.Dialog):
         self.creator = ViewCreator(0, self.panel, None, wx.VERTICAL, style=wx.ALL, space=0)
 
     def result(self):
-        return ModalResult(self.code, self.user_object)
+        return None
 
     # closeイベントで呼ばれる。Alt+F4対策
     def OnClose(self, event):
