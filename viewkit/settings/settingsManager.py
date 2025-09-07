@@ -21,6 +21,17 @@ class SettingsManager:
             'app_version': {'type': 'string', 'default': ''},
             'schema_version': {'type': 'string', 'default': '20250816.0'},
             'shortcuts': {'type': 'dict', 'default': {}},
+            'main_window': {
+                'type': 'dict',
+                'default': {},
+                'schema': {
+                    'x': {'type': 'number', 'min': 0, 'default': 0},
+                    'y': {'type': 'number', 'min': 0, 'default': 0},
+                    'size_x': {'type': 'number', 'min': 0, 'default': -1},
+                    'size_y': {'type': 'number', 'min': 0, 'default': -1},
+                    'maximized': {'type': 'number', 'min': 0, 'max': 1, 'default': 0},
+                },
+            },
             'custom': {'type': 'dict', 'default': {}}
         }
         self.data = {}

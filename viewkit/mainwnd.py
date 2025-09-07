@@ -11,12 +11,24 @@ from viewkit.subwnd import ModalResult
 
 
 class MainWindow(wx.Frame):
-    def __init__(self, app_ctx: ApplicationContext):
-        wx.Frame.__init__(self, None, -1, app_ctx.application_name)
+    def __init__(self, app_ctx: ApplicationContext, *, size_x = -1, size_y = -1):
+        wx.Frame.__init__(
+            self,
+            None,
+            wx.ID_ANY,
+            app_ctx.application_name,
+            size=(size_x if size_x > 0 else app_ctx.settings.getSetting('main_window.size_x'), size_y if size_y > 0 else app_ctx.settings.getSetting('main_window.size_y')),
+            pos=(app_ctx.settings.getSetting('main_window.x'), app_ctx.settings.getSetting('main_window.y'))
+        )
+        if app_ctx.settings.getSetting('main_window.maximized'):
+            self.Maximize()
         self.app_ctx = app_ctx
         self.log=getLogger("%s.%s" % (app_ctx.short_name, "MainWindow"))
         self.ctx = WindowContext()
         self.Bind(wx.EVT_MENU, self._receiveMenuCommand)
+        self.Bind(wx.EVT_MOVE_END,self._windowMove)
+        self.Bind(wx.EVT_SIZE,self._windowResize)
+        self.Bind(wx.EVT_MAXIMIZE,self._windowResize)
         _winxptheme.SetWindowTheme(self.GetHandle(),"","")
         self.log.info("initialized")
         self.clear()
@@ -115,3 +127,26 @@ class MainWindow(wx.Frame):
             return
         if feature.action is not None:
             feature.action(event)
+
+    def _windowMove(self, event):
+        # wx.EVT_MOVE_END→wx.MoveEvent
+        #設定ファイルに位置を保存
+        self.app_ctx.settings.changeSetting('main_window.x', self.GetPosition().x)
+        self.app_ctx.settings.changeSetting('main_window.y', self.GetPosition().y)
+        self.app_ctx.settings.save()
+        event.Skip()
+
+    def _windowResize(self, event):
+        # wx.EVT_SIZE→wx.SizeEvent
+        if not self.IsActive():
+            #ウィンドウがアクティブでない時(ウィンドウ生成時など)のイベントは無視
+            event.Skip()
+            return
+
+        self.app_ctx.settings.changeSetting('main_window.maximized', int(self.IsMaximized()))
+        if not self.IsMaximized():
+            self.app_ctx.settings.changeSetting('main_window.size_x', event.GetSize().x)
+            self.app_ctx.settings.changeSetting('main_window.size_y', event.GetSize().y)
+        self.app_ctx.settings.save()
+        #sizerを正しく機能させるため、Skipの呼出が必須
+        event.Skip()
