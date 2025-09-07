@@ -23,7 +23,7 @@ class MainWindow(wx.Frame):
         if app_ctx.settings.getSetting('main_window.maximized'):
             self.Maximize()
         self.app_ctx = app_ctx
-        self.log=getLogger("%s.%s" % (app_ctx.short_name, "MainWindow"))
+        self.log=getLogger(__name__)
         self.ctx = WindowContext()
         self.Bind(wx.EVT_MENU, self._receiveMenuCommand)
         self.Bind(wx.EVT_MOVE_END,self._windowMove)
