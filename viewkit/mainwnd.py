@@ -24,7 +24,7 @@ class MainWindow(wx.Frame):
             self.Maximize()
         self.app_ctx = app_ctx
         self.logger=getLogger(__name__)
-        self.ctx = WindowContext()
+        self.window_ctx = WindowContext()
         self.Bind(wx.EVT_MENU, self._receiveMenuCommand)
         self.Bind(wx.EVT_MOVE_END,self._windowMove)
         self.Bind(wx.EVT_SIZE,self._windowResize)
@@ -57,7 +57,7 @@ class MainWindow(wx.Frame):
 
     def showSubWindow(self, window_class, title, modal=True):
         """サブウィンドウを表示します。window_class は viewkit.SubWindow のサブクラスである必要があります。ウィンドウ上での作業結果を表すオブジェクトを返します。"""
-        wnd = window_class(self, self.ctx, title)
+        wnd = window_class(self, self.app_ctx, title)
         wnd.Center()
         code = None
         if modal:
@@ -70,29 +70,29 @@ class MainWindow(wx.Frame):
 
     def _register_features(self, features):
         for feature in features:
-            self.ctx.feature_store.register(feature)
+            self.window_ctx.feature_store.register(feature)
 
     def _apply_custom_shortcuts(self):
         """カスタムショートカット設定を適用する"""
         shortcuts_settings = self.app_ctx.settings.getShortcutSettings()
         if shortcuts_settings:
-            self.ctx.feature_store.applyCustomShortcutSettingsWithConflictResolution(shortcuts_settings)
+            self.window_ctx.feature_store.applyCustomShortcutSettingsWithConflictResolution(shortcuts_settings)
 
     def _assign_refs(self):
-        for feature in self.ctx.feature_store.all().values():
-            self.ctx.ref_store.getRef(feature.identifier)
+        for feature in self.window_ctx.feature_store.all().values():
+            self.window_ctx.ref_store.getRef(feature.identifier)
 
     def _setup_menu_bar(self):
-        if not self.ctx.menu.need_menu_bar():
+        if not self.window_ctx.menu.need_menu_bar():
             return
         bar = wx.MenuBar()
-        for top_menu in self.ctx.menu.top_menus:
+        for top_menu in self.window_ctx.menu.top_menus:
             menu = wx.Menu()
             for item in top_menu.items:
                 if item is separator:
                     menu.AppendSeparator()
                     continue
-                ref = self.ctx.ref_store.getRef(item.identifier)
+                ref = self.window_ctx.ref_store.getRef(item.identifier)
                 menu_item = self._generate_menu_item(menu, ref, item)
                 menu.Append(menu_item)
             bar.Append(menu, "%s(&%s)" % (top_menu.display_name, top_menu.accessor_letter))
@@ -101,28 +101,28 @@ class MainWindow(wx.Frame):
     def _generate_menu_item(self, menu: wx.Menu, ref: int, item: MenuItem | MenuItemWithSubmenu):
         if isinstance(item, MenuItem):
             display_name = item.display_name
-            feature = self.ctx.feature_store.getByIdentifier(item.identifier)
+            feature = self.window_ctx.feature_store.getByIdentifier(item.identifier)
             if feature.shortcut_keys:
                 display_name += "\t" + str(feature.shortcut_keys[0])
             return wx.MenuItem(menu, ref, display_name)
         elif isinstance(item, MenuItemWithSubmenu):
             submenu = wx.Menu()
             for sub_item in item.sub_menu_items:
-                ref = self.ctx.ref_store.getRef(sub_item.identifier)
+                ref = self.window_ctx.ref_store.getRef(sub_item.identifier)
                 menu_item = self._generate_menu_item(submenu, ref, sub_item)
                 submenu.Append(menu_item)
             return wx.MenuItem(menu, ref, item.display_name, subMenu=submenu)
 
     def _apply_accelerator_table(self):
-        if not self.ctx.menu.need_menu_bar():
+        if not self.window_ctx.menu.need_menu_bar():
             return
-        self.SetAcceleratorTable(self.ctx.generateAcceleratorTable())
+        self.SetAcceleratorTable(self.window_ctx.generateAcceleratorTable())
 
     def _receiveMenuCommand(self, event):
-        identifier = self.ctx.ref_store.getIdentifier(event.GetId())
+        identifier = self.window_ctx.ref_store.getIdentifier(event.GetId())
         if identifier is None:
             return
-        feature = self.ctx.feature_store.getByIdentifier(identifier)
+        feature = self.window_ctx.feature_store.getByIdentifier(identifier)
         if feature is None:
             return
         if feature.action is not None:
