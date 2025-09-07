@@ -1,5 +1,9 @@
 import wx
+import _winxptheme
+
+from logging import getLogger
 from typing import List
+
 from viewkit.context.app import ApplicationContext
 from viewkit.context.window import WindowContext
 from viewkit.feature import Feature
@@ -9,10 +13,13 @@ from viewkit.creator import ViewCreator
 
 class MainWindow(wx.Frame):
     def __init__(self, app_ctx: ApplicationContext):
-        wx.Frame.__init__(self, None, -1, app_ctx.applicationName)
+        wx.Frame.__init__(self, None, -1, app_ctx.application_name)
         self.app_ctx = app_ctx
+        self.log=getLogger("%s.%s" % (app_ctx.short_name, "MainWindow"))
         self.ctx = WindowContext()
         self.Bind(wx.EVT_MENU, self._receiveMenuCommand)
+        _winxptheme.SetWindowTheme(self.GetHandle(),"","")
+        self.log.info("initialized")
         self.clear()
 
     def clear(self, space=0):
@@ -32,6 +39,10 @@ class MainWindow(wx.Frame):
     def onOpen(self):
         """ウィンドウ生成時に呼ばれる処理"""
         pass
+
+    def Show(self):
+        self.creator.getPanel().Layout()
+        super().Show()
 
     def _register_features(self, features):
         for feature in features:

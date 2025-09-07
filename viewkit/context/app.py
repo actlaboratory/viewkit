@@ -4,12 +4,15 @@ class ApplicationContext:
     def __init__(
         self,
         application_name: str,
+        short_name: str,
+        *,
         supported_languages: dict,
         language: str,
         setting_file_name:str="",
         custom_setting_fields: list[CustomSettingField] = []
     ):
         self.application_name = application_name
+        self.short_name = short_name
         self.supported_languages = supported_languages
         self.language = language
         self.setting_file_name = setting_file_name
