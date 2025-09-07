@@ -1,5 +1,6 @@
 import gettext
 import locale
+import logging
 import os
 import sys
 import wx
@@ -13,12 +14,15 @@ from viewkit.views.langDialog import LangDialog
 class App(wx.App):
     def __init__(self, ctx: ApplicationContext, initial_window):
         """アプリケーション初期化"""
+        self.logger = logging.getLogger(__name__)
         self.ctx = ctx
         self._initial_window = initial_window
+        self.logger.debug("App initialized with initial_window=%s", initial_window)
         wx.App.__init__(self)
 
     def run(self):
         """ウインドウを表示して、アプリケーションを開始。アプリケーションが終了するまで制御を返さない"""
+        self.logger.debug("Running application")
         self._addPath()
         self._initTranslation()
         wnd = self._initial_window(self.ctx)
@@ -31,7 +35,9 @@ class App(wx.App):
         wnd.Show()
         self.SetTopWindow(wnd)
         wx.CallAfter(wnd.onOpen)
+        self.logger.info("application started")
         self.MainLoop()
+        self.logger.info("application exited")
 
     def _addPath(self):
         """sys.pathと、3.8以降の場合のdll読み込み対象パスにアプリケーション直下を追加"""
