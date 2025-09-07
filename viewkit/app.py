@@ -30,7 +30,7 @@ class App(wx.App):
         wnd._register_features(wnd.define_features())
         wnd._apply_custom_shortcuts()
         wnd._assign_refs()
-        wnd.ctx.menu.setup(wnd.define_menu())
+        wnd.window_ctx.menu.setup(wnd.define_menu())
         wnd._setup_menu_bar()
         wnd._apply_accelerator_table()
         wnd.Show()
