@@ -15,7 +15,7 @@ class SubWindow(wx.Dialog):
     """viewkit では、メインウィンドウ以外のウィンドウをサブウィンドウと呼びます。現状では、これらは全て wx.Dialogのサブクラスとして実装されます。"""
 
     def __init__(self, parent, ctx, title, style=wx.CAPTION | wx.SYSTEM_MENU | wx.BORDER_DEFAULT):
-        self.ctx =ctx
+        self.app_ctx =ctx
         wx.Dialog.__init__(self, parent, -1, title, style=style)
         _winxptheme.SetWindowTheme(self.GetHandle(), "", "")
         self.SetEscapeId(wx.ID_NONE)
