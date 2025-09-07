@@ -44,6 +44,18 @@ class MainWindow(wx.Frame):
         self.creator.getPanel().Layout()
         super().Show()
 
+    def showSubWindow(self, window_class, title, modal=True):
+        """サブウィンドウを表示します。window_class は viewkit.SubWindow のサブクラスである必要があります。ウィンドウ上での作業結果を表すオブジェクトを返します。"""
+        wnd = window_class(self, title)
+        wnd.Center()
+        if modal:
+            wnd.ShowModal()
+        else:
+            wnd.Show()
+        result = wnd.result()
+        wnd.Destroy()
+        return result
+
     def _register_features(self, features):
         for feature in features:
             self.ctx.feature_store.register(feature)

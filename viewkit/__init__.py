@@ -5,6 +5,7 @@ from . import creator
 from .context import ApplicationContext, WindowContext
 from .feature import Feature, FeatureStore
 from .mainwnd import MainWindow
+from .subwnd import SubWindow
 from .menu import TopMenuDefinition, MenuItemDefinition, MenuDefinition, separator
 from .settings import CustomSettingField
 

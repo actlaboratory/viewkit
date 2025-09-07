@@ -9,15 +9,18 @@ class SubWindow(wx.Dialog):
     def __init__(self, parent, title, style=wx.CAPTION | wx.SYSTEM_MENU | wx.BORDER_DEFAULT):
         self.value = None
         wx.Dialog.__init__(self, parent, -1, title, style=style)
-        _winxptheme.SetWindowTheme(self.wnd.GetHandle(), "", "")
+        _winxptheme.SetWindowTheme(self.GetHandle(), "", "")
         self.SetEscapeId(wx.ID_NONE)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         self.panel = wx.Panel(self, wx.ID_ANY)
         self.creator = ViewCreator(0, self.panel, None, wx.VERTICAL, style=wx.ALL, space=0)
 
+    def result(self):
+        return None
+
     # closeイベントで呼ばれる。Alt+F4対策
     def OnClose(self, event):
-        if self.wnd.GetWindowStyleFlag() & wx.CLOSE_BOX == wx.CLOSE_BOX:
+        if self.GetWindowStyleFlag() & wx.CLOSE_BOX == wx.CLOSE_BOX:
             event.Skip()
         else:
             event.Veto()
