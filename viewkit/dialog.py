@@ -1,6 +1,7 @@
 ﻿import wx
 import ctypes
 import sys
+import _winxptheme
 
 def dialog(parent, title, message):
 	dialog = wx.MessageDialog(parent,message,title,wx.OK)
