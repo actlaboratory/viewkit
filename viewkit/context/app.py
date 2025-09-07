@@ -5,6 +5,7 @@ class ApplicationContext:
     def __init__(
         self,
         application_name: str,
+        application_version:str,
         short_name: str,
         *,
         supported_languages: dict,
@@ -13,13 +14,15 @@ class ApplicationContext:
         custom_setting_fields: list[CustomSettingField] = [],
         log_handler: logging.Handler = None,
     ):
-        self._initLogger(log_handler)
         self.application_name = application_name
+        self.short_name = short_name
+        self.application_version = application_version
         self.short_name = short_name
         self.supported_languages = supported_languages
         self.language = language
         self.setting_file_name = setting_file_name
-        self.logger.debug("ApplicationContext initialized with application_name=%s, short_name=%s, language=%s, setting_file_name=%s", application_name, short_name, language, self.setting_file_name)
+        self._initLogger(log_handler)
+        self.logger.debug("ApplicationContext initialized with application_name=%s, application_version=%s, short_name=%s, language=%s, setting_file_name=%s", application_name, application_version, short_name, language, self.setting_file_name)
         if self.setting_file_name == "":
             self.setting_file_name = "%s.json" % self.application_name
             self.logger.debug("ApplicationContext using default setting_file_name=%s", self.setting_file_name)
@@ -35,7 +38,7 @@ class ApplicationContext:
         if log_handler:
             self._root_logger.addHandler(log_handler)
         else:
-            h = logging.FileHandler('viewkit.log', encoding='utf-8', mode='w')
+            h = logging.FileHandler("%s.log" % self.short_name, encoding='utf-8', mode='w')
             f = logging.Formatter("%(name)s - %(levelname)s - %(message)s (%(asctime)s)")
             h.setFormatter(f)
             self._root_logger.addHandler(h)

@@ -36,7 +36,7 @@ class App(wx.App):
         wnd.Show()
         self.SetTopWindow(wnd)
         wx.CallAfter(wnd.onOpen)
-        self.logger.info("viewkit version %s", getVersion())
+        self.logger.info("%s (%s) version %s with viewkit version %s", self.ctx.application_name, self.ctx.short_name, self.ctx.application_version, getVersion())
         self.logger.info("application started")
         self.MainLoop()
         self.logger.info("application exited")

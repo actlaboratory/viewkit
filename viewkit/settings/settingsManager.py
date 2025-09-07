@@ -112,58 +112,6 @@ class SettingsManager:
         else:
             return self.data.get(key, default)
 
-    def getCustomSetting(self, field_name: str, key: str = None, default: Any = None) -> Any:
-        """カスタム設定値にアクセスする"""
-        custom_data = self.data.get('custom', {})
-        if field_name not in custom_data:
-            return default
-
-        if key is None:
-            return custom_data[field_name]
-
-        return custom_data[field_name].get(key, default)
-
-    def getNestedSetting(self, path: str, default: Any = None) -> Any:
-        """区切り文字で区切られたパスで設定値を探索して取得する"""
-        keys = path.split(self.SETTING_SEPARATOR)
-        current = self.data
-
-        for key in keys:
-            if isinstance(current, dict) and key in current:
-                current = current[key]
-            else:
-                return default
-
-        return current
-
-    def changeNestedSetting(self, path: str, value: Any):
-        """区切り文字で区切られたパスで設定値を変更する（バリデーション付き）"""
-        keys = path.split(self.SETTING_SEPARATOR)
-
-        # バリデーション用に一時的にデータを作成
-        temp_data = self.data.copy()
-        current = temp_data
-
-        # パスをたどって設定値を変更
-        for i, key in enumerate(keys[:-1]):
-            if key not in current:
-                current[key] = {}
-            elif not isinstance(current[key], dict):
-                raise ValueError(f"Path '{self.SETTING_SEPARATOR.join(keys[:i + 1])}' is not a dictionary")
-            current = current[key]
-
-        # 最終キーに値を設定
-        final_key = keys[-1]
-        current[final_key] = value
-
-        # バリデーション実行
-        validator = Validator(self.schema)
-        if not validator.validate(temp_data):
-            raise ValueError(f"Setting validation failed: {validator.errors}")
-
-        # バリデーション成功時のみ実際のデータを更新
-        self.data = validator.normalized(temp_data)
-
     def changeSetting(self, key: str, value: Any):
         """設定値を変更する（ネストパス・カスタム設定対応）"""
         if self.SETTING_SEPARATOR in key:
