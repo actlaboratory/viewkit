@@ -3,11 +3,20 @@ import _winxptheme
 from viewkit.creator import ViewCreator
 
 
+class ModalResult:
+    def __init__(self, code, user_object):
+        self.code = code
+        self.user_object = user_object
+
+    def __str__(self):
+        return "ModalResult(code=%s, user_object=%s)" % (self.code, self.user_object)
+
 class SubWindow(wx.Dialog):
     """viewkit では、メインウィンドウ以外のウィンドウをサブウィンドウと呼びます。現状では、これらは全て wx.Dialogのサブクラスとして実装されます。"""
 
     def __init__(self, parent, title, style=wx.CAPTION | wx.SYSTEM_MENU | wx.BORDER_DEFAULT):
-        self.value = None
+        self.user_object = None
+        self.code = None
         wx.Dialog.__init__(self, parent, -1, title, style=style)
         _winxptheme.SetWindowTheme(self.GetHandle(), "", "")
         self.SetEscapeId(wx.ID_NONE)
@@ -16,7 +25,7 @@ class SubWindow(wx.Dialog):
         self.creator = ViewCreator(0, self.panel, None, wx.VERTICAL, style=wx.ALL, space=0)
 
     def result(self):
-        return None
+        return ModalResult(self.code, self.user_object)
 
     # closeイベントで呼ばれる。Alt+F4対策
     def OnClose(self, event):

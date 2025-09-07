@@ -52,11 +52,11 @@ class TestSubWindow(viewkit.SubWindow):
 
     def onOK(self, event):
         self.value = "OK"
-        self.Close()
+        self.EndModal(wx.ID_OK)
 
     def onCancel(self, event):
         self.value = "Cancel"
-        self.Close()
+        self.EndModal(wx.ID_CANCEL)
 
     def result(self):
         return self.value

@@ -1,14 +1,13 @@
 import wx
 import _winxptheme
-
 from logging import getLogger
 from typing import List
-
 from viewkit.context.app import ApplicationContext
 from viewkit.context.window import WindowContext
 from viewkit.feature import Feature
 from viewkit.menu import MenuDefinition, MenuItem, MenuItemWithSubmenu, separator
 from viewkit.creator import ViewCreator
+from viewkit.subwnd import ModalResult
 
 
 class MainWindow(wx.Frame):
@@ -48,11 +47,12 @@ class MainWindow(wx.Frame):
         """サブウィンドウを表示します。window_class は viewkit.SubWindow のサブクラスである必要があります。ウィンドウ上での作業結果を表すオブジェクトを返します。"""
         wnd = window_class(self, title)
         wnd.Center()
+        code = None
         if modal:
-            wnd.ShowModal()
+            code = wnd.ShowModal()
         else:
-            wnd.Show()
-        result = wnd.result()
+            code = wnd.Show()
+        result = ModalResult(code, wnd.result())
         wnd.Destroy()
         return result
 
