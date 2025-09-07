@@ -664,13 +664,13 @@ class ViewCreator():
         self.AddSpace()
         return staticBitmap
 
-    def GetPanel(self):
+    def getPanel(self):
         return self.parent
 
-    def GetSizer(self):
+    def getSizer(self):
         return self.sizer
 
-    def GetMode(self):
+    def getMode(self):
         return self.mode
 
     def _addDescriptionText(self, text, textLayout, sizerFlag=0, proportion=0, margin=0):

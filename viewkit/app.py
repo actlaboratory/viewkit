@@ -29,6 +29,7 @@ class App(wx.App):
         wnd._setup_menu_bar()
         wnd._apply_accelerator_table()
         wnd.Show()
+        self.SetTopWindow(wnd)
         wx.CallAfter(wnd.onOpen)
         self.MainLoop()
 
@@ -41,13 +42,13 @@ class App(wx.App):
     def _initTranslation(self):
         """翻訳を初期化する。"""
         localeLang = locale.getdefaultlocale()[0].replace("_", "-")
-        if self.ctx.language in list(self.ctx.supportedLanguages.keys()):
+        if self.ctx.language in list(self.ctx.supported_languages.keys()):
             lang = self.ctx.language
-        elif localeLang in list(self.ctx.supportedLanguages.keys()):
+        elif localeLang in list(self.ctx.supported_languages.keys()):
             lang = localeLang
         else:
             # 言語選択を表示
-            langSelect = LangDialog(self.ctx.supportedLanguages)
+            langSelect = LangDialog(self.ctx.supported_languages)
             langSelect.Initialize()
             langSelect.Show()
             lang = langSelect.GetValue()
