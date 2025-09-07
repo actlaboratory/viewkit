@@ -16,7 +16,7 @@ class SubWindow(wx.Dialog):
 
     def __init__(self, parent, ctx, title, style=wx.CAPTION | wx.SYSTEM_MENU | wx.BORDER_DEFAULT):
         self.app_ctx =ctx
-        wx.Dialog.__init__(self, parent, -1, title, style=style)
+        wx.Dialog.__init__(self, parent, wx.ID_ANY, title, style=style)
         _winxptheme.SetWindowTheme(self.GetHandle(), "", "")
         self.SetEscapeId(wx.ID_NONE)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
@@ -30,6 +30,16 @@ class SubWindow(wx.Dialog):
             style=wx.ALL,
             space=0
         )
+
+    def ShowModal(self):
+        self.creator.getPanel().Layout()
+        self.creator.getSizer().Fit(self)
+        super().ShowModal()
+
+    def Show(self):
+        self.creator.getPanel().Layout()
+        self.creator.getSizer().Fit(self)
+        super().Show()
 
     def result(self):
         return None
