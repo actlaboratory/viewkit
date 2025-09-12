@@ -1,6 +1,7 @@
 import logging
 from viewkit.settings import SettingsManager, CustomSettingField
 from viewkit.fontManager import FontManager, DEFAULT_FONT
+from .message import ContextMessageHandler, ContextMessageReceiver
 
 class ApplicationContext:
     def __init__(
@@ -15,6 +16,7 @@ class ApplicationContext:
         custom_setting_fields: list[CustomSettingField] = [],
         log_handler: logging.Handler = None,
     ):
+        self._message_handler = ContextMessageHandler()
         self.application_name = application_name
         self.short_name = short_name
         self.application_version = application_version
@@ -35,6 +37,12 @@ class ApplicationContext:
         print(self.settings.getSetting("view.font"))
         if not self.font.setFontFromString(self.settings.getSetting("view.font")):
             self.settings.changeSetting("view.font", DEFAULT_FONT)
+
+    def registerContextMessageReceiver(self, key, callable):
+        self._message_handler.registerReceiver(key, ContextMessageReceiver(callable))
+
+    def sendContextMessage(self, key, params=None):
+        self._message_handler.send(key, params)
 
     def _initLogger(self, log_handler):
         self._root_logger = logging.getLogger("viewkit")

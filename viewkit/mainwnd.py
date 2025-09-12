@@ -1,3 +1,4 @@
+import sys
 import wx
 import _winxptheme
 from logging import getLogger
@@ -8,6 +9,8 @@ from viewkit.feature import Feature
 from viewkit.menu import MenuDefinition, MenuItem, MenuItemWithSubmenu, separator
 from viewkit.creator import ViewCreator, ViewModeCalculator
 from viewkit.subwnd import ModalResult
+from viewkit.context.message import MAIN_WINDOW_RELOADED
+from viewkit.context.messageParameters import MainWindowReloaded
 
 
 class MainWindow(wx.Frame):
@@ -76,6 +79,9 @@ class MainWindow(wx.Frame):
         wnd.Destroy()
         return result
 
+    def reload(self, evt=None): # 直接イベントハンドラとして使ってもいいように
+        self.app_ctx.sendContextMessage(MAIN_WINDOW_RELOADED, MainWindowReloaded(self))
+
     def _registerFeatures(self, features):
         for feature in features:
             self.window_ctx.feature_store.register(feature)
@@ -121,7 +127,7 @@ class MainWindow(wx.Frame):
                 submenu.Append(menu_item)
             return wx.MenuItem(menu, ref, item.display_name, subMenu=submenu)
 
-    def _apply_accelerator_table(self):
+    def _applyAcceleratorTable(self):
         if not self.window_ctx.menu.need_menu_bar():
             return
         self.SetAcceleratorTable(self.window_ctx.generateAcceleratorTable())

@@ -1,4 +1,5 @@
 import gettext
+import importlib
 import locale
 import logging
 import os
@@ -7,6 +8,7 @@ import wx
 
 
 from viewkit.context.app import ApplicationContext
+from viewkit.context.message import MAIN_WINDOW_RELOADED
 from viewkit.presets.langDialog import LangDialog
 from viewkit.version import getVersion
 
@@ -16,6 +18,7 @@ class App(wx.App):
         """アプリケーション初期化"""
         self.logger = logging.getLogger(__name__)
         self.ctx = ctx
+        self.ctx.registerContextMessageReceiver(MAIN_WINDOW_RELOADED, self._onMainWindowReloaded)
         self._initial_window = initial_window
         self.logger.debug("App initialized with initial_window=%s", initial_window)
         wx.App.__init__(self)
@@ -25,20 +28,23 @@ class App(wx.App):
         self.logger.debug("Running application")
         self._addPath()
         self._initTranslation()
-        wnd = self._initial_window(self.ctx)
-        wnd._register_features(wnd.define_features())
-        wnd._apply_custom_shortcuts()
-        wnd._assign_refs()
-        wnd.window_ctx.menu.setup(wnd.define_menu())
-        wnd._setup_menu_bar()
-        wnd._apply_accelerator_table()
-        wnd.Show()
-        self.SetTopWindow(wnd)
-        wx.CallAfter(wnd.onOpen)
+        self._openMainWindow()
         self.logger.info("%s (%s) version %s with viewkit version %s", self.ctx.application_name, self.ctx.short_name, self.ctx.application_version, getVersion())
         self.logger.info("application started")
         self.MainLoop()
         self.logger.info("application exited")
+
+    def _openMainWindow(self):
+        wnd = self._initial_window(self.ctx)
+        wnd._registerFeatures(wnd.define_features())
+        wnd._applyCustomShortcuts()
+        wnd._assignRefs()
+        wnd.window_ctx.menu.setup(wnd.define_menu())
+        wnd._setupMenuBar()
+        wnd._applyAcceleratorTable()
+        wnd.Show()
+        self.SetTopWindow(wnd)
+        wx.CallAfter(wnd.onOpen)
 
     def _addPath(self):
         """sys.pathと、3.8以降の場合のdll読み込み対象パスにアプリケーション直下を追加"""
@@ -62,6 +68,15 @@ class App(wx.App):
         self.ctx.language = lang
         self.translator = gettext.translation("messages", "locale", languages=[lang], fallback=True)
         self.translator.install()
+
+    def _onMainWindowReloaded(self, params=None):
+        print("initial window cls: %s" % self._initial_window)
+        module = sys.modules.get(self._initial_window.__module__)
+        print("module: %s" % module)
+        importlib.reload(module)
+        self._initial_window = getattr(module, self._initial_window.__name__)
+        self._openMainWindow()
+        params.old_window.Destroy()
 
     def getAppPath(self):
         """アプリの絶対パスを返す"""
