@@ -16,6 +16,7 @@ class SubWindow(wx.Dialog):
 
     def __init__(self, parent, ctx, title, style=wx.CAPTION | wx.SYSTEM_MENU | wx.BORDER_DEFAULT):
         self.app_ctx =ctx
+        self.reload_requested = False
         wx.Dialog.__init__(self, parent, wx.ID_ANY, title, style=style)
         _winxptheme.SetWindowTheme(self.GetHandle(), "", "")
         self.SetEscapeId(wx.ID_NONE)
@@ -50,3 +51,7 @@ class SubWindow(wx.Dialog):
             event.Skip()
         else:
             event.Veto()
+
+    def reload(self, event=None): # 直接イベントハンドラとして使ってもいいように
+        self.reload_requested = True
+        self.EndModal(wx.ID_NONE)

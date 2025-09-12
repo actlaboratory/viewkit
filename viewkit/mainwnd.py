@@ -1,3 +1,4 @@
+import importlib
 import sys
 import wx
 import _winxptheme
@@ -68,18 +69,31 @@ class MainWindow(wx.Frame):
 
     def showSubWindow(self, window_class, title, modal=True):
         """サブウィンドウを表示します。window_class は viewkit.SubWindow のサブクラスである必要があります。ウィンドウ上での作業結果を表すオブジェクトを返します。"""
-        wnd = window_class(self, self.app_ctx, title)
-        wnd.Center()
-        code = None
-        if modal:
-            code = wnd.ShowModal()
-        else:
-            code = wnd.Show()
-        result = ModalResult(code, wnd.result())
-        wnd.Destroy()
+        while(True):
+            wnd = window_class(self, self.app_ctx, title)
+            wnd.Center()
+            code = None
+            if modal:
+                code = wnd.ShowModal()
+            else:
+                code = wnd.Show()
+            result = ModalResult(code, wnd.result())
+            if wnd.reload_requested:
+                module = sys.modules.get(window_class.__module__)
+                self.logger.info("Reloading sub window: %s" % module)
+                importlib.reload(module)
+                self.logger.debug("re-imported module %s" % module)
+                window_class = getattr(module, window_class.__name__)
+                self.logger.debug("re-opening the sub window")
+                continue
+            # end reload
+            wnd.Destroy()
+            break
+        # end until user interaction except window reloading
         return result
 
     def reload(self, evt=None): # 直接イベントハンドラとして使ってもいいように
+        # トップレベルウインドウの処理は app でやらないといけないが、 app -> mainWindow の依存報告を守りたいのでメッセージング機構を使って逆転させる
         self.app_ctx.sendContextMessage(MAIN_WINDOW_RELOADED, MainWindowReloaded(self))
 
     def _registerFeatures(self, features):
