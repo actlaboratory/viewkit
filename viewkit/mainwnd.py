@@ -76,21 +76,21 @@ class MainWindow(wx.Frame):
         wnd.Destroy()
         return result
 
-    def _register_features(self, features):
+    def _registerFeatures(self, features):
         for feature in features:
             self.window_ctx.feature_store.register(feature)
 
-    def _apply_custom_shortcuts(self):
+    def _applyCustomShortcuts(self):
         """カスタムショートカット設定を適用する"""
         shortcuts_settings = self.app_ctx.settings.getShortcutSettings()
         if shortcuts_settings:
             self.window_ctx.feature_store.applyCustomShortcutSettingsWithConflictResolution(shortcuts_settings)
 
-    def _assign_refs(self):
+    def _assignRefs(self):
         for feature in self.window_ctx.feature_store.all().values():
             self.window_ctx.ref_store.getRef(feature.identifier)
 
-    def _setup_menu_bar(self):
+    def _setupMenuBar(self):
         if not self.window_ctx.menu.need_menu_bar():
             return
         bar = wx.MenuBar()
@@ -101,12 +101,12 @@ class MainWindow(wx.Frame):
                     menu.AppendSeparator()
                     continue
                 ref = self.window_ctx.ref_store.getRef(item.identifier)
-                menu_item = self._generate_menu_item(menu, ref, item)
+                menu_item = self._generateMenuItem(menu, ref, item)
                 menu.Append(menu_item)
             bar.Append(menu, "%s(&%s)" % (top_menu.display_name, top_menu.accessor_letter))
         self.SetMenuBar(bar)
 
-    def _generate_menu_item(self, menu: wx.Menu, ref: int, item: MenuItem | MenuItemWithSubmenu):
+    def _generateMenuItem(self, menu: wx.Menu, ref: int, item: MenuItem | MenuItemWithSubmenu):
         if isinstance(item, MenuItem):
             display_name = item.display_name
             feature = self.window_ctx.feature_store.getByIdentifier(item.identifier)
@@ -117,7 +117,7 @@ class MainWindow(wx.Frame):
             submenu = wx.Menu()
             for sub_item in item.sub_menu_items:
                 ref = self.window_ctx.ref_store.getRef(sub_item.identifier)
-                menu_item = self._generate_menu_item(submenu, ref, sub_item)
+                menu_item = self._generateMenuItem(submenu, ref, sub_item)
                 submenu.Append(menu_item)
             return wx.MenuItem(menu, ref, item.display_name, subMenu=submenu)
 
