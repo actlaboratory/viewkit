@@ -70,13 +70,15 @@ class App(wx.App):
         self.translator.install()
 
     def _onMainWindowReloaded(self, params=None):
-        print("initial window cls: %s" % self._initial_window)
         module = sys.modules.get(self._initial_window.__module__)
-        print("module: %s" % module)
+        self.logger.info("Reloading main window: %s" % module)
         importlib.reload(module)
+        self.logger.debug("re-imported module %s" % module)
         self._initial_window = getattr(module, self._initial_window.__name__)
+        self.logger.debug("re-opening the the main window")
         self._openMainWindow()
         params.old_window.Destroy()
+        self.logger.debug("old window destroyed: %s" %params.old_window)
 
     def getAppPath(self):
         """アプリの絶対パスを返す"""
