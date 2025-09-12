@@ -13,7 +13,6 @@ class WindowContext:
         self.logger = logging.getLogger(__name__)
         self.logger.debug("WindowContext initialized")
 
-
     def generateAcceleratorTable(self):
         """すべての feature の wx.AcceleratorTable を作成する"""
         self.logger.debug("Generating accelerator table")

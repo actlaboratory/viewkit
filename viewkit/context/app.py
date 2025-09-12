@@ -3,16 +3,17 @@ from viewkit.settings import SettingsManager, CustomSettingField
 from viewkit.fontManager import FontManager, DEFAULT_FONT
 from .message import ContextMessageHandler, ContextMessageReceiver
 
+
 class ApplicationContext:
     def __init__(
         self,
         application_name: str,
-        application_version:str,
+        application_version: str,
         short_name: str,
         *,
         supported_languages: dict,
         language: str,
-        setting_file_name:str="",
+        setting_file_name: str = "",
         custom_setting_fields: list[CustomSettingField] = [],
         log_handler: logging.Handler = None,
     ):
@@ -25,7 +26,13 @@ class ApplicationContext:
         self.language = language
         self.setting_file_name = setting_file_name
         self._initLogger(log_handler)
-        self.logger.debug("ApplicationContext initialized with application_name=%s, application_version=%s, short_name=%s, language=%s, setting_file_name=%s", application_name, application_version, short_name, language, self.setting_file_name)
+        self.logger.debug(
+            "ApplicationContext initialized with application_name=%s, application_version=%s, short_name=%s, language=%s, setting_file_name=%s",
+            application_name,
+            application_version,
+            short_name,
+            language,
+            self.setting_file_name)
         if self.setting_file_name == "":
             self.setting_file_name = "%s.json" % self.application_name
             self.logger.debug("ApplicationContext using default setting_file_name=%s", self.setting_file_name)

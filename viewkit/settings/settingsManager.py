@@ -3,10 +3,12 @@ import os
 from typing import Dict, Any, Optional
 from cerberus import Validator
 
+
 class CustomSettingField:
-    def __init__(self, name:str, schema: Dict[str, Any]):
+    def __init__(self, name: str, schema: Dict[str, Any]):
         self.name = name
         self.schema = schema
+
 
 class SettingsManager:
     SETTING_SEPARATOR = '.'

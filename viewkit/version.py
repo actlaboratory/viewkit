@@ -7,7 +7,7 @@ except ImportError:
 
 def getVersion():
     """Get the version of viewkit package from pyproject.toml
-    
+
     Returns:
         str: Version string or "unknown" if package not found
     """

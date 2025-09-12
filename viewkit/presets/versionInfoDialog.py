@@ -18,11 +18,12 @@ class VersionInfoDialog(SubWindow):
         textList.append(_("ライセンス/著作権情報については、同梱の license.txt を参照してください。"))
         textList.append("")
 
-        self.info, dummy = self.creator.inputbox("", defaultValue="\r\n".join(textList), style=wx.TE_MULTILINE|wx.TE_READONLY | wx.TE_NO_VSCROLL | wx.BORDER_RAISED, sizerFlag=wx.EXPAND, x=750, textLayout=None)
+        self.info, dummy = self.creator.inputbox("", defaultValue="\r\n".join(textList), style=wx.TE_MULTILINE |
+                                                 wx.TE_READONLY | wx.TE_NO_VSCROLL | wx.BORDER_RAISED, sizerFlag=wx.EXPAND, x=750, textLayout=None)
         f = self.info.GetFont()
-        f.SetPointSize((int)(f.GetPointSize() * (2/3)))
+        f.SetPointSize((int)(f.GetPointSize() * (2 / 3)))
         self.info.SetFont(f)
-        self.info.SetMinSize(wx.Size(750,240))
+        self.info.SetMinSize(wx.Size(750, 240))
 
         # フッター
         footerCreator = ViewCreator(0, self.app_ctx.font.getFont(), self.panel, self.creator.getSizer(), style=wx.ALIGN_RIGHT | wx.ALL, margin=20)

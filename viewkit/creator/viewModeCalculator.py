@@ -2,6 +2,7 @@
 
 from .viewCreator import MODE_WHITE, MODE_DARK
 
+
 class ViewModeCalculator:
     def __init__(self, is_dark=False, is_word_wrap=True):
         self.is_dark = is_dark

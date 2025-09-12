@@ -29,7 +29,12 @@ class App(wx.App):
         self._addPath()
         self._initTranslation()
         self._openMainWindow()
-        self.logger.info("%s (%s) version %s with viewkit version %s", self.ctx.application_name, self.ctx.short_name, self.ctx.application_version, getVersion())
+        self.logger.info(
+            "%s (%s) version %s with viewkit version %s",
+            self.ctx.application_name,
+            self.ctx.short_name,
+            self.ctx.application_version,
+            getVersion())
         self.logger.info("application started")
         self.MainLoop()
         self.logger.info("application exited")
@@ -78,7 +83,7 @@ class App(wx.App):
         self.logger.debug("re-opening the the main window")
         self._openMainWindow()
         params.old_window.Destroy()
-        self.logger.debug("old window destroyed: %s" %params.old_window)
+        self.logger.debug("old window destroyed: %s" % params.old_window)
 
     def getAppPath(self):
         """アプリの絶対パスを返す"""

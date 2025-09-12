@@ -11,11 +11,12 @@ class ModalResult:
     def __str__(self):
         return "ModalResult(code=%s, user_object=%s)" % (self.code, self.user_object)
 
+
 class SubWindow(wx.Dialog):
     """viewkit では、メインウィンドウ以外のウィンドウをサブウィンドウと呼びます。現状では、これらは全て wx.Dialogのサブクラスとして実装されます。"""
 
     def __init__(self, parent, ctx, title, style=wx.CAPTION | wx.SYSTEM_MENU | wx.BORDER_DEFAULT):
-        self.app_ctx =ctx
+        self.app_ctx = ctx
         self.reload_requested = False
         wx.Dialog.__init__(self, parent, wx.ID_ANY, title, style=style)
         _winxptheme.SetWindowTheme(self.GetHandle(), "", "")
@@ -52,6 +53,6 @@ class SubWindow(wx.Dialog):
         else:
             event.Veto()
 
-    def reload(self, event=None): # 直接イベントハンドラとして使ってもいいように
+    def reload(self, event=None):  # 直接イベントハンドラとして使ってもいいように
         self.reload_requested = True
         self.EndModal(wx.ID_NONE)

@@ -30,7 +30,7 @@ class LangDialog:
 
     def InstallControls(self):
         """いろんなwidgetを設置する。"""
-        self.creator = ViewCreator(0,self.app_ctx.font.getFont(), self.panel, self.sizer, wx.VERTICAL, 20)
+        self.creator = ViewCreator(0, self.app_ctx.font.getFont(), self.panel, self.sizer, wx.VERTICAL, 20)
         # 翻訳
         self.langSelect, static = self.creator.combobox("select language", self.lang_name, None, state=0)
         self.ok = self.creator.okbutton("OK", None)

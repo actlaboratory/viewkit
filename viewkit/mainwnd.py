@@ -15,25 +15,28 @@ from viewkit.context.messageParameters import MainWindowReloaded
 
 
 class MainWindow(wx.Frame):
-    def __init__(self, app_ctx: ApplicationContext, *, size_x = -1, size_y = -1):
+    def __init__(self, app_ctx: ApplicationContext, *, size_x=-1, size_y=-1):
         wx.Frame.__init__(
             self,
             None,
             wx.ID_ANY,
             app_ctx.application_name,
-            size=(size_x if size_x > 0 else app_ctx.settings.getSetting('main_window.size_x'), size_y if size_y > 0 else app_ctx.settings.getSetting('main_window.size_y')),
-            pos=(app_ctx.settings.getSetting('main_window.x'), app_ctx.settings.getSetting('main_window.y'))
-        )
+            size=(
+                size_x if size_x > 0 else app_ctx.settings.getSetting('main_window.size_x'),
+                size_y if size_y > 0 else app_ctx.settings.getSetting('main_window.size_y')),
+            pos=(
+                app_ctx.settings.getSetting('main_window.x'),
+                app_ctx.settings.getSetting('main_window.y')))
         if app_ctx.settings.getSetting('main_window.maximized'):
             self.Maximize()
         self.app_ctx = app_ctx
-        self.logger=getLogger(__name__)
+        self.logger = getLogger(__name__)
         self.window_ctx = WindowContext()
         self.Bind(wx.EVT_MENU, self._receiveMenuCommand)
-        self.Bind(wx.EVT_MOVE_END,self._windowMove)
-        self.Bind(wx.EVT_SIZE,self._windowResize)
-        self.Bind(wx.EVT_MAXIMIZE,self._windowResize)
-        _winxptheme.SetWindowTheme(self.GetHandle(),"","")
+        self.Bind(wx.EVT_MOVE_END, self._windowMove)
+        self.Bind(wx.EVT_SIZE, self._windowResize)
+        self.Bind(wx.EVT_MAXIMIZE, self._windowResize)
+        _winxptheme.SetWindowTheme(self.GetHandle(), "", "")
         self.logger.info("initialized")
         self.clear()
 
@@ -41,12 +44,12 @@ class MainWindow(wx.Frame):
         self.DestroyChildren()
         panel = wx.Panel(self, wx.ID_ANY, size=(-1, -1))
         self.creator = ViewCreator(
-            ViewModeCalculator(self.app_ctx.settings.getSetting('view.is_dark'),self.app_ctx.settings.getSetting('view.is_word_wrap')).getMode(),
+            ViewModeCalculator(self.app_ctx.settings.getSetting('view.is_dark'), self.app_ctx.settings.getSetting('view.is_word_wrap')).getMode(),
             self.app_ctx.font.getFont(),
             panel,
-            None, 
-            wx.VERTICAL, 
-            style=wx.ALL, 
+            None,
+            wx.VERTICAL,
+            style=wx.ALL,
             space=space
         )
         self.Layout()
@@ -69,7 +72,7 @@ class MainWindow(wx.Frame):
 
     def showSubWindow(self, window_class, title, modal=True):
         """サブウィンドウを表示します。window_class は viewkit.SubWindow のサブクラスである必要があります。ウィンドウ上での作業結果を表すオブジェクトを返します。"""
-        while(True):
+        while (True):
             wnd = window_class(self, self.app_ctx, title)
             wnd.Center()
             code = None
@@ -92,7 +95,7 @@ class MainWindow(wx.Frame):
         # end until user interaction except window reloading
         return result
 
-    def reload(self, evt=None): # 直接イベントハンドラとして使ってもいいように
+    def reload(self, evt=None):  # 直接イベントハンドラとして使ってもいいように
         # トップレベルウインドウの処理は app でやらないといけないが、 app -> mainWindow の依存報告を守りたいのでメッセージング機構を使って逆転させる
         self.app_ctx.sendContextMessage(MAIN_WINDOW_RELOADED, MainWindowReloaded(self))
 
@@ -158,7 +161,7 @@ class MainWindow(wx.Frame):
 
     def _windowMove(self, event):
         # wx.EVT_MOVE_END→wx.MoveEvent
-        #設定ファイルに位置を保存
+        # 設定ファイルに位置を保存
         self.app_ctx.settings.changeSetting('main_window.x', self.GetPosition().x)
         self.app_ctx.settings.changeSetting('main_window.y', self.GetPosition().y)
         self.app_ctx.settings.save()
@@ -167,7 +170,7 @@ class MainWindow(wx.Frame):
     def _windowResize(self, event):
         # wx.EVT_SIZE→wx.SizeEvent
         if not self.IsActive():
-            #ウィンドウがアクティブでない時(ウィンドウ生成時など)のイベントは無視
+            # ウィンドウがアクティブでない時(ウィンドウ生成時など)のイベントは無視
             event.Skip()
             return
 
@@ -176,5 +179,5 @@ class MainWindow(wx.Frame):
             self.app_ctx.settings.changeSetting('main_window.size_x', event.GetSize().x)
             self.app_ctx.settings.changeSetting('main_window.size_y', event.GetSize().y)
         self.app_ctx.settings.save()
-        #sizerを正しく機能させるため、Skipの呼出が必須
+        # sizerを正しく機能させるため、Skipの呼出が必須
         event.Skip()

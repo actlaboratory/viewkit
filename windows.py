@@ -1,5 +1,6 @@
 import viewkit
 
+
 class TestWindow(viewkit.MainWindow):
     def __init__(self, ctx):
         viewkit.MainWindow.__init__(self, ctx)
@@ -46,6 +47,7 @@ class TestWindow(viewkit.MainWindow):
     def showAboutDialog(self, event):
         self.showSubWindow(viewkit.presets.VersionInfoDialog, "About", modal=True)
 
+
 class TestSubWindow(viewkit.SubWindow):
     def __init__(self, parent, ctx, title):
         viewkit.SubWindow.__init__(self, parent, ctx, title)
@@ -66,4 +68,3 @@ class TestSubWindow(viewkit.SubWindow):
 
     def result(self):
         return self.value
-

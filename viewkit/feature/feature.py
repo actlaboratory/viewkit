@@ -5,7 +5,7 @@ from copy import copy
 
 
 class Feature:
-    def __init__(self, identifier: str, display_name: str, shortcut_key: Optional[str], action: Optional[Callable]=None):
+    def __init__(self, identifier: str, display_name: str, shortcut_key: Optional[str], action: Optional[Callable] = None):
         self.identifier = identifier
         self.display_name = display_name
         self.action = action
@@ -66,16 +66,16 @@ class FeatureStore:
         """カスタムショートカット設定を適用し、競合解決を行う"""
         if not shortcut_settings:
             return []
-        
+
         # 辞書形式から RawEntry リストに変換
         raw_entries = []
         for feature_id, shortcut_str in shortcut_settings.items():
             if isinstance(shortcut_str, str) and shortcut_str.strip():
                 raw_entries.append(RawEntry(feature_id, shortcut_str))
-        
+
         if not raw_entries:
             return []
-        
+
         # 既存の applyShortcutKeySettings を利用
         input_data = ParsedFileInput("custom", raw_entries)
         return self.applyShortcutKeySettings(input_data)
@@ -83,24 +83,24 @@ class FeatureStore:
     def applyShortcutSettingsWithCustomPriority(self, default_settings: ParsedFileInput = None, custom_settings: dict = None) -> list[RemovedEntry]:
         """デフォルト設定とカスタム設定を統合して適用し、カスタムを優先する"""
         all_removed_entries = []
-        
+
         # まずデフォルト設定を適用
         if default_settings:
             all_removed_entries.extend(self.applyShortcutKeySettings(default_settings))
-        
+
         # 次にカスタム設定を適用（カスタム設定が優先される）
         if custom_settings:
             all_removed_entries.extend(self.applyCustomShortcutSettings(custom_settings))
-        
+
         return all_removed_entries
 
     def applyCustomShortcutSettingsWithConflictResolution(self, shortcut_settings: dict) -> list[RemovedEntry]:
         """カスタムショートカット設定を適用し、デフォルト設定との競合を解決する"""
         if not shortcut_settings:
             return []
-        
+
         removed_entries = []
-        
+
         # カスタム設定で使用されるショートカットキーを収集
         custom_shortcut_keys = set()
         for feature_id, shortcut_str in shortcut_settings.items():
@@ -111,9 +111,9 @@ class FeatureStore:
                     for key_str in separated_keys:
                         shortcut_key = strToShortcutKey(key_str)
                         custom_shortcut_keys.add(str(shortcut_key).lower())
-                except:
+                except BaseException:
                     continue
-        
+
         # デフォルト設定のFeatureで競合するものを特定し、ショートカットを削除
         for feature in self.features.values():
             if feature.identifier not in shortcut_settings:  # カスタム設定にないFeature
@@ -122,8 +122,8 @@ class FeatureStore:
                         if str(shortcut_key).lower() in custom_shortcut_keys:
                             # 競合するデフォルトショートカットを削除
                             feature.shortcut_keys.remove(shortcut_key)
-        
+
         # カスタム設定を適用
         removed_entries.extend(self.applyCustomShortcutSettings(shortcut_settings))
-        
+
         return removed_entries
