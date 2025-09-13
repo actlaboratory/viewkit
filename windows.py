@@ -60,12 +60,19 @@ class TestWindow(viewkit.MainWindow):
                 keyValueSetting.KeyValueSettingKey("年齢", wx.LIST_FORMAT_RIGHT, 100),
                 keyValueSetting.KeyValueSettingKey("職業", wx.LIST_FORMAT_LEFT, 200),
             ],
-            values = {
-                "名前": "nekochan",
-                "年齢": "27",
-                "職業": "猫"
-            },
-            allow_edit_keys=False,
+            values = [
+                {
+                    "名前": "nekochan",
+                    "年齢": "27",
+                    "職業": "猫"
+                },
+                {
+                    "名前": "usachan",
+                    "年齢": "24",
+                    "職業": "うっさ",
+                },
+            ],
+            allow_edit_keys=True,
             custom_buttons=[
                 keyValueSetting.KeyValueSettingCustomButton("説明", self.onExplainButtonClicked)
             ],
