@@ -54,7 +54,7 @@ class TestSubWindow(viewkit.SubWindow):
         viewkit.SubWindow.__init__(self, parent, ctx, title)
         self.value = None
         self.creator.staticText("This is a sub window")
-        self.creator.inputbox("hogehogehogehoge", defaultValue="にゃーにゃーにゃー")
+        self.creator.inputbox("hogehogehogehoge", default_value="にゃーにゃーにゃー")
         self.creator.button("Reload from code", self.reload)
         self.creator.okbutton("OK", self.onOK)
         self.creator.cancelbutton("Cancel", self.onCancel)

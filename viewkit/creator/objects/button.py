@@ -8,7 +8,7 @@ from . import control, tooltip, util
 
 class button(control.controlBase, wx.Button):
     def __init__(self, *pArg, **kArg):
-        self.focusFromKbd = util.popArg(kArg, "enableTabFocus", True)  # キーボードフォーカスの初期値
+        self.focusFromKbd = util.popArg(kArg, "enable_tab_focus", True)  # キーボードフォーカスの初期値
         super().__init__(*pArg, **kArg)
         self.Bind(wx.EVT_ENTER_WINDOW, self.onMouseEnter)
         self.Bind(wx.EVT_LEAVE_WINDOW, self.onMouseLeave)
