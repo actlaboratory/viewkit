@@ -81,7 +81,7 @@ class TestWindow(viewkit.MainWindow):
 
 
 class TestSubWindow(viewkit.SubWindow):
-    def __init__(self, parent, ctx, title):
+    def __init__(self, parent, ctx, title, parameters):
         viewkit.SubWindow.__init__(self, parent, ctx, title)
         self.value = None
         self.creator.staticText("This is a sub window")

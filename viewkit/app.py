@@ -1,15 +1,14 @@
 import gettext
-import importlib
 import locale
 import logging
 import os
 import sys
 import wx
 
-
 from viewkit.context.app import ApplicationContext
 from viewkit.context.message import MAIN_WINDOW_RELOADED
 from viewkit.presets.langDialog import LangDialog
+from viewkit.reload import reload_recursive
 from viewkit.version import getVersion
 
 
@@ -77,7 +76,7 @@ class App(wx.App):
     def _onMainWindowReloaded(self, params=None):
         module = sys.modules.get(self._initial_window.__module__)
         self.logger.info("Reloading main window: %s" % module)
-        importlib.reload(module)
+        reload_recursive(module)
         self.logger.debug("re-imported module %s" % module)
         self._initial_window = getattr(module, self._initial_window.__name__)
         self.logger.debug("re-opening the the main window")
