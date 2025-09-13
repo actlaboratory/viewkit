@@ -747,6 +747,9 @@ class ViewCreator():
         _winxptheme.SetWindowTheme(target.GetHandle(), "", "")
         target.SetFont(self.font)
 
+    def getFont(self):
+        return self.font
+
     def getParentOrientation(self, default=wx.VERTICAL):
         if type(self.sizer) in (wx.BoxSizer, wx.StaticBoxSizer):
             return self.sizer.GetOrientation()

@@ -55,7 +55,7 @@ class KeyValueSettingWindow(SubWindow):
             if key.key in self.config.values:
                 lst.InsertItem(i,key.key)
                 lst.SetItem(i, 1, self.config.values[key.key])
-        control_button_creator = ViewCreator(0,self.creator.getPanel(),self.creator.getSizer(),wx.HORIZONTAL,20,"",wx.EXPAND)
+        control_button_creator = ViewCreator(0,self.creator.getFont(), self.creator.getPanel(),self.creator.getSizer(),wx.HORIZONTAL,20,"",wx.EXPAND)
         for btn in self.config.custom_buttons:
             control_button_creator.button(btn.label,btn.event_handler)
         control_button_creator.button(self.config.add_button_label,None)
