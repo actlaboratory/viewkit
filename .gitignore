@@ -6,3 +6,4 @@ settings.json
 .claude/settings.local.json
 viewkit.log
 vk.log
+errorLog.txt
