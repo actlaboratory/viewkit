@@ -38,7 +38,8 @@ class TestWindow(viewkit.MainWindow):
         )
 
     def onExit(self, event):
-        self.Close()
+        raise RuntimeError("test")
+        # self.Close()
 
     def testSubWindow(self, event):
         result = self.showSubWindow(TestSubWindow, "Test Sub Window", modal=True)

@@ -1,23 +1,23 @@
-import wx
+﻿import wx
 import ctypes
 import sys
 import _winxptheme
 
 
-def dialog(parent, title, message):
+def simple(parent, title, message):
     dialog = wx.MessageDialog(parent, message, title, wx.OK)
     dialog.ShowModal()
     dialog.Destroy()
 
 
-def yesNoDialog(parent, title, message):
+def yesNo(parent, title, message):
     dialog = wx.MessageDialog(parent, message, title, wx.YES_NO)
     result = dialog.ShowModal()
     dialog.Destroy()
     return result
 
 
-def errorDialog(parent, message):
+def error(parent, message):
     dialog = wx.MessageDialog(parent, message, "error", wx.OK | wx.ICON_ERROR)
     dialog.ShowModal()
     dialog.Destroy()

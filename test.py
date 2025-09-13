@@ -1,6 +1,27 @@
-import wx
+import os
+import sys
+import traceback
 import viewkit
 from windows import *
+
+def handleException(type, exc, tb):
+	print("exchandler")
+	msg=traceback.format_exception(type, exc, tb)
+	if not hasattr(sys, "frozen"):
+		print("".join(msg))
+	else:
+		viewkit.dialog.win("error", "An error has occurred. Contact the developer for further assistance. Details:" + "\n".join(msg[-2:]))
+	try:
+		f=open("errorLog.txt", "a")
+		f.writelines(msg)
+		f.close()
+	except:
+		pass
+	os._exit(1)
+
+
+sys.excepthook = handleException
+
 
 user_name_field = viewkit.CustomSettingField(
     "user_name",
