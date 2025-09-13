@@ -34,7 +34,7 @@ class KeyValueSettingConfig:
         listview_label="keys",
         keys=[],
         values={},
-        allow_edit_keys=True,
+        allow_edit_rows=True,
         custom_buttons=[],
         editor_window_class=None,
         add_button_label="Add",
@@ -44,7 +44,7 @@ class KeyValueSettingConfig:
         self.listview_label = listview_label
         self.keys = keys
         self.values = values
-        self.allow_edit_keys = allow_edit_keys
+        self.allow_edit_rows = allow_edit_rows
         self.custom_buttons = custom_buttons
         self.editor_window_class = editor_window_class
         self.add_button_label = add_button_label
@@ -75,9 +75,12 @@ class KeyValueSettingWindow(SubWindow):
                                              self.creator.getSizer(), wx.HORIZONTAL, 20, "", wx.EXPAND)
         for btn in self.config.custom_buttons:
             control_button_creator.button(btn.label, lambda event, h=btn.event_handler_method_name: self._handleCustomButton(event, h))
-        control_button_creator.button(self.config.add_button_label, None)
-        control_button_creator.button(self.config.edit_button_label, None)
-        control_button_creator.button(self.config.delete_button_label, self._delete)
+        add_button = control_button_creator.button(self.config.add_button_label, None)
+        edit_button = control_button_creator.button(self.config.edit_button_label, None)
+        delete_button = control_button_creator.button(self.config.delete_button_label, self._delete)
+        if not self.config.allow_edit_rows:
+            add_button.Disable()
+            delete_button.Disable()
         bottom_button_creator = ViewCreator(0, self.creator.getFont(), self.creator.getPanel(),
                                             self.creator.getSizer(), wx.HORIZONTAL, 20, "", wx.EXPAND)
         bottom_button_creator.okbutton("OK")

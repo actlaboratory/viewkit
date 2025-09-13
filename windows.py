@@ -72,7 +72,7 @@ class TestWindow(viewkit.MainWindow):
                     "job": "うっさ",
                 },
             ],
-            allow_edit_keys=True,
+            allow_edit_rows=True,
             custom_buttons=[
                 keyValueSetting.KeyValueSettingCustomButton("説明", "explain")
             ],
