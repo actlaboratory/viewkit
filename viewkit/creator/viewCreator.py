@@ -760,6 +760,20 @@ class ViewCreator():
         assert (isinstance(self.sizer, wx.GridBagSizer))
         self.sizer.SetItemSpan(wx.GBSpan(row, col))
 
+    def makeChild(self, orient=wx.HORIZONTAL, space=0, label="", style=0, proportion=0, margin=20):
+        return ViewCreator(
+            self.mode,
+            self.font,
+            self.parent,
+            self.sizer,
+            orient,
+            space,
+            label,
+            style,
+            proportion,
+            margin)
+
+
 # parentで指定したsizerの下に、新たなBoxSizerを設置
 
 
