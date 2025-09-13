@@ -58,7 +58,14 @@ class ApplicationContext:
         if log_handler:
             self._root_logger.addHandler(log_handler)
         else:
-            h = logging.handlers.RotatingFileHandler("%s.log" % self.short_name, mode="w", encoding="UTF-8", maxBytes=2**20*256, backupCount=5) # 256MB
+            h = logging.handlers.RotatingFileHandler(
+                "%s.log" %
+                self.short_name,
+                mode="w",
+                encoding="UTF-8",
+                maxBytes=2**20 *
+                256,
+                backupCount=5)  # 256MB
             f = logging.Formatter("%(name)s - %(levelname)s - %(message)s (%(asctime)s)")
             h.setFormatter(f)
             self._root_logger.addHandler(h)

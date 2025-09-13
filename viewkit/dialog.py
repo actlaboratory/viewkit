@@ -1,4 +1,4 @@
-﻿import wx
+import wx
 import ctypes
 import sys
 import _winxptheme
