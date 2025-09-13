@@ -43,7 +43,7 @@ class TestWindow(viewkit.MainWindow):
 
     def testSubWindow(self, event):
         result = self.showSubWindow(TestSubWindow, "Test Sub Window", modal=True)
-        viewkit.dialog(self, "Result from sub window", f"Result: {result}")
+        viewkit.dialog.simple(self, "Result from sub window", f"Result: {result}")
 
     def showAboutDialog(self, event):
         self.showSubWindow(viewkit.presets.VersionInfoDialog, "About", modal=True)
