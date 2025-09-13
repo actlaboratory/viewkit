@@ -1,4 +1,6 @@
+import wx
 import viewkit
+import viewkit.presets.keyValueSetting as keyValueSetting
 
 
 class TestWindow(viewkit.MainWindow):
@@ -13,6 +15,7 @@ class TestWindow(viewkit.MainWindow):
             viewkit.Feature("file_open_video", "Open video file", None),
             viewkit.Feature("file_show_sub_window", "Show sub window", "ctrl+t", self.testSubWindow),
             viewkit.Feature("file_reload_main_window", "Reload main window", "ctrl+r/f5", self.reload),
+            viewkit.Feature("file_show_kv_window", "show key value settings", "ctrl+k", self.showKvWindow),
             viewkit.Feature("help_about", "Show about dialog", None, self.showAboutDialog)
         ]
 
@@ -27,6 +30,7 @@ class TestWindow(viewkit.MainWindow):
                     viewkit.separator,
                     viewkit.MenuItemDefinition("file_show_sub_window", "Show sub window", "T"),
                     viewkit.MenuItemDefinition("file_reload_main_window", "Reload main window", "R"),
+                    viewkit.MenuItemDefinition("file_show_kv_window", "Show key value settings", "K"),
                     viewkit.MenuItemDefinition("file_exit", "Exit", "E")
                 ]
             ),
@@ -48,6 +52,28 @@ class TestWindow(viewkit.MainWindow):
     def showAboutDialog(self, event):
         self.showSubWindow(viewkit.presets.VersionInfoDialog, "About", modal=True)
 
+    def showKvWindow(self, event):
+        config = keyValueSetting.KeyValueSettingConfig(
+            listview_label="プロフィール項目",
+            keys=[
+                keyValueSetting.KeyValueSettingKey("名前", wx.LIST_FORMAT_LEFT, 200),
+                keyValueSetting.KeyValueSettingKey("年齢", wx.LIST_FORMAT_RIGHT, 100),
+                keyValueSetting.KeyValueSettingKey("職業", wx.LIST_FORMAT_LEFT, 200),
+            ],
+            values = {
+                "名前": "nekochan",
+                "年齢": "27",
+                "職業": "猫"
+            },
+            allow_edit_keys=False,
+            custom_buttons=[
+                keyValueSetting.KeyValueSettingCustomButton("説明", self.onExplainButtonClicked)
+            ],
+        )
+        self.showSubWindow(keyValueSetting.KeyValueSettingWindow, "Key Value Setting", config, modal=True)
+
+    def onExplainButtonClicked(self, event):
+        viewkit.dialog.simple("説明", "これはキーと値のペアを編集するためのウィンドウです。")
 
 class TestSubWindow(viewkit.SubWindow):
     def __init__(self, parent, ctx, title):

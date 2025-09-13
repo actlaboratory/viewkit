@@ -100,7 +100,7 @@ class ViewCreator():
             label = ""
             parent_sizer = self.BoxSizer(parent_sizer, wx.VERTICAL, "", margin, style, proportion)
         else:
-            raise ValueError("ViewCreatorの親はパネルまたはブックコントロールである必要があります。")
+            raise ValueError("ViewCreatorの親はパネルまたはブックコントロールである必要があります。これは %s です。" % type(parent))
 
         # サイザー作成
         if orient == FlexGridSizer:

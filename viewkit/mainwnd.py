@@ -70,10 +70,10 @@ class MainWindow(wx.Frame):
         self.creator.getPanel().Layout()
         super().Show()
 
-    def showSubWindow(self, window_class, title, modal=True):
+    def showSubWindow(self, window_class, title, parameters=None, modal=True):
         """サブウィンドウを表示します。window_class は viewkit.SubWindow のサブクラスである必要があります。ウィンドウ上での作業結果を表すオブジェクトを返します。"""
         while (True):
-            wnd = window_class(self, self.app_ctx, title)
+            wnd = window_class(self, self.app_ctx, title, parameters)
             wnd.Center()
             code = None
             if modal:
@@ -96,7 +96,7 @@ class MainWindow(wx.Frame):
         return result
 
     def reload(self, evt=None):  # 直接イベントハンドラとして使ってもいいように
-        # トップレベルウインドウの処理は app でやらないといけないが、 app -> mainWindow の依存報告を守りたいのでメッセージング機構を使って逆転させる
+        # トップレベルウインドウの処理は app でやらないといけないが、 app -> mainWindow の依存方向を守りたいのでメッセージング機構を使って逆転させる
         self.app_ctx.sendContextMessage(MAIN_WINDOW_RELOADED, MainWindowReloaded(self))
 
     def _registerFeatures(self, features):
