@@ -1,7 +1,6 @@
 import wx
 from copy import copy
 from viewkit import SubWindow
-from viewkit.creator import ViewCreator
 
 
 class KeyValueSettingKey:
@@ -85,8 +84,7 @@ class KeyValueSettingWindow(SubWindow):
             index = lst.InsertItem(lst.GetItemCount(), row.get(self.config.keys[0].display_name, ""))
             for i, key in enumerate(self.config.keys):
                 lst.SetItem(index, i, row.get(key.key, ""))
-        control_button_creator = ViewCreator(0, self.creator.getFont(), self.creator.getPanel(),
-                                             self.creator.getSizer(), wx.HORIZONTAL, 20, "", wx.EXPAND)
+        control_button_creator = self.creator.makeChild(wx.HORIZONTAL, 20, "", wx.EXPAND)
         for btn in self.config.custom_buttons:
             control_button_creator.button(btn.label, lambda event, h=btn.event_handler_method_name: self._handleCustomButton(event, h))
         add_button = control_button_creator.button(self.config.add_button_label, self._handleAdd)
@@ -95,8 +93,7 @@ class KeyValueSettingWindow(SubWindow):
         if not self.config.allow_edit_rows:
             add_button.Disable()
             delete_button.Disable()
-        bottom_button_creator = ViewCreator(0, self.creator.getFont(), self.creator.getPanel(),
-                                            self.creator.getSizer(), wx.HORIZONTAL, 20, "", wx.EXPAND)
+        bottom_button_creator = self.creator.makeChild(wx.HORIZONTAL, 20, "", wx.EXPAND)
         bottom_button_creator.okbutton("OK")
         bottom_button_creator.cancelbutton("Cancel")
         self._lst = lst

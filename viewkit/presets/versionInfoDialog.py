@@ -1,6 +1,5 @@
 import wx
 from viewkit.subwnd import SubWindow
-from viewkit.creator import ViewCreator
 from viewkit.version import getVersion
 
 
