@@ -1,3 +1,5 @@
+import importlib
+import sys
 import wx
 import _winxptheme
 from viewkit.creator import ViewCreator, ViewModeCalculator
@@ -57,3 +59,28 @@ class SubWindow(wx.Dialog):
     def reload(self, event=None):  # 直接イベントハンドラとして使ってもいいように
         self.reload_requested = True
         self.EndModal(wx.ID_NONE)
+
+    def showSubWindow(self, window_class, title, parameters=None, modal=True):
+        """サブウィンドウを表示します。window_class は viewkit.SubWindow のサブクラスである必要があります。ウィンドウ上での作業結果を表すオブジェクトを返します。"""
+        while (True):
+            wnd = window_class(self, self.app_ctx, title, parameters)
+            wnd.Center()
+            code = None
+            if modal:
+                code = wnd.ShowModal()
+            else:
+                code = wnd.Show()
+            result = ModalResult(code, wnd.result())
+            if wnd.reload_requested:
+                module = sys.modules.get(window_class.__module__)
+                self.logger.info("Reloading sub window: %s" % module)
+                importlib.reload(module)
+                self.logger.debug("re-imported module %s" % module)
+                window_class = getattr(module, window_class.__name__)
+                self.logger.debug("re-opening the sub window")
+                continue
+            # end reload
+            wnd.Destroy()
+            break
+        # end until user interaction except window reloading
+        return result

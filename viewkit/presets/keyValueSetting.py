@@ -5,7 +5,7 @@ from viewkit.creator import ViewCreator
 
 
 class KeyValueSettingKey:
-    def __init__(self, key:str, display_name:str, format:int, width:int):
+    def __init__(self, key: str, display_name: str, format: int, width: int):
         self.key = key
         self.display_name = display_name
         self.format = format
@@ -13,7 +13,7 @@ class KeyValueSettingKey:
 
 
 class KeyValueSettingCustomButton:
-    def __init__(self, label:str, event_handler_method_name:str):
+    def __init__(self, label: str, event_handler_method_name: str):
         self.label = label
         self.event_handler_method_name = event_handler_method_name
 
@@ -21,11 +21,25 @@ class KeyValueSettingCustomButton:
 class KeyValueSettingCustomButtonEvent:
     def __init__(
             self,
-            selected_index:int,
-            selected_value_row:dict
+            selected_index: int,
+            selected_value_row: dict
     ):
         self.selected_index = selected_index
         self.selected_value_row = selected_value_row
+
+
+class KeyValueSettingEditEvent:
+    def __init__(
+            self,
+            all_value_rows: list,
+            is_add: bool,
+            editing_index: int,
+            original_value_row: dict
+    ):
+        self.all_value_rows = all_value_rows
+        self.is_add = is_add
+        self.editing_index = editing_index
+        self.original_value_row = original_value_row
 
 
 class KeyValueSettingConfig:
@@ -34,7 +48,7 @@ class KeyValueSettingConfig:
         listview_label="keys",
         keys=[],
         values={},
-        allow_edit_keys=True,
+        allow_edit_rows=True,
         custom_buttons=[],
         editor_window_class=None,
         add_button_label="Add",
@@ -44,7 +58,7 @@ class KeyValueSettingConfig:
         self.listview_label = listview_label
         self.keys = keys
         self.values = values
-        self.allow_edit_keys = allow_edit_keys
+        self.allow_edit_rows = allow_edit_rows
         self.custom_buttons = custom_buttons
         self.editor_window_class = editor_window_class
         self.add_button_label = add_button_label
@@ -75,16 +89,19 @@ class KeyValueSettingWindow(SubWindow):
                                              self.creator.getSizer(), wx.HORIZONTAL, 20, "", wx.EXPAND)
         for btn in self.config.custom_buttons:
             control_button_creator.button(btn.label, lambda event, h=btn.event_handler_method_name: self._handleCustomButton(event, h))
-        control_button_creator.button(self.config.add_button_label, None)
-        control_button_creator.button(self.config.edit_button_label, None)
-        control_button_creator.button(self.config.delete_button_label, self._delete)
+        add_button = control_button_creator.button(self.config.add_button_label, self._handleAdd)
+        edit_button = control_button_creator.button(self.config.edit_button_label, self._handleEdit)
+        delete_button = control_button_creator.button(self.config.delete_button_label, self._handleDelete)
+        if not self.config.allow_edit_rows:
+            add_button.Disable()
+            delete_button.Disable()
         bottom_button_creator = ViewCreator(0, self.creator.getFont(), self.creator.getPanel(),
                                             self.creator.getSizer(), wx.HORIZONTAL, 20, "", wx.EXPAND)
         bottom_button_creator.okbutton("OK")
         bottom_button_creator.cancelbutton("Cancel")
         self._lst = lst
 
-    def _handleCustomButton(self, event, handler_method_name:str):
+    def _handleCustomButton(self, event, handler_method_name: str):
         if not hasattr(self, handler_method_name):
             return
         method = getattr(self, handler_method_name)
@@ -99,7 +116,57 @@ class KeyValueSettingWindow(SubWindow):
             )
         )
 
-    def _delete(self, event):
+    def _handleAdd(self, event):
+        if self.config.editor_window_class is None:
+            return
+        event = KeyValueSettingEditEvent(
+            all_value_rows=self._value_rows,
+            is_add=True,
+            editing_index=-1,
+            original_value_row=None
+        )
+        result = self.showSubWindow(self.config.editor_window_class, "Add", event, modal=True)
+        print(result.code)
+        if result.code != wx.ID_OK:
+            return
+        new_value_row = result.user_object
+        if new_value_row is None:
+            return
+        index = self._lst.InsertItem(self._lst.GetItemCount(), new_value_row.get(self.config.keys[0].key, ""))
+        for i, key in enumerate(self.config.keys):
+            self._lst.SetItem(index, i, new_value_row.get(key.key, ""))
+        self._value_rows.append(new_value_row)
+        self._lst.Select(index)
+        self._lst.Focus(index)
+        self._lst.SetFocus()
+
+    def _handleEdit(self, event):
+        if self.config.editor_window_class is None:
+            return
+        selected_index = self._lst.GetFirstSelected()
+        if selected_index < 0:
+            return
+        original_value_row = self._value_rows[selected_index]
+        event = KeyValueSettingEditEvent(
+            all_value_rows=self._value_rows,
+            is_add=False,
+            editing_index=selected_index,
+            original_value_row=original_value_row
+        )
+        result = self.showSubWindow(self.config.editor_window_class, "Edit", event, modal=True)
+        if result.code != wx.ID_OK:
+            return
+        new_value_row = result.user_object
+        if new_value_row is None:
+            return
+        for i, key in enumerate(self.config.keys):
+            self._lst.SetItem(selected_index, i, new_value_row.get(key.key, ""))
+        self._value_rows[selected_index] = new_value_row
+        self._lst.Select(selected_index)
+        self._lst.Focus(selected_index)
+        self._lst.SetFocus()
+
+    def _handleDelete(self, event):
         selected_index = self._lst.GetFirstSelected()
         if selected_index < 0:
             return

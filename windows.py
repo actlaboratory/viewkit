@@ -1,6 +1,7 @@
 import wx
 import viewkit
 import viewkit.presets.keyValueSetting as keyValueSetting
+from viewkit.subwnd import SubWindow
 
 
 class TestWindow(viewkit.MainWindow):
@@ -72,7 +73,8 @@ class TestWindow(viewkit.MainWindow):
                     "job": "うっさ",
                 },
             ],
-            allow_edit_keys=True,
+            allow_edit_rows=True,
+            editor_window_class=KvEditWindow,
             custom_buttons=[
                 keyValueSetting.KeyValueSettingCustomButton("説明", "explain")
             ],
@@ -101,9 +103,43 @@ class TestSubWindow(viewkit.SubWindow):
     def result(self):
         return self.value
 
+
 class MyKvWindow(keyValueSetting.KeyValueSettingWindow):
     def explain(self, event):
         if event is None:
             return
         v = event.selected_value_row
         viewkit.dialog.simple(self, "説明", "%s %s歳 職業は%sだよ。よろしくね" % (v["name"], v["age"], v["job"]))
+
+
+class KvEditWindow(SubWindow):
+    def __init__(self, parent, ctx, title, event):
+        super().__init__(parent, ctx, title)
+        self.event = event
+        self._name, _ = self.creator.inputbox("名前", default_value=event.original_value_row.get("name", "") if event.original_value_row else "")
+        self._age, _ = self.creator.inputbox("年齢", default_value=event.original_value_row.get("age", "") if event.original_value_row else "")
+        self._job, _ = self.creator.inputbox("職業", default_value=event.original_value_row.get("job", "") if event.original_value_row else "")
+        self.creator.okbutton("OK", self._handleOk)
+        self.creator.cancelbutton("Cancel")
+
+    def result(self):
+        return {
+            "name": self._name.GetValue(),
+            "age": self._age.GetValue(),
+            "job": self._job.GetValue()
+        }
+
+    def _handleOk(self, event):
+        if self._name.GetValue().strip() == "":
+            viewkit.dialog.win("error", "名前は必須です")
+            return
+        if not self._age.GetValue().isdigit():
+            viewkit.dialog.win("error", "年齢は整数で入力してください")
+            return
+        if self._job.GetValue().strip() == "":
+            viewkit.dialog.win("error", "職業は必須です")
+            return
+        if self._name.GetValue() in [v["name"] for i, v in enumerate(self.event.all_value_rows) if i != self.event.editing_index]:
+            viewkit.dialog.win("error", "その名前は既に使われています")
+            return
+        event.Skip()
