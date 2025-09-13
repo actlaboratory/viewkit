@@ -50,7 +50,18 @@ MODE_WRAPPING = 2
 
 
 class ViewCreator():
-    def __init__(self, mode: int, font: wx.Font, parent, parent_sizer=None, orient=wx.HORIZONTAL, space=0, label="", style=0, proportion=0, margin=20):
+    def __init__(
+            self,
+            mode: int,
+            font: wx.Font,
+            parent,
+            parent_sizer=None,
+            orient=wx.HORIZONTAL,
+            space=0,
+            label="",
+            style=0,
+            proportion=0,
+            margin=20):
         # wxオブジェクトを辞書に格納
         self.winObject = {
             "button": button.button,
@@ -278,13 +289,25 @@ class ViewCreator():
         self.AddSpace()
         return hCombo, hStaticText
 
-    def checkbox(self, text, event=None, state=False, style=0, x=-1, sizer_flag=wx.ALIGN_CENTER_VERTICAL, proportion=0, margin=5, enable_tab_focus=True):
+    def checkbox(
+            self,
+            text,
+            event=None,
+            state=False,
+            style=0,
+            x=-1,
+            sizer_flag=wx.ALIGN_CENTER_VERTICAL,
+            proportion=0,
+            margin=5,
+            enable_tab_focus=True):
         hPanel = wx.Panel(self.parent, wx.ID_ANY)
         self._setFace(hPanel, mode=SKIP_COLOUR)
         hSizer = self.BoxSizer(hPanel, self.getParentOrientation())
 
         if (isinstance(text, str)):  # 単純に一つを作成
-            hCheckBox = self.winObject["checkBox"](hPanel, wx.ID_ANY, label=text, name=text, size=(x, -1), style=style, enable_tab_focus=enable_tab_focus)
+            hCheckBox = self.winObject["checkBox"](
+                hPanel, wx.ID_ANY, label=text, name=text, size=(
+                    x, -1), style=style, enable_tab_focus=enable_tab_focus)
             hCheckBox.SetValue(state)
             hCheckBox.Bind(wx.EVT_CHECKBOX, event)
             self._setFace(hCheckBox, mode=SKIP_COLOUR)
@@ -297,7 +320,9 @@ class ViewCreator():
         elif (isinstance(text, list)):  # 複数同時作成
             hCheckBoxes = []
             for s in text:
-                hCheckBox = self.winObject["checkBox"](hPanel, wx.ID_ANY, label=s, name=s, size=(x, -1), style=style, enable_tab_focus=enable_tab_focus)
+                hCheckBox = self.winObject["checkBox"](
+                    hPanel, wx.ID_ANY, label=s, name=s, size=(
+                        x, -1), style=style, enable_tab_focus=enable_tab_focus)
                 hCheckBox.SetValue(state)
                 hCheckBox.Bind(wx.EVT_CHECKBOX, event)
                 self._setFace(hCheckBox, mode=SKIP_COLOUR)
@@ -312,7 +337,17 @@ class ViewCreator():
             raise ValueError("ViewCreatorはCheckboxの作成に際し正しくない型の値を受け取りました。")
 
     # 3stateチェックボックス
-    def checkbox3(self, text, event=None, state=None, style=0, x=-1, sizer_flag=wx.ALIGN_CENTER_VERTICAL, proportion=0, margin=0, enable_tab_focus=True):
+    def checkbox3(
+            self,
+            text,
+            event=None,
+            state=None,
+            style=0,
+            x=-1,
+            sizer_flag=wx.ALIGN_CENTER_VERTICAL,
+            proportion=0,
+            margin=0,
+            enable_tab_focus=True):
         hPanel = wx.Panel(self.parent, wx.ID_ANY)
         self._setFace(hPanel, mode=SKIP_COLOUR)
         hSizer = self.BoxSizer(hPanel, self.getParentOrientation())
