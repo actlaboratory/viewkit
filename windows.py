@@ -62,14 +62,14 @@ class TestWindow(viewkit.MainWindow):
             ],
             values=[
                 {
-                    "名前": "nekochan",
-                    "年齢": "27",
-                    "職業": "猫"
+                    "name": "nekochan",
+                    "age": "27",
+                    "job": "猫"
                 },
                 {
-                    "名前": "usachan",
-                    "年齢": "24",
-                    "職業": "うっさ",
+                    "name": "usachan",
+                    "age": "24",
+                    "job": "うっさ",
                 },
             ],
             allow_edit_keys=True,
