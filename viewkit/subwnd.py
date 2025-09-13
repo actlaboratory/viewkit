@@ -84,4 +84,3 @@ class SubWindow(wx.Dialog):
             break
         # end until user interaction except window reloading
         return result
-

@@ -5,7 +5,7 @@ from viewkit.creator import ViewCreator
 
 
 class KeyValueSettingKey:
-    def __init__(self, key:str, display_name:str, format:int, width:int):
+    def __init__(self, key: str, display_name: str, format: int, width: int):
         self.key = key
         self.display_name = display_name
         self.format = format
@@ -13,7 +13,7 @@ class KeyValueSettingKey:
 
 
 class KeyValueSettingCustomButton:
-    def __init__(self, label:str, event_handler_method_name:str):
+    def __init__(self, label: str, event_handler_method_name: str):
         self.label = label
         self.event_handler_method_name = event_handler_method_name
 
@@ -21,8 +21,8 @@ class KeyValueSettingCustomButton:
 class KeyValueSettingCustomButtonEvent:
     def __init__(
             self,
-            selected_index:int,
-            selected_value_row:dict
+            selected_index: int,
+            selected_value_row: dict
     ):
         self.selected_index = selected_index
         self.selected_value_row = selected_value_row
@@ -31,10 +31,10 @@ class KeyValueSettingCustomButtonEvent:
 class KeyValueSettingEditEvent:
     def __init__(
             self,
-            all_value_rows:list,
-            is_add:bool,
-            editing_index:int,
-            original_value_row:dict
+            all_value_rows: list,
+            is_add: bool,
+            editing_index: int,
+            original_value_row: dict
     ):
         self.all_value_rows = all_value_rows
         self.is_add = is_add
@@ -101,7 +101,7 @@ class KeyValueSettingWindow(SubWindow):
         bottom_button_creator.cancelbutton("Cancel")
         self._lst = lst
 
-    def _handleCustomButton(self, event, handler_method_name:str):
+    def _handleCustomButton(self, event, handler_method_name: str):
         if not hasattr(self, handler_method_name):
             return
         method = getattr(self, handler_method_name)

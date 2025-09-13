@@ -103,12 +103,14 @@ class TestSubWindow(viewkit.SubWindow):
     def result(self):
         return self.value
 
+
 class MyKvWindow(keyValueSetting.KeyValueSettingWindow):
     def explain(self, event):
         if event is None:
             return
         v = event.selected_value_row
         viewkit.dialog.simple(self, "説明", "%s %s歳 職業は%sだよ。よろしくね" % (v["name"], v["age"], v["job"]))
+
 
 class KvEditWindow(SubWindow):
     def __init__(self, parent, ctx, title, event):
