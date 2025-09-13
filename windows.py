@@ -56,9 +56,9 @@ class TestWindow(viewkit.MainWindow):
         config = keyValueSetting.KeyValueSettingConfig(
             listview_label="プロフィール項目",
             keys=[
-                keyValueSetting.KeyValueSettingKey("名前", wx.LIST_FORMAT_LEFT, 200),
-                keyValueSetting.KeyValueSettingKey("年齢", wx.LIST_FORMAT_RIGHT, 100),
-                keyValueSetting.KeyValueSettingKey("職業", wx.LIST_FORMAT_LEFT, 200),
+                keyValueSetting.KeyValueSettingKey("name", "名前", wx.LIST_FORMAT_LEFT, 200),
+                keyValueSetting.KeyValueSettingKey("age", "年齢", wx.LIST_FORMAT_RIGHT, 100),
+                keyValueSetting.KeyValueSettingKey("job", "職業", wx.LIST_FORMAT_LEFT, 200),
             ],
             values=[
                 {
@@ -80,7 +80,10 @@ class TestWindow(viewkit.MainWindow):
         self.showSubWindow(keyValueSetting.KeyValueSettingWindow, "Key Value Setting", config, modal=True)
 
     def onExplainButtonClicked(self, event):
-        viewkit.dialog.simple("説明", "これはキーと値のペアを編集するためのウィンドウです。")
+        if event is None:
+            return
+        v = event.selected_value_row
+        viewkit.dialog.simple("説明", "%s %d歳 %s" % (v["name"], v["age"], v["job"]))
 
 
 class TestSubWindow(viewkit.SubWindow):

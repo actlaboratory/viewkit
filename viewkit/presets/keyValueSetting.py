@@ -1,19 +1,31 @@
 import wx
+from copy import copy
 from viewkit import SubWindow
 from viewkit.creator import ViewCreator
 
 
 class KeyValueSettingKey:
-    def __init__(self, key, format, width):
+    def __init__(self, key:str, display_name:str, format:int, width:int):
         self.key = key
+        self.display_name = display_name
         self.format = format
         self.width = width
 
 
 class KeyValueSettingCustomButton:
-    def __init__(self, label, event_handler):
+    def __init__(self, label:str, event_handler_method_name:str):
         self.label = label
-        self.event_handler = event_handler
+        self.event_handler_method_name = event_handler_method_name
+
+
+class KeyValueSettingCustomButtonEvent:
+    def __init__(
+            self,
+            selected_index:int,
+            selected_value_row:dict
+    ):
+        self.selected_index = selected_index
+        self.selected_value_row = selected_value_row
 
 
 class KeyValueSettingConfig:
@@ -50,18 +62,19 @@ class KeyValueSettingWindow(SubWindow):
     def __init__(self, parent, ctx, title, parameters: KeyValueSettingConfig):
         super().__init__(parent, ctx, title, parameters)
         self.config = parameters
+        self._value_rows = copy(parameters.values)
         lst, _ = self.creator.virtualListCtrl(self.config.listview_label, proportion=0, sizer_flag=wx.ALL |
                                               wx.ALIGN_CENTER_HORIZONTAL, size=(750, 300), style=wx.LC_REPORT | wx.LC_SINGLE_SEL)
         for i, key in enumerate(self.config.keys):
-            lst.InsertColumn(i, key.key, format=key.format, width=key.width)
+            lst.InsertColumn(i, key.display_name, format=key.format, width=key.width)
         for row in self.config.values:
-            index = lst.InsertItem(lst.GetItemCount(), row.get(self.config.keys[0].key, ""))
+            index = lst.InsertItem(lst.GetItemCount(), row.get(self.config.keys[0].display_name, ""))
             for i, key in enumerate(self.config.keys):
                 lst.SetItem(index, i, row.get(key.key, ""))
         control_button_creator = ViewCreator(0, self.creator.getFont(), self.creator.getPanel(),
                                              self.creator.getSizer(), wx.HORIZONTAL, 20, "", wx.EXPAND)
         for btn in self.config.custom_buttons:
-            control_button_creator.button(btn.label, btn.event_handler)
+            control_button_creator.button(btn.label, lambda event, h=btn.event_handler_method_name: self.handleCustomButton(event, h))
         control_button_creator.button(self.config.add_button_label, None)
         control_button_creator.button(self.config.edit_button_label, None)
         control_button_creator.button(self.config.delete_button_label, None)
@@ -69,3 +82,19 @@ class KeyValueSettingWindow(SubWindow):
                                             self.creator.getSizer(), wx.HORIZONTAL, 20, "", wx.EXPAND)
         bottom_button_creator.okbutton("OK")
         bottom_button_creator.cancelbutton("Cancel")
+        self._lst = lst
+
+    def handleCustomButton(self, event, handler_method_name:str):
+        if not hasattr(self, handler_method_name):
+            return
+        method = getattr(self, handler_method_name)
+        if not callable(method):
+            return
+        selected_index = self._lst.GetFirstSelected()
+        selected_value_row = self._value_rows[selected_index] if selected_index >= 0 else None
+        method(
+            KeyValueSettingCustomButtonEvent(
+                selected_index=selected_index,
+                selected_value_row=selected_value_row
+            )
+        )
