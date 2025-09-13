@@ -74,16 +74,10 @@ class TestWindow(viewkit.MainWindow):
             ],
             allow_edit_keys=True,
             custom_buttons=[
-                keyValueSetting.KeyValueSettingCustomButton("説明", self.onExplainButtonClicked)
+                keyValueSetting.KeyValueSettingCustomButton("説明", "explain")
             ],
         )
-        self.showSubWindow(keyValueSetting.KeyValueSettingWindow, "Key Value Setting", config, modal=True)
-
-    def onExplainButtonClicked(self, event):
-        if event is None:
-            return
-        v = event.selected_value_row
-        viewkit.dialog.simple("説明", "%s %d歳 %s" % (v["name"], v["age"], v["job"]))
+        self.showSubWindow(MyKvWindow, "Key Value Setting", config, modal=True)
 
 
 class TestSubWindow(viewkit.SubWindow):
@@ -106,3 +100,10 @@ class TestSubWindow(viewkit.SubWindow):
 
     def result(self):
         return self.value
+
+class MyKvWindow(keyValueSetting.KeyValueSettingWindow):
+    def explain(self, event):
+        if event is None:
+            return
+        v = event.selected_value_row
+        viewkit.dialog.simple(self, "説明", "%s %s歳 職業は%sだよ。よろしくね" % (v["name"], v["age"], v["job"]))
