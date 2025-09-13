@@ -19,7 +19,7 @@ class virtualListCtrl(listctrl.listCtrl):
         else:
             kArg["style"] = wx.LC_REPORT | wx.LC_VIRTUAL
         self.lst = []
-        self.focusFromKbd = util.popArg(kArg, "enableTabFocus", True)
+        self.focusFromKbd = util.popArg(kArg, "enable_tab_focus", True)
         self.columns = []
         self.bindFunctions = {}  # カラム関係のイベントのバインドを保存する辞書
         self.printColumn = True
