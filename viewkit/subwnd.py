@@ -37,12 +37,12 @@ class SubWindow(wx.Dialog):
     def ShowModal(self):
         self.creator.getPanel().Layout()
         self.creator.getSizer().Fit(self)
-        super().ShowModal()
+        return super().ShowModal()
 
     def Show(self):
         self.creator.getPanel().Layout()
         self.creator.getSizer().Fit(self)
-        super().Show()
+        return super().Show()
 
     def result(self):
         return None

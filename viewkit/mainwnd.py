@@ -1,4 +1,5 @@
 import sys
+import traceback
 import wx
 import _winxptheme
 
@@ -14,6 +15,8 @@ from viewkit.subwnd import ModalResult
 from viewkit.context.message import MAIN_WINDOW_RELOADED
 from viewkit.context.messageParameters import MainWindowReloaded
 from viewkit.reload import reload_recursive
+from viewkit.presets.exceptionDialog import ExceptionDialog
+
 
 class MainWindow(wx.Frame):
     def __init__(self, app_ctx: ApplicationContext, *, size_x=-1, size_y=-1):
@@ -84,17 +87,37 @@ class MainWindow(wx.Frame):
             result = ModalResult(code, wnd.result())
             if wnd.reload_requested:
                 module = sys.modules.get(window_class.__module__)
-                self.logger.info("Reloading sub window: %s" % module)
-                reload_recursive(module)
-                self.logger.debug("re-imported module %s" % module)
-                window_class = getattr(module, window_class.__name__)
-                self.logger.debug("re-opening the sub window")
-                continue
+                if e := self._reloadWindow(window_class) == None:
+                    window_class = getattr(module, window_class.__name__)
+                    self.logger.debug("re-opening the sub window")
+                    continue
+                else:
+                    raise e
             # end reload
             wnd.Destroy()
             break
         # end until user interaction except window reloading
         return result
+
+    def _reloadWindow(self, window_class):
+        while(True):
+            module = sys.modules.get(window_class.__module__)
+            self.logger.info("Reloading sub window: %s" % module)
+            try:
+                reload_recursive(module)
+                return None
+            except BaseException as e:
+                if hasattr(sys, "frozen"):
+                    #解発ちゅう以外は上に投げる
+                    raise e
+                msg = list(traceback.TracebackException.from_exception(e).format())
+                self.logger.error("".join(msg))
+                wnd = ExceptionDialog(self, self.app_ctx, _("リロードエラー"), "".join(msg))
+                wnd.Center()
+                code = wnd.ShowModal()
+                if code==wx.ID_CANCEL:
+                    print("cancel")
+                    return e
 
     def reload(self, evt=None):  # 直接イベントハンドラとして使ってもいいように
         # トップレベルウインドウの処理は app でやらないといけないが、 app -> mainWindow の依存方向を守りたいのでメッセージング機構を使って逆転させる
