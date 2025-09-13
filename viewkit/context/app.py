@@ -1,4 +1,5 @@
 import logging
+import logging.handlers
 from viewkit.settings import SettingsManager, CustomSettingField
 from viewkit.fontManager import FontManager, DEFAULT_FONT
 from .message import ContextMessageHandler, ContextMessageReceiver
@@ -57,7 +58,7 @@ class ApplicationContext:
         if log_handler:
             self._root_logger.addHandler(log_handler)
         else:
-            h = logging.FileHandler("%s.log" % self.short_name, encoding='utf-8', mode='w')
+            h = logging.handlers.RotatingFileHandler("%s.log" % self.short_name, mode="w", encoding="UTF-8", maxBytes=2**20*256, backupCount=5) # 256MB
             f = logging.Formatter("%(name)s - %(levelname)s - %(message)s (%(asctime)s)")
             h.setFormatter(f)
             self._root_logger.addHandler(h)
