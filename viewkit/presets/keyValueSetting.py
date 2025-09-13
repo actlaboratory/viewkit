@@ -74,17 +74,17 @@ class KeyValueSettingWindow(SubWindow):
         control_button_creator = ViewCreator(0, self.creator.getFont(), self.creator.getPanel(),
                                              self.creator.getSizer(), wx.HORIZONTAL, 20, "", wx.EXPAND)
         for btn in self.config.custom_buttons:
-            control_button_creator.button(btn.label, lambda event, h=btn.event_handler_method_name: self.handleCustomButton(event, h))
+            control_button_creator.button(btn.label, lambda event, h=btn.event_handler_method_name: self._handleCustomButton(event, h))
         control_button_creator.button(self.config.add_button_label, None)
         control_button_creator.button(self.config.edit_button_label, None)
-        control_button_creator.button(self.config.delete_button_label, None)
+        control_button_creator.button(self.config.delete_button_label, self._delete)
         bottom_button_creator = ViewCreator(0, self.creator.getFont(), self.creator.getPanel(),
                                             self.creator.getSizer(), wx.HORIZONTAL, 20, "", wx.EXPAND)
         bottom_button_creator.okbutton("OK")
         bottom_button_creator.cancelbutton("Cancel")
         self._lst = lst
 
-    def handleCustomButton(self, event, handler_method_name:str):
+    def _handleCustomButton(self, event, handler_method_name:str):
         if not hasattr(self, handler_method_name):
             return
         method = getattr(self, handler_method_name)
@@ -98,3 +98,15 @@ class KeyValueSettingWindow(SubWindow):
                 selected_value_row=selected_value_row
             )
         )
+
+    def _delete(self, event):
+        selected_index = self._lst.GetFirstSelected()
+        if selected_index < 0:
+            return
+        self._lst.DeleteItem(selected_index)
+        del self._value_rows[selected_index]
+        adjusted_index = selected_index if selected_index < len(self._value_rows) else selected_index - 1
+        if adjusted_index >= 0:
+            self._lst.Select(adjusted_index)
+            self._lst.Focus(adjusted_index)
+            self._lst.SetFocus()
