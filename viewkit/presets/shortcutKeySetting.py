@@ -2,6 +2,7 @@ import wx
 from viewkit import Feature
 from viewkit import MainWindow, SubWindow
 from .keyValueSetting import *
+from viewkit.shortcut import str2key
 
 
 class ShortcutKeyEditWindow(SubWindow):
@@ -34,6 +35,52 @@ class ShortcutKeyEditWindow(SubWindow):
             "shortcut_keys": "/".join(shortcut_keys)
         }
 
+
+class ShortcutKeyDetectionWindow(SubWindow):
+    def __init__(self, parent, ctx, title):
+        super().__init__(parent, ctx, title)
+        self.creator.staticText(_("設定するには、使用したいキーの組み合わせを押します。\n設定を解除するには、Escキーを押します。"))
+        self.key_nameText=self.creator.staticText("",sizer_flag=wx.ALIGN_CENTER | wx.ALL,margin=20)
+        self.error_text=self.creator.staticText("",sizerFlag=wx.ALIGN_CENTER)
+        self._cancel_button = self.creator.cancelbutton(_("設定解除"),self.cancelButton)
+        self.Bind(wx.EVT_TIMER, self._handleTimer)
+        self._timer=wx.Timer(self)
+        self.TIMER_INTERVAL=100
+
+    def onOpen(self):
+        self.timer.StartOnce(self.TIMER_INTERVAL)
+
+    def _handleTimer(self, event):
+        self.timer.Stop()
+        hits = []
+        key_names = str2key.keys()
+        for name in key_names:
+            code=str2key[name]
+            if code<=4: # マウスを使われると困る
+                continue
+            #カテゴリキーは取得不可、NumLockとCapsLockは押し下げ状態ではなく現在のON/OFFを返してしまうので
+            if type(code)==wx.KeyCategoryFlags or name=="NUMLOCK" or name=="SCROLL":
+                continue
+            if wx.GetKeyState(code):
+                hits.append(name)
+            # end ヒット
+        # end 全部のキー
+        if hits:
+            self._cancel_button.Disable() #こうしないとEnterで反応してEnterがショートカットに使えない
+            self.key=""
+            for i,key in enumerate(hits):
+                self.key+=key
+                if i<len(hits)-1:
+                    self.key+="+"
+                if len(self.result)<len(self.key):
+                    self.keyNameText.SetLabel(self.result)
+                    self._key_name_text.SetLabel(self.result)
+                    self.panel.Layout()
+                else:									#キーが放されたら前の入力を検証する
+                    self._cancel_button.Enable()
+                    # とりあえずバリデーションはすっ飛ばす
+                    self.EndModal(wx.ID_OK)		#正しい入力なのでダイアログを閉じる
+        self.timer.Start(self.TIMER_INTERVAL)
 
 def showShortcutKeySettingWindow(parent: MainWindow, features: list[Feature]):
     keys = [
