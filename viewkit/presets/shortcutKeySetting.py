@@ -34,7 +34,8 @@ class ShortcutKeyEditWindow(SubWindow):
             "shortcut_keys": "/".join(shortcut_keys)
         }
 
-def showShortcutKeySettingWindow(parent:MainWindow, features: list[Feature]):
+
+def showShortcutKeySettingWindow(parent: MainWindow, features: list[Feature]):
     keys = [
         KeyValueSettingKey("feature", "feature", wx.LIST_FORMAT_LEFT, 200),
         KeyValueSettingKey("shortcut_keys", "shortcut keys", wx.LIST_FORMAT_LEFT, 200)
@@ -52,4 +53,4 @@ def showShortcutKeySettingWindow(parent:MainWindow, features: list[Feature]):
         allow_edit_rows=False,
         editor_window_class=ShortcutKeyEditWindow,
     )
-    return parent.showSubWindow(KeyValueSettingWindow, "shortcut key settings", config, modal=True  )
+    return parent.showSubWindow(KeyValueSettingWindow, "shortcut key settings", config, modal=True)

@@ -87,6 +87,7 @@ class TestWindow(viewkit.MainWindow):
         features = self.window_ctx.feature_store.all().values()
         showShortcutKeySettingWindow(self, features)
 
+
 class TestSubWindow(viewkit.SubWindow):
     def __init__(self, parent, ctx, title, parameters):
         viewkit.SubWindow.__init__(self, parent, ctx, title)

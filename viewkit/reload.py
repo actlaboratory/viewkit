@@ -13,6 +13,7 @@ from importlib import reload
 STDLIB_ROOT = distutils.sysconfig.get_python_lib(standard_lib=True).lower()
 __reloaded_modules = set()
 
+
 def reload_recursive(module_obj):
     global __reloaded_modules
     __reloaded_modules.clear()
@@ -33,7 +34,7 @@ def __is_reload_target(module_obj):
 
 def __force_reload_rec(module_obj, indent=0):
     if not isinstance(module_obj, types.ModuleType):
-        return 
+        return
 
     global __reloaded_modules
     if module_obj in __reloaded_modules:
@@ -43,8 +44,8 @@ def __force_reload_rec(module_obj, indent=0):
         return
 
     module_obj = reload(module_obj)
-    #print('{}reloading {}, {}'.format('  ' * indent, module_obj.__name__, module_obj.__file__))
-    #print("reloaded:"+ str(module_obj))
+    # print('{}reloading {}, {}'.format('  ' * indent, module_obj.__name__, module_obj.__file__))
+    # print("reloaded:"+ str(module_obj))
     __reloaded_modules.add(module_obj)
 
     for submodule in __find_submodules(module_obj):
@@ -54,7 +55,7 @@ def __force_reload_rec(module_obj, indent=0):
         __force_reload_rec(submodule.module_obj, indent + 1)
 
         module_obj = reload(module_obj)
-        #print("reloaded:"+ str(module_obj))
+        # print("reloaded:"+ str(module_obj))
         __reloaded_modules.add(module_obj)
 
         if submodule.from_import:
@@ -90,7 +91,7 @@ class __ModuleInfo(object):
         self.from_import = False
         self.symbols = []
 
-    #def __repr__(self):
+    # def __repr__(self):
     #    return '{}, {}, {}, {}'.format(self.name, self.module_obj, self.from_import, ', '.join(self.symbols))
 
 
