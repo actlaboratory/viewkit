@@ -15,6 +15,7 @@ class KeyValueSettingCustomButton:
         self.label = label
         self.event_handler = event_handler
 
+
 class KeyValueSettingConfig:
     def __init__(
         self,
@@ -38,8 +39,8 @@ class KeyValueSettingConfig:
         self.edit_button_label = edit_button_label
         self.delete_button_label = delete_button_label
 
-    def findIndexByKey(self, key:str):
-        for i,k in enumerate(self.keys):
+    def findIndexByKey(self, key: str):
+        for i, k in enumerate(self.keys):
             if k.key == key:
                 return i
         return None
@@ -49,19 +50,22 @@ class KeyValueSettingWindow(SubWindow):
     def __init__(self, parent, ctx, title, parameters: KeyValueSettingConfig):
         super().__init__(parent, ctx, title, parameters)
         self.config = parameters
-        lst, _ = self.creator.virtualListCtrl(self.config.listview_label, proportion=0, sizer_flag=wx.ALL|wx.ALIGN_CENTER_HORIZONTAL,size=(750,300),style=wx.LC_REPORT | wx.LC_SINGLE_SEL)
-        for i,key in enumerate(self.config.keys):
-            lst.InsertColumn(i,key.key,format=key.format,width=key.width)
+        lst, _ = self.creator.virtualListCtrl(self.config.listview_label, proportion=0, sizer_flag=wx.ALL |
+                                              wx.ALIGN_CENTER_HORIZONTAL, size=(750, 300), style=wx.LC_REPORT | wx.LC_SINGLE_SEL)
+        for i, key in enumerate(self.config.keys):
+            lst.InsertColumn(i, key.key, format=key.format, width=key.width)
         for row in self.config.values:
             index = lst.InsertItem(lst.GetItemCount(), row.get(self.config.keys[0].key, ""))
-            for i,key in enumerate(self.config.keys):
+            for i, key in enumerate(self.config.keys):
                 lst.SetItem(index, i, row.get(key.key, ""))
-        control_button_creator = ViewCreator(0,self.creator.getFont(), self.creator.getPanel(),self.creator.getSizer(),wx.HORIZONTAL,20,"",wx.EXPAND)
+        control_button_creator = ViewCreator(0, self.creator.getFont(), self.creator.getPanel(),
+                                             self.creator.getSizer(), wx.HORIZONTAL, 20, "", wx.EXPAND)
         for btn in self.config.custom_buttons:
-            control_button_creator.button(btn.label,btn.event_handler)
-        control_button_creator.button(self.config.add_button_label,None)
-        control_button_creator.button(self.config.edit_button_label,None)
-        control_button_creator.button(self.config.delete_button_label,None)
-        bottom_button_creator = ViewCreator(0,self.creator.getFont(), self.creator.getPanel(),self.creator.getSizer(),wx.HORIZONTAL,20,"",wx.EXPAND)
+            control_button_creator.button(btn.label, btn.event_handler)
+        control_button_creator.button(self.config.add_button_label, None)
+        control_button_creator.button(self.config.edit_button_label, None)
+        control_button_creator.button(self.config.delete_button_label, None)
+        bottom_button_creator = ViewCreator(0, self.creator.getFont(), self.creator.getPanel(),
+                                            self.creator.getSizer(), wx.HORIZONTAL, 20, "", wx.EXPAND)
         bottom_button_creator.okbutton("OK")
         bottom_button_creator.cancelbutton("Cancel")

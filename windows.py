@@ -60,7 +60,7 @@ class TestWindow(viewkit.MainWindow):
                 keyValueSetting.KeyValueSettingKey("年齢", wx.LIST_FORMAT_RIGHT, 100),
                 keyValueSetting.KeyValueSettingKey("職業", wx.LIST_FORMAT_LEFT, 200),
             ],
-            values = [
+            values=[
                 {
                     "名前": "nekochan",
                     "年齢": "27",
@@ -81,6 +81,7 @@ class TestWindow(viewkit.MainWindow):
 
     def onExplainButtonClicked(self, event):
         viewkit.dialog.simple("説明", "これはキーと値のペアを編集するためのウィンドウです。")
+
 
 class TestSubWindow(viewkit.SubWindow):
     def __init__(self, parent, ctx, title):
