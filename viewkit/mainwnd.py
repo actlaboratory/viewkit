@@ -1,9 +1,10 @@
-import importlib
 import sys
 import wx
 import _winxptheme
+
 from logging import getLogger
 from typing import List
+
 from viewkit.context.app import ApplicationContext
 from viewkit.context.window import WindowContext
 from viewkit.feature import Feature
@@ -12,7 +13,7 @@ from viewkit.creator import ViewCreator, ViewModeCalculator
 from viewkit.subwnd import ModalResult
 from viewkit.context.message import MAIN_WINDOW_RELOADED
 from viewkit.context.messageParameters import MainWindowReloaded
-
+from viewkit.reload import reload_recursive
 
 class MainWindow(wx.Frame):
     def __init__(self, app_ctx: ApplicationContext, *, size_x=-1, size_y=-1):
@@ -84,7 +85,7 @@ class MainWindow(wx.Frame):
             if wnd.reload_requested:
                 module = sys.modules.get(window_class.__module__)
                 self.logger.info("Reloading sub window: %s" % module)
-                importlib.reload(module)
+                reload_recursive(module)
                 self.logger.debug("re-imported module %s" % module)
                 window_class = getattr(module, window_class.__name__)
                 self.logger.debug("re-opening the sub window")
