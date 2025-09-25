@@ -18,6 +18,7 @@ from viewkit.reload import reload_recursive
 from viewkit.presets.exceptionDialog import ExceptionDialog
 
 
+
 class MainWindow(wx.Frame):
     def __init__(self, app_ctx: ApplicationContext, *, size_x=-1, size_y=-1):
         wx.Frame.__init__(

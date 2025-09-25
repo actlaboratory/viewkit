@@ -1,6 +1,7 @@
 import wx
 import viewkit
 import viewkit.presets.keyValueSetting as keyValueSetting
+from viewkit.presets.shortcutKeySetting import showShortcutKeySettingWindow
 from viewkit.subwnd import SubWindow
 
 
@@ -16,7 +17,8 @@ class TestWindow(viewkit.MainWindow):
             viewkit.Feature("file_open_video", "Open video file", None),
             viewkit.Feature("file_show_sub_window", "Show sub window", "ctrl+t", self.testSubWindow),
             viewkit.Feature("file_reload_main_window", "Reload main window", "ctrl+r/f5", self.reload),
-            viewkit.Feature("file_show_kv_window", "show key value settings", "ctrl+k", self.showKvWindow),
+            viewkit.Feature("file_show_kv_window", "show key value settings", None, self.showKvWindow),
+            viewkit.Feature("file_show_shortcut_window", "show shortcut key settings", "ctrl+k", self.showShortcutWindow),
             viewkit.Feature("help_about", "Show about dialog", None, self.showAboutDialog)
         ]
 
@@ -32,6 +34,7 @@ class TestWindow(viewkit.MainWindow):
                     viewkit.MenuItemDefinition("file_show_sub_window", "Show sub window", "T"),
                     viewkit.MenuItemDefinition("file_reload_main_window", "Reload main window", "R"),
                     viewkit.MenuItemDefinition("file_show_kv_window", "Show key value settings", "K"),
+                    viewkit.MenuItemDefinition("file_show_shortcut_window", "Show shortcut key settings", "S"),
                     viewkit.MenuItemDefinition("file_exit", "Exit", "E")
                 ]
             ),
@@ -43,8 +46,7 @@ class TestWindow(viewkit.MainWindow):
         )
 
     def onExit(self, event):
-        raise RuntimeError("test")
-        # self.Close()
+        self.Close()
 
     def testSubWindow(self, event):
         result = self.showSubWindow(TestSubWindow, "Test Sub Window", modal=True)
@@ -73,13 +75,17 @@ class TestWindow(viewkit.MainWindow):
                     "job": "うっさ",
                 },
             ],
-            allow_edit_rows=True,
+            allow_edit_rows=False,
             editor_window_class=KvEditWindow,
             custom_buttons=[
                 keyValueSetting.KeyValueSettingCustomButton("説明", "explain")
             ],
         )
         self.showSubWindow(MyKvWindow, "Key Value Setting", config, modal=True)
+
+    def showShortcutWindow(self, event):
+        features = self.window_ctx.feature_store.all().values()
+        showShortcutKeySettingWindow(self, features)
 
 
 class TestSubWindow(viewkit.SubWindow):
