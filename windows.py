@@ -85,7 +85,9 @@ class TestWindow(viewkit.MainWindow):
 
     def showShortcutWindow(self, event):
         features = self.window_ctx.feature_store.all().values()
-        showShortcutKeySettingWindow(self, features)
+        ret = showShortcutKeySettingWindow(self, features)
+        for r in ret:
+            print(r)
 
 
 class TestSubWindow(viewkit.SubWindow):

@@ -113,6 +113,14 @@ class ShortcutKeyDetectionWindow(SubWindow):
         return True
 
 
+class ShortcutKeySettingResultEntry:
+    def __init__(self, feature_identifier:str, shortcut_key_str:str):
+        self.feature_identifier = feature_identifier
+        self.shortcut_key_str = shortcut_key_str
+
+    def __str__(self):
+        return f"ShortcutKeySettingResultEntry(feature_identifier={self.feature_identifier}, shortcut_key_str={self.shortcut_key_str})"
+
 def showShortcutKeySettingWindow(parent: MainWindow, features: list[Feature]):
     keys = [
         KeyValueSettingKey("feature", "feature", wx.LIST_FORMAT_LEFT, 200),
@@ -131,4 +139,8 @@ def showShortcutKeySettingWindow(parent: MainWindow, features: list[Feature]):
         allow_edit_rows=False,
         editor_window_class=ShortcutKeyEditWindow,
     )
-    return parent.showSubWindow(KeyValueSettingWindow, "shortcut key settings", config, modal=True)
+    result = parent.showSubWindow(KeyValueSettingWindow, "shortcut key settings", config, modal=True)
+    if result.code != wx.ID_OK:
+        return None
+    return [ShortcutKeySettingResultEntry(r["feature"], r["shortcut_keys"]) for r in result.user_object]
+

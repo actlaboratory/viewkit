@@ -123,7 +123,6 @@ class KeyValueSettingWindow(SubWindow):
             original_value_row=None
         )
         result = self.showSubWindow(self.config.editor_window_class, "Add", event, modal=True)
-        print(result.code)
         if result.code != wx.ID_OK:
             return
         new_value_row = result.user_object
@@ -174,3 +173,6 @@ class KeyValueSettingWindow(SubWindow):
             self._lst.Select(adjusted_index)
             self._lst.Focus(adjusted_index)
             self._lst.SetFocus()
+
+    def result(self):
+        return self._value_rows
