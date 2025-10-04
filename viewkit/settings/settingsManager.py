@@ -2,6 +2,7 @@ import json
 import os
 from typing import Dict, Any, Optional
 from cerberus import Validator
+from viewkit.version import getVersion
 
 
 class CustomSettingField:
@@ -195,6 +196,7 @@ class SettingsManager:
 
     def save(self):
         """ファイルを保存する"""
+        self.changeSetting("app_version", getVersion())
         self._saveSettings()
 
     def _saveSettings(self):

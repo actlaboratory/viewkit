@@ -47,6 +47,7 @@ class TestWindow(viewkit.MainWindow):
         )
 
     def onExit(self, event):
+        self.app_ctx.settings.save()
         self.Close()
 
     def testSubWindow(self, event):
