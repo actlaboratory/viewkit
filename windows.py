@@ -1,7 +1,7 @@
 import wx
 import viewkit
 import viewkit.presets.keyValueSetting as keyValueSetting
-from viewkit.presets.shortcutKeySetting import showShortcutKeySettingWindow
+from viewkit.presets.shortcutKeySetting import showShortcutKeySettingWindow, convertResultToSettingInput
 from viewkit.subwnd import SubWindow
 
 
@@ -86,9 +86,11 @@ class TestWindow(viewkit.MainWindow):
     def showShortcutWindow(self, event):
         features = self.window_ctx.feature_store.all().values()
         ret = showShortcutKeySettingWindow(self, features)
-        for r in ret:
-            print(r)
-
+        if ret is None:
+            return
+        input = convertResultToSettingInput(ret)
+        self.window_ctx.feature_store.applyShortcutKeySettings(input)
+        self.updateShortcutKeys()
 
 class TestSubWindow(viewkit.SubWindow):
     def __init__(self, parent, ctx, title, parameters):

@@ -139,6 +139,16 @@ class MainWindow(wx.Frame):
                     print("cancel")
                     return e
 
+    def updateShortcutKeys(self):
+        """ショートカットキー設定を再適用します。ショートカットキー設定を変更した後に呼び出してください。"""
+        self._applyAcceleratorTable()
+        # メニューバーのショートカットキーの描画も更新しないといけない
+        if self.GetMenuBar() is not None:
+            # 一度メニューバーを消す
+            self.SetMenuBar(None)
+            self._setupMenuBar()
+            self.Layout()
+
     def reload(self, evt=None):  # 直接イベントハンドラとして使ってもいいように
         # トップレベルウインドウの処理は app でやらないといけないが、 app -> mainWindow の依存方向を守りたいのでメッセージング機構を使って逆転させる
         self.app_ctx.sendContextMessage(MAIN_WINDOW_RELOADED, MainWindowReloaded(self))

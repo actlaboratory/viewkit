@@ -4,6 +4,8 @@ from viewkit import MainWindow, SubWindow
 from .keyValueSetting import *
 from viewkit.shortcut.str2key import str2key
 from viewkit.shortcut import ShortcutKeyValidationError, ShortcutKeyStringValidator
+from viewkit.settings.shortcut import ShortcutKeySettings, RawEntry, RemovedEntry, ParsedFileInput
+from viewkit.version import getVersion
 
 
 class ShortcutKeyEditWindow(SubWindow):
@@ -114,12 +116,12 @@ class ShortcutKeyDetectionWindow(SubWindow):
 
 
 class ShortcutKeySettingResultEntry:
-    def __init__(self, feature_identifier:str, shortcut_key_str:str):
+    def __init__(self, feature_identifier:str, shortcut_key_string:str):
         self.feature_identifier = feature_identifier
-        self.shortcut_key_str = shortcut_key_str
+        self.shortcut_key_string = shortcut_key_string
 
     def __str__(self):
-        return f"ShortcutKeySettingResultEntry(feature_identifier={self.feature_identifier}, shortcut_key_str={self.shortcut_key_str})"
+        return f"ShortcutKeySettingResultEntry(feature_identifier={self.feature_identifier}, shortcut_keys={self.shortcut_key_string})"
 
 def showShortcutKeySettingWindow(parent: MainWindow, features: list[Feature]):
     keys = [
@@ -142,5 +144,13 @@ def showShortcutKeySettingWindow(parent: MainWindow, features: list[Feature]):
     result = parent.showSubWindow(KeyValueSettingWindow, "shortcut key settings", config, modal=True)
     if result.code != wx.ID_OK:
         return None
-    return [ShortcutKeySettingResultEntry(r["feature"], r["shortcut_keys"]) for r in result.user_object]
+    # 画面側はfeature identifierの情報を持ってないので、nameからidentifierに変換するための辞書が必要
+    name_to_id = {f.display_name: f.identifier for f in features}
+    return [ShortcutKeySettingResultEntry(name_to_id.get(r["feature"]), r["shortcut_keys"]) for r in result.user_object]
 
+def convertResultToSettingInput(result: list[ShortcutKeySettingResultEntry]) -> list[RawEntry]:
+    version = getVersion()
+    raw_entries = []
+    for r in result:
+        raw_entries.append(RawEntry(r.feature_identifier, r.shortcut_key_string))
+    return ParsedFileInput(version, raw_entries)
