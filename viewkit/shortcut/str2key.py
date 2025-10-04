@@ -299,10 +299,8 @@ str2numpadKey = {
 
 str2key = {}
 str2key.update(
-    **str2ControlCommand,
     **str2MouseKey,
     **str2ModifierKey,
-    **str2UnknownKey,
     **str2FunctionKey,
     **str2InputControlKey,
     **str2GenericKey,
