@@ -8,6 +8,7 @@ class RawEntry:
         self.feature_identifier = feature_identifier
         self.shortcut_key_string = shortcut_key_string
 
+
 def convertRawEntriesToWritableDict(entries: list[RawEntry]) -> list[dict]:
     """RawEntryのリストを、設定ファイルに書き込むための辞書に変換する。"""
     ret = {}

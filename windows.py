@@ -97,6 +97,7 @@ class TestWindow(viewkit.MainWindow):
         self.app_ctx.settings.changeSetting("shortcuts", new_settings)
         self.app_ctx.settings.save()
 
+
 class TestSubWindow(viewkit.SubWindow):
     def __init__(self, parent, ctx, title, parameters):
         viewkit.SubWindow.__init__(self, parent, ctx, title)
