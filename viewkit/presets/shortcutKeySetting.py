@@ -95,12 +95,13 @@ class ShortcutKeyDetectionWindow(SubWindow):
         else:  # 全部リリースされた
             if self._all_detected_keys:
                 self._cancel_button.Enable()
-                if not self._validate(): return
+                if not self._validate():
+                    return
                 self.EndModal(wx.ID_OK)
         # なにも変化なかったので、もう一度タイマーセット
         self._timer.Start(self.TIMER_INTERVAL)
 
-    def  _validate(self):
+    def _validate(self):
         validator = ShortcutKeyStringValidator(has_char_input_on_screen=True)
         try:
             result = self.result()
@@ -116,12 +117,13 @@ class ShortcutKeyDetectionWindow(SubWindow):
 
 
 class ShortcutKeySettingResultEntry:
-    def __init__(self, feature_identifier:str, shortcut_key_string:str):
+    def __init__(self, feature_identifier: str, shortcut_key_string: str):
         self.feature_identifier = feature_identifier
         self.shortcut_key_string = shortcut_key_string
 
     def __str__(self):
         return f"ShortcutKeySettingResultEntry(feature_identifier={self.feature_identifier}, shortcut_keys={self.shortcut_key_string})"
+
 
 def showShortcutKeySettingWindow(parent: MainWindow, features: list[Feature]):
     keys = [
@@ -147,6 +149,7 @@ def showShortcutKeySettingWindow(parent: MainWindow, features: list[Feature]):
     # 画面側はfeature identifierの情報を持ってないので、nameからidentifierに変換するための辞書が必要
     name_to_id = {f.display_name: f.identifier for f in features}
     return [ShortcutKeySettingResultEntry(name_to_id.get(r["feature"]), r["shortcut_keys"]) for r in result.user_object]
+
 
 def convertResultToSettingInput(result: list[ShortcutKeySettingResultEntry]) -> list[RawEntry]:
     version = getVersion()

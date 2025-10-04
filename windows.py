@@ -92,6 +92,7 @@ class TestWindow(viewkit.MainWindow):
         self.window_ctx.feature_store.applyShortcutKeySettings(input)
         self.updateShortcutKeys()
 
+
 class TestSubWindow(viewkit.SubWindow):
     def __init__(self, parent, ctx, title, parameters):
         viewkit.SubWindow.__init__(self, parent, ctx, title)
