@@ -38,7 +38,9 @@ class ShortcutKeyEditWindow(SubWindow):
 
     def _onChangeButton(self, index):
         def handler(event):
-            self.showSubWindow(ShortcutKeyDetectionWindow, "Change shortcut key")
+            result = self.showSubWindow(ShortcutKeyDetectionWindow, "Change shortcut key")
+            if result.code == wx.ID_OK:
+                self._shortcut_key_inputs[index].SetValue(result.user_object)
         return handler
 
 class ShortcutKeyDetectionWindow(SubWindow):
@@ -56,6 +58,9 @@ class ShortcutKeyDetectionWindow(SubWindow):
 
     def onOpen(self):
         self._timer.StartOnce(self.TIMER_INTERVAL)
+
+    def result(self):
+        return "+".join(self._all_detected_keys)
 
     def _handleTimer(self, event):
         self._timer.Stop()
@@ -83,10 +88,11 @@ class ShortcutKeyDetectionWindow(SubWindow):
                     self._key_name_text.SetLabel(key_str)
                     self._key_name_text.SetLabel(key_str)
                     self.panel.Layout()
-                else:									#キーが放されたら前の入力を検証する
-                    self._cancel_button.Enable()
-                    # とりあえずバリデーションはすっ飛ばす
-                    self.EndModal(wx.ID_OK)		#正しい入力なのでダイアログを閉じる
+        else: # 全部リリースされた
+            if self._all_detected_keys:
+                self._cancel_button.Enable()
+                self.EndModal(wx.ID_OK)
+        # なにも変化なかったので、もう一度タイマーセット
         self._timer.Start(self.TIMER_INTERVAL)
 
 def showShortcutKeySettingWindow(parent: MainWindow, features: list[Feature]):
