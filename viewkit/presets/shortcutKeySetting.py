@@ -3,6 +3,7 @@ from viewkit import Feature
 from viewkit import MainWindow, SubWindow
 from .keyValueSetting import *
 from viewkit.shortcut.str2key import str2key
+from viewkit.shortcut import ShortcutKeyValidationError, ShortcutKeyStringValidator
 
 
 class ShortcutKeyEditWindow(SubWindow):
@@ -92,9 +93,24 @@ class ShortcutKeyDetectionWindow(SubWindow):
         else:  # 全部リリースされた
             if self._all_detected_keys:
                 self._cancel_button.Enable()
+                if not self._validate(): return
                 self.EndModal(wx.ID_OK)
         # なにも変化なかったので、もう一度タイマーセット
         self._timer.Start(self.TIMER_INTERVAL)
+
+    def  _validate(self):
+        validator = ShortcutKeyStringValidator(has_char_input_on_screen=True)
+        try:
+            result = self.result()
+            validator.validate(result)
+        except ShortcutKeyValidationError as e:
+            self.error_text.SetLabel(str(e))
+            self._all_detected_keys = []
+            self._key_name_text.SetLabel("")
+            self.panel.Layout()
+            self._timer.Start(self.TIMER_INTERVAL)
+            return False
+        return True
 
 
 def showShortcutKeySettingWindow(parent: MainWindow, features: list[Feature]):
