@@ -3,6 +3,7 @@ import viewkit
 import viewkit.presets.keyValueSetting as keyValueSetting
 from viewkit.presets.shortcutKeySetting import showShortcutKeySettingWindow, convertResultToSettingInput
 from viewkit.subwnd import SubWindow
+from viewkit.settings.shortcut import convertRawEntriesToWritableDict
 
 
 class TestWindow(viewkit.MainWindow):
@@ -91,7 +92,9 @@ class TestWindow(viewkit.MainWindow):
         input = convertResultToSettingInput(ret)
         self.window_ctx.feature_store.applyShortcutKeySettings(input)
         self.updateShortcutKeys()
-
+        new_settings = convertRawEntriesToWritableDict(input.raw_entries)
+        self.app_ctx.settings.changeSetting("shortcuts", new_settings)
+        self.app_ctx.settings.save()
 
 class TestSubWindow(viewkit.SubWindow):
     def __init__(self, parent, ctx, title, parameters):
