@@ -146,8 +146,8 @@ class MainWindow(wx.Frame):
         if self.GetMenuBar() is not None:
             # 一度メニューバーを消す
             self.SetMenuBar(None)
-            self._setupMenuBar()
-            self.Layout()
+            # self._setupMenuBar()
+            # self.Layout()
 
     def reload(self, evt=None):  # 直接イベントハンドラとして使ってもいいように
         # トップレベルウインドウの処理は app でやらないといけないが、 app -> mainWindow の依存方向を守りたいのでメッセージング機構を使って逆転させる
