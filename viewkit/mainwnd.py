@@ -78,25 +78,45 @@ class MainWindow(wx.Frame):
     def showSubWindow(self, window_class, title, parameters=None, modal=True):
         """サブウィンドウを表示します。window_class は viewkit.SubWindow のサブクラスである必要があります。ウィンドウ上での作業結果を表すオブジェクトを返します。"""
         while (True):
-            wnd = window_class(self, self.app_ctx, title, parameters)
-            wnd.Center()
-            code = None
-            if modal:
+            try:
+                wnd = window_class(self, self.app_ctx, title, parameters)
+                wnd.Center()
+                code = None
+                if modal:
+                    code = wnd.ShowModal()
+                else:
+                    code = wnd.Show()
+                result = ModalResult(code, wnd.result())
+                if wnd.reload_requested:
+                    module = sys.modules.get(window_class.__module__)
+                    if e := self._reloadWindow(window_class) == None:
+                        window_class = getattr(module, window_class.__name__)
+                        self.logger.debug("re-opening the sub window")
+                        continue
+                    else:
+                        raise e
+                # end reload
+                wnd.Destroy()
+                break
+            except Exception as e:
+                if hasattr(sys, "frozen"):
+                    #解発ちゅう以外は上に投げる
+                    raise e
+                msg = list(traceback.TracebackException.from_exception(e).format())
+                self.logger.error("".join(msg))
+                wnd = ExceptionDialog(self, self.app_ctx, _("リロードエラー"), "".join(msg))
+                wnd.Center()
                 code = wnd.ShowModal()
-            else:
-                code = wnd.Show()
-            result = ModalResult(code, wnd.result())
-            if wnd.reload_requested:
+                if code==wx.ID_CANCEL:
+                    print("cancel")
+                    return e
+
                 module = sys.modules.get(window_class.__module__)
                 if e := self._reloadWindow(window_class) == None:
                     window_class = getattr(module, window_class.__name__)
                     self.logger.debug("re-opening the sub window")
-                    continue
                 else:
-                    raise e
-            # end reload
-            wnd.Destroy()
-            break
+                    raise e				
         # end until user interaction except window reloading
         return result
 

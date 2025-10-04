@@ -18,7 +18,7 @@ class VersionInfoDialog(SubWindow):
         textList.append("")
 
         self.info, dummy = self.creator.inputbox("", default_value="\r\n".join(textList), style=wx.TE_MULTILINE |
-                                                 wx.TE_READONLY | wx.TE_NO_VSCROLL | wx.BORDER_RAISED, sizer_flag=wx.EXPAND, x=750, text_layout=None)
+                                                 wx.TE_READONLY | wx.BORDER_RAISED, sizer_flag=wx.EXPAND, x=750, text_layout=None)
         f = self.info.GetFont()
         f.SetPointSize((int)(f.GetPointSize() * (2 / 3)))
         self.info.SetFont(f)
