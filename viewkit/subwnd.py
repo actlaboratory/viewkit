@@ -36,6 +36,10 @@ class SubWindow(wx.Dialog):
             space=0
         )
 
+    def onOpen(self):
+        """オーバーライドすると、ウィンドウが表示される直前に呼ばれます。"""
+        pass
+
     def ShowModal(self):
         self.creator.getPanel().Layout()
         self.creator.getSizer().Fit(self)
@@ -65,6 +69,7 @@ class SubWindow(wx.Dialog):
         while (True):
             wnd = window_class(self, self.app_ctx, title, parameters)
             wnd.Center()
+            wnd.onOpen()
             code = None
             if modal:
                 code = wnd.ShowModal()
