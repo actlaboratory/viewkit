@@ -18,7 +18,6 @@ from viewkit.reload import reload_recursive
 from viewkit.presets.exceptionDialog import ExceptionDialog
 
 
-
 class MainWindow(wx.Frame):
     def __init__(self, app_ctx: ApplicationContext, *, size_x=-1, size_y=-1):
         wx.Frame.__init__(
@@ -89,7 +88,7 @@ class MainWindow(wx.Frame):
                 result = ModalResult(code, wnd.result())
                 if wnd.reload_requested:
                     module = sys.modules.get(window_class.__module__)
-                    if e := self._reloadWindow(window_class) == None:
+                    if e := self._reloadWindow(window_class) is None:
                         window_class = getattr(module, window_class.__name__)
                         self.logger.debug("re-opening the sub window")
                         continue
@@ -100,28 +99,28 @@ class MainWindow(wx.Frame):
                 break
             except Exception as e:
                 if hasattr(sys, "frozen"):
-                    #解発ちゅう以外は上に投げる
+                    # 解発ちゅう以外は上に投げる
                     raise e
                 msg = list(traceback.TracebackException.from_exception(e).format())
                 self.logger.error("".join(msg))
                 wnd = ExceptionDialog(self, self.app_ctx, _("リロードエラー"), "".join(msg))
                 wnd.Center()
                 code = wnd.ShowModal()
-                if code==wx.ID_CANCEL:
+                if code == wx.ID_CANCEL:
                     print("cancel")
                     return e
 
                 module = sys.modules.get(window_class.__module__)
-                if e := self._reloadWindow(window_class) == None:
+                if e := self._reloadWindow(window_class) is None:
                     window_class = getattr(module, window_class.__name__)
                     self.logger.debug("re-opening the sub window")
                 else:
-                    raise e				
+                    raise e
         # end until user interaction except window reloading
         return result
 
     def _reloadWindow(self, window_class):
-        while(True):
+        while (True):
             module = sys.modules.get(window_class.__module__)
             self.logger.info("Reloading sub window: %s" % module)
             try:
@@ -129,14 +128,14 @@ class MainWindow(wx.Frame):
                 return None
             except BaseException as e:
                 if hasattr(sys, "frozen"):
-                    #解発ちゅう以外は上に投げる
+                    # 解発ちゅう以外は上に投げる
                     raise e
                 msg = list(traceback.TracebackException.from_exception(e).format())
                 self.logger.error("".join(msg))
                 wnd = ExceptionDialog(self, self.app_ctx, _("リロードエラー"), "".join(msg))
                 wnd.Center()
                 code = wnd.ShowModal()
-                if code==wx.ID_CANCEL:
+                if code == wx.ID_CANCEL:
                     print("cancel")
                     return e
 

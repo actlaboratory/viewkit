@@ -43,18 +43,19 @@ class ShortcutKeyEditWindow(SubWindow):
                 self._shortcut_key_inputs[index].SetValue(result.user_object)
         return handler
 
+
 class ShortcutKeyDetectionWindow(SubWindow):
     def __init__(self, parent, ctx, title, parameters=None):
         super().__init__(parent, ctx, title)
         self.creator.staticText(_("設定するには、使用したいキーの組み合わせを押します。\n設定を解除するには、Escキーを押します。"))
-        self._key_name_text=self.creator.staticText("",sizer_flag=wx.ALIGN_CENTER | wx.ALL,margin=20)
-        self.error_text=self.creator.staticText("",sizer_flag=wx.ALIGN_CENTER)
+        self._key_name_text = self.creator.staticText("", sizer_flag=wx.ALIGN_CENTER | wx.ALL, margin=20)
+        self.error_text = self.creator.staticText("", sizer_flag=wx.ALIGN_CENTER)
         self._cancel_button = self.creator.cancelbutton(_("設定解除"))
         self.Bind(wx.EVT_TIMER, self._handleTimer)
-        self._timer=wx.Timer(self)
-        self.TIMER_INTERVAL=100
-        self._all_detected_keys = [] # キーが全部リリースされるまで記録し続ける
-        self._last_detected_keys = [] # 最後のタイマーフレームで検出されたキー
+        self._timer = wx.Timer(self)
+        self.TIMER_INTERVAL = 100
+        self._all_detected_keys = []  # キーが全部リリースされるまで記録し続ける
+        self._last_detected_keys = []  # 最後のタイマーフレームで検出されたキー
 
     def onOpen(self):
         self._timer.StartOnce(self.TIMER_INTERVAL)
@@ -67,33 +68,34 @@ class ShortcutKeyDetectionWindow(SubWindow):
         hits = []
         key_names = str2key.keys()
         for name in key_names:
-            code=str2key[name]
-            if code<=4: # マウスを使われると困る
+            code = str2key[name]
+            if code <= 4:  # マウスを使われると困る
                 continue
-            #カテゴリキーは取得不可、NumLockとCapsLockは押し下げ状態ではなく現在のON/OFFを返してしまうので
-            if type(code)==wx.KeyCategoryFlags or name=="NUMLOCK" or name=="SCROLL":
+            # カテゴリキーは取得不可、NumLockとCapsLockは押し下げ状態ではなく現在のON/OFFを返してしまうので
+            if type(code) == wx.KeyCategoryFlags or name == "NUMLOCK" or name == "SCROLL":
                 continue
             if wx.GetKeyState(code):
                 hits.append(name)
             # end ヒット
         # end 全部のキー
         if hits:
-            self._cancel_button.Disable() #こうしないとEnterで反応してEnterがショートカットに使えない
+            self._cancel_button.Disable()  # こうしないとEnterで反応してEnterがショートカットに使えない
             self.last_detected_keys = []
-            for i,key in enumerate(hits):
+            for i, key in enumerate(hits):
                 self.last_detected_keys.append(key)
-                if len(self._all_detected_keys)<len(self.last_detected_keys):
+                if len(self._all_detected_keys) < len(self.last_detected_keys):
                     self._all_detected_keys.append(key)
                     key_str = "+".join(self._all_detected_keys)
                     self._key_name_text.SetLabel(key_str)
                     self._key_name_text.SetLabel(key_str)
                     self.panel.Layout()
-        else: # 全部リリースされた
+        else:  # 全部リリースされた
             if self._all_detected_keys:
                 self._cancel_button.Enable()
                 self.EndModal(wx.ID_OK)
         # なにも変化なかったので、もう一度タイマーセット
         self._timer.Start(self.TIMER_INTERVAL)
+
 
 def showShortcutKeySettingWindow(parent: MainWindow, features: list[Feature]):
     keys = [
