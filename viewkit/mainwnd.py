@@ -16,7 +16,7 @@ from viewkit.context.message import MAIN_WINDOW_RELOADED
 from viewkit.context.messageParameters import MainWindowReloaded
 from viewkit.reload import reload_recursive
 from viewkit.presets.exceptionDialog import ExceptionDialog
-
+from viewkit.shortcut import joinShortcutKeysToString
 
 class MainWindow(wx.Frame):
     def __init__(self, app_ctx: ApplicationContext, *, size_x=-1, size_y=-1):
@@ -146,8 +146,8 @@ class MainWindow(wx.Frame):
         if self.GetMenuBar() is not None:
             # 一度メニューバーを消す
             self.SetMenuBar(None)
-            # self._setupMenuBar()
-            # self.Layout()
+            self._setupMenuBar()
+            self.Layout()
 
     def reload(self, evt=None):  # 直接イベントハンドラとして使ってもいいように
         # トップレベルウインドウの処理は app でやらないといけないが、 app -> mainWindow の依存方向を守りたいのでメッセージング機構を使って逆転させる
@@ -168,27 +168,35 @@ class MainWindow(wx.Frame):
             self.window_ctx.ref_store.getRef(feature.identifier)
 
     def _setupMenuBar(self):
+        self.logger.debug("Setting up menu bar")
         if not self.window_ctx.menu.need_menu_bar():
             return
         bar = wx.MenuBar()
         for top_menu in self.window_ctx.menu.top_menus:
+            self.logger.debug("Adding top menu: %s", top_menu.display_name)
             menu = wx.Menu()
             for item in top_menu.items:
                 if item is separator:
                     menu.AppendSeparator()
+                    self.logger.debug("Adding separator to menu: %s", top_menu.display_name)
                     continue
                 ref = self.window_ctx.ref_store.getRef(item.identifier)
                 menu_item = self._generateMenuItem(menu, ref, item)
+                self.logger.debug("Adding menu item: %s to menu: %s", item.display_name, top_menu.display_name)
                 menu.Append(menu_item)
             bar.Append(menu, "%s(&%s)" % (top_menu.display_name, top_menu.accessor_letter))
+            self.logger.debug("Added top menu: %s", top_menu.display_name)
         self.SetMenuBar(bar)
 
     def _generateMenuItem(self, menu: wx.Menu, ref: int, item: MenuItem | MenuItemWithSubmenu):
+        self.logger.debug("Generating menu item: %s", item.display_name)
         if isinstance(item, MenuItem):
             display_name = item.display_name
             feature = self.window_ctx.feature_store.getByIdentifier(item.identifier)
+            self.logger.debug("Menu item %s is linked to feature: %s", item.display_name, feature)
             if feature.shortcut_keys:
-                display_name += "\t" + str(feature.shortcut_keys[0])
+                shortcut_key_string = joinShortcutKeysToString(feature.shortcut_keys)
+                display_name += "\t" + shortcut_key_string
             return wx.MenuItem(menu, ref, display_name)
         elif isinstance(item, MenuItemWithSubmenu):
             submenu = wx.Menu()

@@ -80,3 +80,7 @@ def separateShortcutKeyString(key_string: str) -> list[str]:
     if not key_string:
         return []
     return key_string.split(SHORTCUT_KEY_SEPARATOR)
+
+def joinShortcutKeysToString(shortcut_keys: list[ShortcutKey]) -> str:
+    """複数のショートカットキーを文字列に結合する"""
+    return SHORTCUT_KEY_SEPARATOR.join([str(k) for k in shortcut_keys]) if shortcut_keys else ""
