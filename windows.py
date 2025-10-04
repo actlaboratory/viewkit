@@ -92,18 +92,19 @@ class TestSubWindow(viewkit.SubWindow):
     def __init__(self, parent, ctx, title, parameters):
         viewkit.SubWindow.__init__(self, parent, ctx, title)
         self.value = None
+
         self.creator.staticText("This is a sub window")
-        self.creator.inputbox("hogehogehogehoge", default_value="にゃーにゃーにゃー")
+        i, dummy = self.creator.inputbox("some input", default_value="にゃーにゃーにゃー")
+        i.hideScrollBar(wx.HORIZONTAL)
+
         self.creator.button("Reload from code", self.reload)
-        self.creator.okbutton("OK", self.onOK)
-        self.creator.cancelbutton("Cancel", self.onCancel)
+
+        footerCreator = self.creator.makeChild(style=wx.ALIGN_RIGHT | wx.ALL, margin=20)
+        footerCreator.okbutton("OK", self.onOK)
+        footerCreator.cancelbutton("Cancel")
 
     def onOK(self, event):
         self.value = "OK"
-        event.Skip()
-
-    def onCancel(self, event):
-        self.value = "Cancel"
         event.Skip()
 
     def result(self):
